@@ -1,0 +1,162 @@
+/* ============================================================
+   Navbar Styles
+   - Transparent → solid on scroll
+   - Mobile hamburger drawer
+   ============================================================ */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.4rem 3rem;
+  /* Smooth transition for background and shadow */
+  transition: background 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease;
+  background: transparent;
+}
+
+/* Solid navbar after scrolling */
+.navbar--scrolled {
+  background: var(--burgundy);
+  padding: 1rem 3rem;
+  box-shadow: 0 2px 20px rgba(105,27,25,0.25);
+}
+
+/* Couple initials logo */
+.navbar__logo {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--white);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: color var(--transition);
+}
+.navbar__logo span {
+  color: var(--gold);
+  margin: 0 0.2rem;
+}
+.navbar__logo:hover {
+  color: var(--gold);
+}
+
+/* Desktop nav links */
+.navbar__links {
+  list-style: none;
+  display: flex;
+  gap: 2.5rem;
+}
+
+.navbar__link {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(255,255,255,0.85);
+  position: relative;
+  transition: color var(--transition);
+}
+.navbar__link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--gold);
+  transition: width var(--transition);
+}
+.navbar__link:hover,
+.navbar__link--active {
+  color: var(--gold);
+}
+.navbar__link:hover::after,
+.navbar__link--active::after {
+  width: 100%;
+}
+
+/* ---- Hamburger ---- */
+.navbar__hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+.navbar__hamburger span {
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--white);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+/* Animate to X when open */
+.navbar__hamburger.open span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.navbar__hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+.navbar__hamburger.open span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ---- Mobile Drawer ---- */
+.navbar__drawer {
+  display: none; /* shown via media query */
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: min(75vw, 280px);
+  background: var(--burgundy);
+  padding: 5rem 2rem 2rem;
+  flex-direction: column;
+  gap: 1.8rem;
+  transform: translateX(100%);
+  transition: transform 0.35s ease;
+  box-shadow: -4px 0 20px rgba(0,0,0,0.2);
+}
+.navbar__drawer--open {
+  transform: translateX(0);
+}
+.navbar__drawer-link {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(255,255,255,0.8);
+  transition: color var(--transition);
+}
+.navbar__drawer-link.active,
+.navbar__drawer-link:hover {
+  color: var(--gold);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1.2rem 1.5rem;
+  }
+  .navbar--scrolled {
+    padding: 0.9rem 1.5rem;
+  }
+  .navbar__links {
+    display: none;
+  }
+  .navbar__hamburger {
+    display: flex;
+  }
+  .navbar__drawer {
+    display: flex;
+  }
+}

@@ -1,0 +1,128 @@
+/* ============================================================
+   GLOBAL STYLES — nimrod-jirah-wedding
+   Edit color palette, fonts, and spacing here.
+   ============================================================ */
+
+/* --- CSS Custom Properties (Variables) ---
+   Change colors here and they update everywhere on the site. */
+:root {
+  --gold:       #E1CA96;   /* warm gold — hero text, accents */
+  --sage:       #556251;   /* deep sage green — buttons, backgrounds */
+  --terracotta: #BD6738;   /* terracotta — highlights, borders */
+  --burgundy:   #691B19;   /* deep burgundy — headings, navbar solid */
+  --blush:      #FFD9DA;   /* soft blush — section backgrounds, cards */
+  --white:      #FFFFFF;
+  --off-white:  #FDF8F5;   /* very warm white for page background */
+
+  /* Typography */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Jost', sans-serif;
+
+  /* Spacing */
+  --section-pad: 6rem 1.5rem;
+
+  /* Transitions */
+  --transition: 0.35s ease;
+}
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--off-white);
+  color: var(--burgundy);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* --- Typography Helpers --- */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* Section title style used throughout the site */
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: var(--burgundy);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+/* Gold decorative rule below section titles */
+.section-divider {
+  display: block;
+  width: 60px;
+  height: 2px;
+  background: var(--terracotta);
+  margin: 0 auto 3rem;
+}
+
+/* --- Buttons --- */
+.btn {
+  display: inline-block;
+  padding: 0.85rem 2.2rem;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+
+/* Primary button: sage background */
+.btn-primary {
+  background: var(--sage);
+  color: var(--white);
+}
+.btn-primary:hover {
+  background: var(--burgundy);
+  transform: translateY(-2px);
+}
+
+/* Outlined button: transparent with gold border */
+.btn-outline {
+  background: transparent;
+  color: var(--gold);
+  border: 1.5px solid var(--gold);
+}
+.btn-outline:hover {
+  background: var(--gold);
+  color: var(--burgundy);
+  transform: translateY(-2px);
+}
+
+/* --- Utility --- */
+.text-center { text-align: center; }
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+
+/* --- Fade-in animation used on section entry --- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up {
+  animation: fadeUp 0.7s ease both;
+}
+
+/* --- Scrollbar styling (optional aesthetic touch) --- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--off-white); }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }

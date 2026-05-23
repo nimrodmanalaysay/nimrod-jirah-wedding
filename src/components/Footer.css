@@ -1,0 +1,30 @@
+/* ============================================================
+   Footer Styles
+   ============================================================ */
+.footer {
+  background: var(--burgundy);
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  padding: 3rem 1.5rem;
+}
+
+.footer__names {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 300;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.3rem;
+}
+
+.footer__date {
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.footer__copy {
+  font-size: 0.75rem;
+  opacity: 0.5;
+}

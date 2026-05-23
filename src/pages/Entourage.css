@@ -1,0 +1,175 @@
+/* ============================================================
+   Entourage Page Styles
+   ============================================================ */
+
+.entourage {
+  min-height: 100vh;
+  background: var(--off-white);
+  padding-top: 6rem;
+  padding-bottom: 5rem;
+}
+
+.entourage__header {
+  text-align: center;
+  padding: 2rem 1.5rem 0;
+  margin-bottom: 0.5rem;
+}
+
+.entourage__sub {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--terracotta);
+  font-size: 1.05rem;
+}
+
+/* ---- Section block ---- */
+.entourage__section {
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+
+.entourage__section-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--burgundy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.entourage__section-icon {
+  color: var(--terracotta);
+  font-size: 1rem;
+}
+
+/* Grid of member cards */
+.entourage__cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  justify-content: center;
+}
+
+/* Individual member card */
+.member-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.2rem 1rem;
+  background: var(--white);
+  border: 1px solid rgba(225,202,150,0.4);
+  border-radius: 2px;
+  min-width: 120px;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.member-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(105,27,25,0.1);
+}
+
+/* Circular avatar placeholder */
+.member-card__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blush), var(--gold));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--burgundy);
+  /* ✏️ To add a real photo:
+     background-image: url('/photos/name.jpg');
+     background-size: cover; */
+}
+
+.member-card__name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--burgundy);
+  text-align: center;
+}
+
+/* ---- Principal Sponsors (pairs) ---- */
+.entourage__pairs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.pair-card {
+  background: var(--white);
+  border: 1px solid rgba(225,202,150,0.45);
+  border-radius: 2px;
+  padding: 1.2rem 1.8rem;
+  text-align: center;
+  min-width: 220px;
+  transition: box-shadow var(--transition);
+}
+.pair-card:hover {
+  box-shadow: 0 6px 20px rgba(105,27,25,0.1);
+}
+
+.pair-card__male,
+.pair-card__female {
+  font-size: 0.9rem;
+  color: var(--burgundy);
+  font-weight: 400;
+}
+
+.pair-card__and {
+  display: block;
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--gold);
+  font-size: 1.1rem;
+  margin: 0.2rem 0;
+}
+
+/* ---- Best Man & Maid of Honor row ---- */
+.entourage__honor-row {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.entourage__honor-row .entourage__section {
+  margin: 1rem 0;
+  flex: 1;
+  min-width: 200px;
+}
+.entourage__honor-divider {
+  width: 1px;
+  height: 100px;
+  background: rgba(225,202,150,0.5);
+  align-self: center;
+}
+
+/* ---- Others row ---- */
+.entourage__others {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.entourage__others .entourage__section {
+  flex: 1;
+  min-width: 200px;
+}
+
+@media (max-width: 600px) {
+  .entourage__honor-divider { display: none; }
+}

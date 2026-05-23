@@ -1,0 +1,171 @@
+/* ============================================================
+   RSVP Page Styles
+   ============================================================ */
+
+.rsvp {
+  min-height: 100vh;
+  background: var(--off-white);
+  padding-top: 6rem;
+  padding-bottom: 5rem;
+}
+
+.rsvp__header {
+  text-align: center;
+  padding: 2rem 1.5rem 0;
+}
+
+.rsvp__sub {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--terracotta);
+  font-size: 1.05rem;
+}
+
+/* ---- Two-column layout ---- */
+.rsvp__container {
+  display: flex;
+  gap: 0;
+  max-width: 860px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+  background: var(--white);
+  border: 1px solid rgba(225,202,150,0.4);
+  border-radius: 2px;
+  box-shadow: 0 8px 40px rgba(105,27,25,0.08);
+  overflow: hidden;
+}
+
+/* ---- Left decorative panel ---- */
+.rsvp__left {
+  background: var(--burgundy);
+  color: var(--white);
+  padding: 3rem 2rem;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.rsvp__left-title {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.rsvp__left-date {
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 2rem;
+}
+
+.rsvp__left-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.6;
+}
+
+/* ---- Form ---- */
+.rsvp__form {
+  flex: 1;
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* Two fields side by side */
+.rsvp__row {
+  display: flex;
+  gap: 1rem;
+}
+.rsvp__row .rsvp__field {
+  flex: 1;
+}
+
+/* Field wrapper */
+.rsvp__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.rsvp__field label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+/* Input / select base styles */
+.rsvp__field input,
+.rsvp__field select {
+  background: var(--off-white);
+  border: 1px solid rgba(105,27,25,0.18);
+  border-radius: 2px;
+  padding: 0.7rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--burgundy);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  width: 100%;
+}
+.rsvp__field input:focus,
+.rsvp__field select:focus {
+  border-color: var(--terracotta);
+  box-shadow: 0 0 0 3px rgba(189,103,56,0.12);
+}
+.rsvp__field input::placeholder {
+  color: rgba(105,27,25,0.35);
+}
+
+/* Submit button */
+.rsvp__submit {
+  margin-top: 0.5rem;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Status messages */
+.rsvp__message {
+  padding: 0.8rem 1rem;
+  border-radius: 2px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.rsvp__message--success {
+  background: rgba(85,98,81,0.12);
+  color: var(--sage);
+  border: 1px solid var(--sage);
+}
+.rsvp__message--error {
+  background: rgba(189,103,56,0.1);
+  color: var(--terracotta);
+  border: 1px solid var(--terracotta);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 700px) {
+  .rsvp__container {
+    flex-direction: column;
+  }
+  .rsvp__left {
+    padding: 2rem 1.5rem;
+  }
+  .rsvp__form {
+    padding: 2rem 1.5rem;
+  }
+  .rsvp__row {
+    flex-direction: column;
+  }
+}

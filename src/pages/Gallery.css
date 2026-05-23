@@ -1,0 +1,159 @@
+/* ============================================================
+   Gallery Page — Masonry Grid + Lightbox
+   ============================================================ */
+
+.gallery {
+  min-height: 100vh;
+  background: var(--off-white);
+  padding-top: 6rem;
+  padding-bottom: 5rem;
+}
+
+.gallery__header {
+  text-align: center;
+  padding: 2rem 1.5rem 0;
+}
+
+.gallery__sub {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--terracotta);
+  font-size: 1.05rem;
+}
+
+/* ---- Masonry Grid ---- */
+.gallery__grid {
+  display: grid;
+  /* 3 equal columns; each row unit = 200px */
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 200px;
+  gap: 8px;
+  max-width: 1100px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+}
+
+/* Individual photo tile */
+.gallery__item {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 2px;
+  background: var(--blush);
+}
+
+.gallery__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+/* Hover overlay */
+.gallery__item-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(105,27,25,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.gallery__item-overlay span {
+  color: var(--gold);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 2px;
+}
+
+.gallery__item:hover img {
+  transform: scale(1.05);
+}
+.gallery__item:hover .gallery__item-overlay {
+  opacity: 1;
+}
+
+/* ---- Lightbox ---- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,5,5,0.92);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeUp 0.25s ease both;
+}
+
+.lightbox__img-wrap {
+  max-width: min(85vw, 700px);
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.lightbox__img-wrap img {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 2px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.lightbox__counter {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+}
+
+/* Navigation arrows */
+.lightbox__prev,
+.lightbox__next,
+.lightbox__close {
+  position: fixed;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  font-size: 2.5rem;
+  cursor: pointer;
+  transition: color var(--transition), transform var(--transition);
+  padding: 0.5rem;
+  line-height: 1;
+}
+.lightbox__prev:hover,
+.lightbox__next:hover,
+.lightbox__close:hover {
+  color: var(--gold);
+  transform: scale(1.2);
+}
+
+.lightbox__prev  { left:  1.5rem; top: 50%; transform: translateY(-50%); }
+.lightbox__next  { right: 1.5rem; top: 50%; transform: translateY(-50%); }
+.lightbox__close { top: 1.2rem;   right: 1.5rem; font-size: 1.4rem; }
+
+.lightbox__prev:hover  { transform: translateY(-50%) scale(1.2); }
+.lightbox__next:hover  { transform: translateY(-50%) scale(1.2); }
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .gallery__grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 160px;
+  }
+}
+@media (max-width: 480px) {
+  .gallery__grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 220px;
+  }
+  /* All spans become 1 on mobile */
+  .gallery__item { grid-row: span 1 !important; }
+}

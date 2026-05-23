@@ -1,0 +1,252 @@
+/* ============================================================
+   Home Page Styles
+   ============================================================ */
+
+/* ---- Hero ---- */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Hero background: deep sage with subtle gradient texture
+     ✏️ Replace with your own background image:
+     background: url('/your-photo.jpg') center/cover no-repeat; */
+  background: linear-gradient(
+    160deg,
+    var(--burgundy) 0%,
+    #3a1a19 40%,
+    #2d3b29 100%
+  );
+  overflow: hidden;
+  padding: 0 1.5rem;
+}
+
+/* Subtle decorative overlay pattern */
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(189,103,56,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(225,202,150,0.12) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: var(--white);
+}
+
+.hero__pre {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+}
+
+/* Couple names — large elegant serif */
+.hero__names {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 12vw, 9rem);
+  font-weight: 300;
+  line-height: 0.95;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+
+.hero__amp {
+  color: var(--gold);
+  font-style: italic;
+  font-size: 0.7em;
+}
+
+.hero__date {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 1.5rem 0 2.5rem;
+}
+
+.hero__cta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Animated scroll arrow */
+.hero__scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.hero__scroll-hint span {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-right: 1.5px solid var(--gold);
+  border-bottom: 1.5px solid var(--gold);
+  transform: rotate(45deg);
+  animation: scrollBounce 1.5s ease infinite;
+  opacity: 0.7;
+}
+@keyframes scrollBounce {
+  0%, 100% { transform: rotate(45deg) translateY(0); }
+  50%       { transform: rotate(45deg) translateY(6px); }
+}
+
+/* ---- Countdown section ---- */
+.home__countdown {
+  background: var(--sage);
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+.home__countdown-label {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 0.5rem;
+}
+
+/* ---- Wedding Details ---- */
+.home__details {
+  padding: var(--section-pad);
+  background: var(--off-white);
+  text-align: center;
+}
+
+.details__grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.details__card {
+  background: var(--white);
+  border: 1px solid rgba(225,202,150,0.4);
+  padding: 2.5rem 2rem;
+  flex: 1;
+  min-width: 220px;
+  max-width: 300px;
+  border-radius: 2px;
+  box-shadow: 0 4px 24px rgba(105,27,25,0.06);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.details__card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(105,27,25,0.12);
+}
+
+.details__icon {
+  color: var(--terracotta);
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.details__card h3 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--burgundy);
+  margin-bottom: 0.8rem;
+}
+
+.details__time {
+  font-size: 0.9rem;
+  color: var(--sage);
+  font-weight: 500;
+}
+
+.details__place {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--terracotta);
+  margin-top: 0.6rem;
+}
+
+.details__address {
+  font-size: 0.8rem;
+  color: rgba(105,27,25,0.55);
+  margin-top: 0.3rem;
+}
+
+/* Decorative middle ornament between cards */
+.details__ornament {
+  font-size: 2.5rem;
+  color: var(--gold);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+/* ---- Quick nav teasers ---- */
+.home__teasers {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  min-height: 220px;
+}
+
+.teaser__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  text-decoration: none;
+  padding: 2.5rem 1rem;
+  transition: background var(--transition), transform var(--transition);
+  cursor: pointer;
+}
+
+/* Alternating background colors for teaser cards */
+.teaser__card:nth-child(1) { background: var(--blush); }
+.teaser__card:nth-child(2) { background: var(--gold); }
+.teaser__card:nth-child(3) { background: var(--sage); }
+.teaser__card:nth-child(4) { background: var(--burgundy); }
+
+.teaser__card:hover {
+  filter: brightness(0.92);
+  transform: translateY(-3px);
+}
+
+.teaser__icon {
+  font-size: 1.8rem;
+  color: var(--burgundy);
+}
+.teaser__card:nth-child(3) .teaser__icon,
+.teaser__card:nth-child(4) .teaser__icon {
+  color: var(--gold);
+}
+
+.teaser__label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--burgundy);
+}
+.teaser__card:nth-child(3) .teaser__label,
+.teaser__card:nth-child(4) .teaser__label {
+  color: rgba(255,255,255,0.85);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 600px) {
+  .home__teasers {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .details__ornament {
+    display: none;
+  }
+}
