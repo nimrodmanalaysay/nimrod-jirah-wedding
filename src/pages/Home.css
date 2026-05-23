@@ -12,7 +12,12 @@
   /* Hero background: deep sage with subtle gradient texture
      ✏️ Replace with your own background image:
      background: url('/your-photo.jpg') center/cover no-repeat; */
-  background: url('/src/pages/photos/hero.png') center/cover no-repeat;
+  background: linear-gradient(
+    160deg,
+    var(--burgundy) 0%,
+    #3a1a19 40%,
+    #2d3b29 100%
+  );
   overflow: hidden;
   padding: 0 1.5rem;
 }

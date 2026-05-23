@@ -1,0 +1,98 @@
+/* ============================================================
+   Page Transition Styles
+   ✏️ Timing guide:
+     --pt-curtain-duration  : how long the curtain takes to slide
+     --pt-content-delay     : when content starts fading in
+     --pt-progress-duration : how long the top progress bar takes
+   ============================================================ */
+
+:root {
+  --pt-curtain-duration:  0.55s;
+  --pt-content-delay:     0.35s;
+  --pt-progress-duration: 0.6s;
+}
+
+/* ---- Wrapper ---- */
+.pt-wrapper {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* ---- Progress bar (top of viewport) ---- */
+.pt-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--terracotta), var(--gold));
+  z-index: 1100;
+  pointer-events: none;
+  transition: none;
+}
+/* Animate progress bar width when entering */
+.pt-progress--run {
+  width: 85%;
+  transition: width var(--pt-progress-duration) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---- Curtain ---- */
+.pt-curtain {
+  position: fixed;
+  inset: 0;
+  background: var(--burgundy);
+  z-index: 1050;
+  pointer-events: none;
+  /* Default: fully hidden above the screen */
+  transform: translateY(-100%);
+  transition: transform var(--pt-curtain-duration) cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* Curtain drops DOWN to cover screen */
+.pt-curtain--entering {
+  transform: translateY(0%);
+  transition: transform var(--pt-curtain-duration) cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* Curtain slides UP out of view */
+.pt-curtain--visible {
+  transform: translateY(100%);
+  transition: transform var(--pt-curtain-duration) cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* ---- Content fade + rise ---- */
+.pt-content {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity  0.5s ease var(--pt-content-delay),
+    transform 0.5s ease var(--pt-content-delay);
+}
+
+/* Content hides while curtain is covering */
+.pt-wrapper--entering .pt-content {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+/* Content rises in after curtain lifts */
+.pt-wrapper--visible .pt-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---- Optional: decorative monogram on curtain ---- */
+.pt-curtain--entering::after {
+  content: 'N & J';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 300;
+  color: rgba(225, 202, 150, 0.35);
+  letter-spacing: 0.15em;
+  pointer-events: none;
+  white-space: nowrap;
+}
