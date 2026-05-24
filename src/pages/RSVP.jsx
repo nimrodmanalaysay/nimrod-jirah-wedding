@@ -326,14 +326,14 @@ function StepSuccess({ inviteeName, attendance }) {
         {attendance === 'attending' ? '🥂' : '💌'}
       </div>
       <h2 className="rsvp-success__title">
-        {attendance === 'attending' ? 'See you there!' : 'We'll miss you!'}
+        {attendance === 'attending' ? 'See you there!' : "We'll miss you!"}
       </h2>
       <p className="rsvp-success__msg">
         {attendance === 'attending'
           ? `Thank you, ${inviteeName}! We can't wait to celebrate with you on November 7. 🎉`
           : `Thank you, ${inviteeName}. We're sad you can't make it, but we appreciate you letting us know. 💛`
-        }
-      </p>
+        }`
+      </p>`
     </div>
   )
 }
