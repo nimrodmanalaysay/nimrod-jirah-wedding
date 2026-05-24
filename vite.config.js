@@ -12,7 +12,8 @@ import react from '@vitejs/plugin-react'
 //
 // ✏️ Change the base value below if your repo name is different.
 // ============================================================
+// vite.config.js
 export default defineConfig({
   plugins: [react()],
-  base: '/nimrod-jirah-wedding/',
+  base: '/',   // ← change from '/nimrod-jirah-wedding/' to just '/'
 })
