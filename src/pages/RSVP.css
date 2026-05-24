@@ -1,104 +1,238 @@
 /* ============================================================
-   RSVP Page Styles
+   RSVP Page — Gate + Step-by-step form styles
    ============================================================ */
 
-.rsvp {
+/* ---- Page wrapper ---- */
+.rsvp-page {
   min-height: 100vh;
   background: var(--off-white);
   padding-top: 6rem;
   padding-bottom: 5rem;
 }
 
-.rsvp__header {
+.rsvp-page__header {
   text-align: center;
   padding: 2rem 1.5rem 0;
 }
 
-.rsvp__sub {
+.rsvp-page__sub {
   font-family: var(--font-display);
   font-style: italic;
   color: var(--terracotta);
   font-size: 1.05rem;
 }
 
-/* ---- Two-column layout ---- */
-.rsvp__container {
-  display: flex;
-  gap: 0;
-  max-width: 860px;
+/* ---- Card that wraps every step ---- */
+.rsvp-card {
+  max-width: 560px;
   margin: 3rem auto;
-  padding: 0 1.5rem;
+  padding: 3rem 2.5rem;
   background: var(--white);
   border: 1px solid rgba(225,202,150,0.4);
-  border-radius: 2px;
+  border-radius: 4px;
   box-shadow: 0 8px 40px rgba(105,27,25,0.08);
-  overflow: hidden;
 }
 
-/* ---- Left decorative panel ---- */
-.rsvp__left {
-  background: var(--burgundy);
-  color: var(--white);
-  padding: 3rem 2rem;
-  min-width: 220px;
+/* ---- Progress dots ---- */
+.rsvp-progress {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  text-align: center;
-  flex-shrink: 0;
+  gap: 0.6rem;
+  margin-bottom: 2.5rem;
 }
 
-.rsvp__left-title {
+.rsvp-progress__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(105,27,25,0.15);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.rsvp-progress__dot.done   { background: rgba(189,103,56,0.4); }
+.rsvp-progress__dot.active { background: var(--terracotta); transform: scale(1.4); }
+
+/* ================================================================
+   GATE (Step 0)
+   ================================================================ */
+.rsvp-gate {
+  text-align: center;
+}
+
+.rsvp-gate__icon {
+  font-size: 2.5rem;
+  color: var(--gold);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.rsvp-gate__title {
   font-family: var(--font-display);
   font-size: 2.2rem;
-  font-weight: 300;
-  color: var(--gold);
-  margin-bottom: 0.5rem;
+  color: var(--burgundy);
+  margin-bottom: 0.6rem;
 }
 
-.rsvp__left-date {
-  font-size: 0.78rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.65);
+.rsvp-gate__sub {
+  font-size: 0.9rem;
+  color: rgba(105,27,25,0.6);
   margin-bottom: 2rem;
-}
-
-.rsvp__left-details {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-  color: rgba(255,255,255,0.8);
   line-height: 1.6;
 }
 
-/* ---- Form ---- */
-.rsvp__form {
-  flex: 1;
-  padding: 3rem 2.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+.rsvp-gate__field {
+  margin-bottom: 1rem;
 }
 
-/* Two fields side by side */
-.rsvp__row {
+.rsvp-gate__field input {
+  width: 100%;
+  background: var(--off-white);
+  border: 1.5px solid rgba(105,27,25,0.18);
+  border-radius: 2px;
+  padding: 0.85rem 1.2rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--burgundy);
+  text-align: center;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.rsvp-gate__field input:focus {
+  border-color: var(--terracotta);
+  box-shadow: 0 0 0 3px rgba(189,103,56,0.12);
+}
+.rsvp-gate__field input::placeholder {
+  color: rgba(105,27,25,0.35);
+}
+
+.rsvp-gate__msg {
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  padding: 0.7rem 1rem;
+  border-radius: 2px;
+  line-height: 1.5;
+}
+.rsvp-gate__msg--error {
+  background: rgba(189,103,56,0.1);
+  color: var(--terracotta);
+  border: 1px solid rgba(189,103,56,0.3);
+}
+
+.rsvp-gate__btn {
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+/* ================================================================
+   STEP SHARED STYLES (Steps 1–3)
+   ================================================================ */
+.rsvp-step {
+  text-align: center;
+}
+
+.rsvp-step__greeting {
+  font-size: 0.85rem;
+  color: var(--sage);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+}
+.rsvp-step__greeting strong {
+  color: var(--terracotta);
+}
+
+.rsvp-step__title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--burgundy);
+  margin-bottom: 0.4rem;
+}
+
+.rsvp-step__sub {
+  font-size: 0.85rem;
+  color: rgba(105,27,25,0.55);
+  margin-bottom: 2rem;
+}
+
+.rsvp-step__actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.rsvp-step__next { min-width: 140px; }
+.rsvp-step__back {
+  color: var(--terracotta);
+  border-color: var(--terracotta);
+}
+
+/* ================================================================
+   STEP 1 — Attendance cards
+   ================================================================ */
+.rsvp-attend__options {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.rsvp-attend__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.8rem 2rem;
+  background: var(--off-white);
+  border: 2px solid rgba(105,27,25,0.15);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+  min-width: 150px;
+  font-family: var(--font-body);
+}
+.rsvp-attend__card:hover {
+  border-color: var(--terracotta);
+  transform: translateY(-3px);
+}
+.rsvp-attend__card.selected {
+  border-color: var(--terracotta);
+  background: rgba(189,103,56,0.07);
+}
+
+.rsvp-attend__icon { font-size: 2rem; }
+
+.rsvp-attend__label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--burgundy);
+}
+
+/* ================================================================
+   STEP 2 & 3 — Fields
+   ================================================================ */
+.rsvp-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  text-align: left;
+}
+
+.rsvp-row {
   display: flex;
   gap: 1rem;
 }
-.rsvp__row .rsvp__field {
-  flex: 1;
-}
+.rsvp-row .rsvp-field { flex: 1; }
 
-/* Field wrapper */
-.rsvp__field {
+.rsvp-field {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
-.rsvp__field label {
+.rsvp-field label {
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.12em;
@@ -106,66 +240,79 @@
   color: var(--sage);
 }
 
-/* Input / select base styles */
-.rsvp__field input,
-.rsvp__field select {
+.rsvp-field input,
+.rsvp-field textarea {
   background: var(--off-white);
-  border: 1px solid rgba(105,27,25,0.18);
+  border: 1.5px solid rgba(105,27,25,0.18);
   border-radius: 2px;
   padding: 0.7rem 1rem;
   font-family: var(--font-body);
   font-size: 0.9rem;
   color: var(--burgundy);
   outline: none;
-  transition: border-color var(--transition), box-shadow var(--transition);
   width: 100%;
+  resize: vertical;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
-.rsvp__field input:focus,
-.rsvp__field select:focus {
+.rsvp-field input:focus,
+.rsvp-field textarea:focus {
   border-color: var(--terracotta);
-  box-shadow: 0 0 0 3px rgba(189,103,56,0.12);
+  box-shadow: 0 0 0 3px rgba(189,103,56,0.1);
 }
-.rsvp__field input::placeholder {
+.rsvp-field input::placeholder,
+.rsvp-field textarea::placeholder {
   color: rgba(105,27,25,0.35);
 }
 
-/* Submit button */
-.rsvp__submit {
-  margin-top: 0.5rem;
-  width: 100%;
-  justify-content: center;
+.rsvp-error {
+  text-align: center;
+  color: var(--terracotta);
+  font-size: 0.85rem;
+  margin-top: 1rem;
+  padding: 0.7rem;
+  border: 1px solid rgba(189,103,56,0.3);
+  border-radius: 2px;
+  background: rgba(189,103,56,0.06);
 }
 
-/* Status messages */
-.rsvp__message {
-  padding: 0.8rem 1rem;
-  border-radius: 2px;
-  font-size: 0.88rem;
-  line-height: 1.5;
+/* ================================================================
+   STEP 4 — Success
+   ================================================================ */
+.rsvp-success {
+  text-align: center;
+  padding: 1rem 0;
 }
-.rsvp__message--success {
-  background: rgba(85,98,81,0.12);
-  color: var(--sage);
-  border: 1px solid var(--sage);
+
+.rsvp-success__icon {
+  font-size: 3.5rem;
+  margin-bottom: 1.2rem;
+  display: block;
+  animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
-.rsvp__message--error {
-  background: rgba(189,103,56,0.1);
-  color: var(--terracotta);
-  border: 1px solid var(--terracotta);
+@keyframes popIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.rsvp-success__title {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  color: var(--burgundy);
+  margin-bottom: 1rem;
+}
+
+.rsvp-success__msg {
+  font-size: 0.95rem;
+  color: rgba(105,27,25,0.7);
+  line-height: 1.8;
+  max-width: 380px;
+  margin: 0 auto;
 }
 
 /* ---- Responsive ---- */
-@media (max-width: 700px) {
-  .rsvp__container {
-    flex-direction: column;
-  }
-  .rsvp__left {
-    padding: 2rem 1.5rem;
-  }
-  .rsvp__form {
-    padding: 2rem 1.5rem;
-  }
-  .rsvp__row {
-    flex-direction: column;
-  }
+@media (max-width: 600px) {
+  .rsvp-card { padding: 2rem 1.4rem; margin: 2rem 1rem; }
+  .rsvp-row  { flex-direction: column; }
+  .rsvp-attend__options { flex-direction: column; align-items: center; }
+  .rsvp-attend__card { width: 100%; max-width: 260px; }
 }
