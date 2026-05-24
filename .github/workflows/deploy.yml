@@ -1,7 +1,6 @@
 # ============================================================
 # GitHub Actions — Deploy to GitHub Pages
 # Triggers automatically on every push to main.
-# Uses the official GitHub Pages Actions (most reliable method).
 # ============================================================
 
 name: Deploy to GitHub Pages
@@ -10,16 +9,13 @@ on:
   push:
     branches:
       - main
-  # Allow manual trigger from the Actions tab
   workflow_dispatch:
 
-# Required permissions for GitHub Pages deployment
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Only one deployment at a time
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -35,15 +31,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
+      # npm install (not ci) so it works even without a lockfile
       - name: Install dependencies
         run: npm install
 
+      # npx ensures vite is found regardless of bin permissions
       - name: Build
-        run: npm run build
+        run: npx --yes vite build
 
-      # Upload the built /dist folder as a Pages artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
