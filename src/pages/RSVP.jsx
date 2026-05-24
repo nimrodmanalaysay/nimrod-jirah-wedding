@@ -326,7 +326,7 @@ function StepSuccess({ inviteeName, attendance }) {
         {attendance === 'attending' ? '🥂' : '💌'}
       </div>
       <h2 className="rsvp-success__title">
-        {attendance === 'attending' ? 'See you there!' : 'We'll miss you!'}
+        {attendance === 'attending' ? 'See you there!' : "We'll miss you!"}
       </h2>
       <p className="rsvp-success__msg">
         {attendance === 'attending'
