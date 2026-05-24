@@ -5,14 +5,8 @@ import App from './App'
 import './styles/global.css'
 
 // ============================================================
-// HashRouter is used instead of BrowserRouter so that React
-// Router works correctly on GitHub Pages.
-//
-// URLs will look like:
-//   https://yourname.github.io/nimrod-jirah-wedding/#/story
-//
-// If you later move to Vercel or Netlify, switch back to
-// BrowserRouter — those platforms support clean URLs natively.
+// BrowserRouter for Vercel — supports clean URLs like /story
+// If moving back to GitHub Pages, switch to HashRouter.
 // ============================================================
 
 ReactDOM.createRoot(document.getElementById('root')).render(
