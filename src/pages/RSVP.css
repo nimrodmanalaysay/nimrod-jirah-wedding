@@ -316,3 +316,144 @@
   .rsvp-attend__options { flex-direction: column; align-items: center; }
   .rsvp-attend__card { width: 100%; max-width: 260px; }
 }
+
+/* ================================================================
+   NEW STATES — added with RSVP refactor
+   ================================================================ */
+
+/* ---- Loading skeleton while session restores ---- */
+.rsvp-card--loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.rsvp-spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(202,102,65,0.2);
+  border-top-color: var(--btn-color);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Animated ellipsis on "Checking..." */
+.dots::after {
+  content: '';
+  animation: dotPulse 1.2s steps(4, end) infinite;
+}
+@keyframes dotPulse {
+  0%   { content: ''; }
+  25%  { content: '.'; }
+  50%  { content: '..'; }
+  75%  { content: '...'; }
+}
+
+/* ---- Gate: disambiguation sub-step ---- */
+.rsvp-gate__sub--disambig {
+  background: rgba(225,202,150,0.15);
+  border: 1px solid rgba(225,202,150,0.45);
+  border-radius: 3px;
+  padding: 0.8rem 1rem;
+  font-size: 0.9rem;
+  color: var(--burgundy);
+  line-height: 1.6;
+  font-family: var(--font-body);
+  font-style: normal;
+  margin-bottom: 1.2rem;
+}
+.rsvp-gate__sub--disambig strong {
+  color: var(--btn-color);
+}
+
+/* Gate: two-button row (back + confirm) */
+.rsvp-gate__actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+/* ---- Already Submitted screen ---- */
+.rsvp-done {
+  text-align: center;
+  padding: 0.5rem 0;
+}
+
+.rsvp-done__icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+  animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+.rsvp-done__title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--burgundy);
+  margin-bottom: 0.5rem;
+}
+
+.rsvp-done__msg {
+  font-size: 0.9rem;
+  color: rgba(105,27,25,0.65);
+  margin-bottom: 1.5rem;
+}
+
+/* Summary table */
+.rsvp-done__summary {
+  background: var(--off-white);
+  border: 1px solid rgba(225,202,150,0.4);
+  border-radius: 3px;
+  padding: 1rem 1.4rem;
+  margin: 0 auto 1.4rem;
+  max-width: 340px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rsvp-done__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.83rem;
+}
+.rsvp-done__row span {
+  color: rgba(105,27,25,0.5);
+  font-weight: 400;
+}
+.rsvp-done__row strong {
+  color: var(--burgundy);
+  font-weight: 500;
+  text-align: right;
+}
+
+.rsvp-done__note {
+  font-size: 0.78rem;
+  color: rgba(105,27,25,0.45);
+  margin-bottom: 1.5rem;
+}
+
+.rsvp-done__reset {
+  font-size: 0.75rem;
+  padding: 0.55rem 1.2rem;
+  color: rgba(105,27,25,0.45);
+  border-color: rgba(105,27,25,0.2);
+}
+.rsvp-done__reset:hover {
+  color: var(--btn-color);
+  border-color: var(--btn-color);
+  background: transparent;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 420px) {
+  .rsvp-done__summary { padding: 0.8rem 1rem; }
+  .rsvp-gate__actions { flex-direction: column; }
+}
