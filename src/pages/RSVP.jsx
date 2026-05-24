@@ -67,9 +67,9 @@ import './RSVP.css'
    ============================================================ */
 
 // ✏️ Paste your Apps Script URLs here
-const INVITEE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_INVITEE_SCRIPT_ID/exec'
-const RSVP_SCRIPT_URL    = 'https://script.google.com/macros/s/YOUR_RSVP_SCRIPT_ID/exec'
-
+const INVITEE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxsQd3L8JnIagl9VY6sVizjrl2CpJI7Z9DX5sT3uK7v_68BJ4anQ3VlzCOH7ZBu3s9T/exec'
+const RSVP_SCRIPT_URL    = 'https://script.google.com/macros/s/AKfycbzgBkS_Ej0GZpiw3wDm2Q6z7Gp7JM4wz1SXU5_--sRTSwXTl5UEjJolr0vMhwZ5ekQa/exec'
+// ── Helpers ──────────────────────────────────────────────────
 // ── Helpers ──────────────────────────────────────────────────
 
 // Normalize a name: lowercase, strip accents, remove non-alpha except spaces
