@@ -1,5 +1,5 @@
 /* ============================================================
-   Entourage Page Styles
+   Entourage Page Styles — no avatars, name + role only
    ============================================================ */
 
 .entourage {
@@ -12,7 +12,6 @@
 .entourage__header {
   text-align: center;
   padding: 2rem 1.5rem 0;
-  margin-bottom: 0.5rem;
 }
 
 .entourage__sub {
@@ -20,85 +19,79 @@
   font-style: italic;
   color: var(--btn-color);
   font-size: 1.05rem;
+  margin-top: 0.4rem;
 }
 
-/* ---- Section block ---- */
-.entourage__section {
+/* ── Section wrapper ── */
+.ent-section {
   max-width: 900px;
-  margin: 3rem auto;
+  margin: 3.5rem auto 0;
   padding: 0 1.5rem;
   text-align: center;
 }
 
-.entourage__section-title {
-  font-family: var(--font-display);
-  font-size: 1.6rem;
-  color: var(--burgundy);
+/* Heading with side rules */
+.ent-section__heading {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  margin-bottom: 1.5rem;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
-
-.entourage__section-icon {
-  color: var(--btn-color);
-  font-size: 1rem;
+.ent-section__rule {
+  flex: 1;
+  height: 1px;
+  background: rgba(225,202,150,0.5);
 }
-
-/* Grid of member cards */
-.entourage__cards {
+.ent-section__title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--burgundy);
+  white-space: nowrap;
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.2rem;
-  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+.ent-section__icon {
+  color: var(--btn-color);
+  font-size: 0.9rem;
 }
 
-/* Individual member card */
-.member-card {
+/* ── Name card (no avatar) ── */
+.name-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.6rem;
-  padding: 1.2rem 1rem;
+  gap: 0.25rem;
+  padding: 1.1rem 1.6rem;
   background: var(--white);
-  border: 1px solid rgba(225,202,150,0.4);
+  border: 1px solid rgba(225,202,150,0.45);
   border-radius: 2px;
-  min-width: 120px;
+  min-width: 160px;
   transition: transform var(--transition), box-shadow var(--transition);
 }
-.member-card:hover {
+.name-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(105,27,25,0.1);
+  box-shadow: 0 6px 24px rgba(105,27,25,0.1);
 }
 
-/* Circular avatar placeholder */
-.member-card__avatar {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--blush), var(--gold));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  color: var(--burgundy);
-  /* ✏️ To add a real photo:
-     background-image: url('/photos/name.jpg');
-     background-size: cover; */
-}
-
-.member-card__name {
-  font-size: 0.8rem;
+.name-card__role {
+  font-size: 0.65rem;
   font-weight: 500;
-  letter-spacing: 0.05em;
-  color: var(--burgundy);
-  text-align: center;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--btn-color);
 }
 
-/* ---- Principal Sponsors (pairs) ---- */
-.entourage__pairs {
+.name-card__name {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--burgundy);
+  font-weight: 400;
+}
+
+/* ── Principal Sponsors ── */
+.ent-pairs {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -109,67 +102,94 @@
   background: var(--white);
   border: 1px solid rgba(225,202,150,0.45);
   border-radius: 2px;
-  padding: 1.2rem 1.8rem;
+  padding: 1.2rem 2rem;
   text-align: center;
-  min-width: 220px;
+  min-width: 230px;
   transition: box-shadow var(--transition);
 }
 .pair-card:hover {
   box-shadow: 0 6px 20px rgba(105,27,25,0.1);
 }
-
-.pair-card__male,
-.pair-card__female {
-  font-size: 0.9rem;
+.pair-card__name {
+  font-family: var(--font-display);
+  font-size: 1rem;
   color: var(--burgundy);
-  font-weight: 400;
 }
-
 .pair-card__and {
   display: block;
   font-family: var(--font-display);
   font-style: italic;
   color: var(--gold);
-  font-size: 1.1rem;
-  margin: 0.2rem 0;
+  font-size: 1rem;
+  margin: 0.15rem 0;
 }
 
-/* ---- Best Man & Maid of Honor row ---- */
-.entourage__honor-row {
+/* ── Best Man & Maid of Honor ── */
+.ent-honor-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.ent-honor-divider {
+  width: 1px;
+  height: 80px;
+  background: rgba(225,202,150,0.5);
+}
+
+/* ── Groomsmen & Bridesmaids two-column grid ── */
+.ent-party-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1rem 2rem;
+  align-items: start;
   max-width: 700px;
   margin: 0 auto;
-  padding: 0 1.5rem;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-.entourage__honor-row .entourage__section {
-  margin: 1rem 0;
-  flex: 1;
-  min-width: 200px;
-}
-.entourage__honor-divider {
-  width: 1px;
-  height: 100px;
-  background: rgba(225,202,150,0.5);
-  align-self: center;
 }
 
-/* ---- Others row ---- */
-.entourage__others {
-  max-width: 1000px;
-  margin: 0 auto;
+.ent-party-col {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.entourage__others .entourage__section {
-  flex: 1;
-  min-width: 200px;
+  flex-direction: column;
+  gap: 0.8rem;
+  align-items: center;
 }
 
-@media (max-width: 600px) {
-  .entourage__honor-divider { display: none; }
+.ent-party-col__label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 0.4rem;
+}
+
+.ent-party-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2.8rem; /* align with first card */
+}
+.ent-party-ornament {
+  font-size: 1.6rem;
+  color: rgba(225,202,150,0.6);
+}
+
+/* ── Others (special roles) ── */
+.ent-others-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .ent-honor-divider   { display: none; }
+  .ent-party-grid {
+    grid-template-columns: 1fr;
+  }
+  .ent-party-center    { display: none; }
+  .ent-party-col       { width: 100%; }
+  .ent-section__title  { font-size: 1.2rem; }
 }

@@ -3,63 +3,65 @@ import './Entourage.css'
 
 /* ============================================================
    Entourage Page
-   ✏️ Replace placeholder names in the `entourage` object below
-      with the real wedding party members.
+   ✏️ Replace placeholder names/roles in the data below.
+   No avatars or profile images — name + role only.
    ============================================================ */
 
-// ✏️ Edit names here — add or remove items in each array
-const entourage = {
-  principalSponsors: {
-    label: 'Principal Sponsors',
-    icon: '✦',
-    pairs: [
-      { male: 'Mr. Juan dela Cruz',   female: 'Mrs. Maria dela Cruz' },
-      { male: 'Mr. Pedro Santos',     female: 'Mrs. Ana Santos' },
-      { male: 'Mr. Jose Reyes',       female: 'Mrs. Linda Reyes' },
-    ],
-  },
-  bestMan:    { label: 'Best Man',    icon: '◈', members: ['Name Placeholder'] },
-  maidHonor:  { label: 'Maid of Honor', icon: '◈', members: ['Name Placeholder'] },
-  groomsmen:  {
-    label: 'Groomsmen', icon: '♦',
-    members: ['Groomsman One', 'Groomsman Two', 'Groomsman Three', 'Groomsman Four'],
-  },
-  bridesmaids: {
-    label: 'Bridesmaids', icon: '♦',
-    members: ['Bridesmaid One', 'Bridesmaid Two', 'Bridesmaid Three', 'Bridesmaid Four'],
-  },
-  ringBearer:  { label: 'Ring Bearer',  icon: '❧', members: ['Name Placeholder'] },
-  flowerGirls: { label: 'Flower Girls', icon: '✿', members: ['Flower Girl One', 'Flower Girl Two'] },
-  coinBearer:  { label: 'Coin Bearer',  icon: '❧', members: ['Name Placeholder'] },
-  veilCord:    { label: 'Veil & Cord',  icon: '❧', members: ['Name One', 'Name Two'] },
-}
+const principalSponsors = [
+  { male: 'Mr. Juan dela Cruz',   female: 'Mrs. Maria dela Cruz' },
+  { male: 'Mr. Pedro Santos',     female: 'Mrs. Ana Santos' },
+  { male: 'Mr. Jose Reyes',       female: 'Mrs. Linda Reyes' },
+]
 
-/* Reusable card for a single member */
-function MemberCard({ name }) {
+const bestMan    = { name: 'Name Placeholder',  role: 'Best Man'      }
+const maidHonor  = { name: 'Name Placeholder',  role: 'Maid of Honor' }
+
+// ✏️ Exactly 3 groomsmen
+const groomsmen = [
+  { name: 'Groomsman One',   role: 'Groomsman' },
+  { name: 'Groomsman Two',   role: 'Groomsman' },
+  { name: 'Groomsman Three', role: 'Groomsman' },
+]
+
+// ✏️ Exactly 3 bridesmaids
+const bridesmaids = [
+  { name: 'Bridesmaid One',   role: 'Bridesmaid' },
+  { name: 'Bridesmaid Two',   role: 'Bridesmaid' },
+  { name: 'Bridesmaid Three', role: 'Bridesmaid' },
+]
+
+const others = [
+  { name: 'Name Placeholder', role: 'Ring Bearer'  },
+  { name: 'Name Placeholder', role: 'Coin Bearer'  },
+  { name: 'Flower Girl One',  role: 'Flower Girl'  },
+  { name: 'Flower Girl Two',  role: 'Flower Girl'  },
+  { name: 'Name One',         role: 'Veil'         },
+  { name: 'Name Two',         role: 'Cord'         },
+]
+
+/* ---- Reusable name card (no avatar) ---- */
+function NameCard({ name, role }) {
   return (
-    <div className="member-card">
-      {/* Avatar circle — you can add a real photo here later */}
-      <div className="member-card__avatar">
-        {name.charAt(0)}
-      </div>
-      <p className="member-card__name">{name}</p>
+    <div className="name-card">
+      <p className="name-card__role">{role}</p>
+      <p className="name-card__name">{name}</p>
     </div>
   )
 }
 
-/* Section block with title and cards */
-function EntourageSection({ label, icon, members }) {
+/* ---- Section wrapper ---- */
+function Section({ icon, label, children }) {
   return (
-    <div className="entourage__section">
-      <h3 className="entourage__section-title">
-        <span className="entourage__section-icon">{icon}</span>
-        {label}
-      </h3>
-      <div className="entourage__cards">
-        {members.map((name, i) => (
-          <MemberCard key={i} name={name} />
-        ))}
+    <div className="ent-section">
+      <div className="ent-section__heading">
+        <span className="ent-section__rule" />
+        <h3 className="ent-section__title">
+          <span className="ent-section__icon">{icon}</span>
+          {label}
+        </h3>
+        <span className="ent-section__rule" />
       </div>
+      {children}
     </div>
   )
 }
@@ -67,47 +69,73 @@ function EntourageSection({ label, icon, members }) {
 export default function Entourage() {
   return (
     <div className="entourage">
+
+      {/* Page header */}
       <div className="entourage__header">
         <h1 className="section-title">Entourage</h1>
         <span className="section-divider" />
         <p className="entourage__sub">The wonderful people walking with us</p>
       </div>
 
-      {/* Principal Sponsors (pairs) */}
-      <div className="entourage__section">
-        <h3 className="entourage__section-title">
-          <span className="entourage__section-icon">✦</span>
-          {entourage.principalSponsors.label}
-        </h3>
-        <div className="entourage__pairs">
-          {entourage.principalSponsors.pairs.map((pair, i) => (
+      {/* ── Principal Sponsors ── */}
+      <Section icon="✦" label="Principal Sponsors">
+        <div className="ent-pairs">
+          {principalSponsors.map((p, i) => (
             <div key={i} className="pair-card">
-              <p className="pair-card__male">{pair.male}</p>
+              <p className="pair-card__name">{p.male}</p>
               <span className="pair-card__and">&amp;</span>
-              <p className="pair-card__female">{pair.female}</p>
+              <p className="pair-card__name">{p.female}</p>
             </div>
           ))}
         </div>
-      </div>
+      </Section>
 
-      {/* Best Man & Maid of Honor side by side */}
-      <div className="entourage__honor-row">
-        <EntourageSection {...entourage.bestMan} />
-        <div className="entourage__honor-divider" />
-        <EntourageSection {...entourage.maidHonor} />
-      </div>
+      {/* ── Best Man & Maid of Honor ── */}
+      <Section icon="◈" label="Principal Party">
+        <div className="ent-honor-row">
+          <NameCard name={bestMan.name}   role={bestMan.role}   />
+          <div className="ent-honor-divider" />
+          <NameCard name={maidHonor.name} role={maidHonor.role} />
+        </div>
+      </Section>
 
-      {/* Groomsmen & Bridesmaids */}
-      <EntourageSection {...entourage.groomsmen} />
-      <EntourageSection {...entourage.bridesmaids} />
+      {/* ── Groomsmen & Bridesmaids ── */}
+      <Section icon="♦" label="Groomsmen &amp; Bridesmaids">
+        <div className="ent-party-grid">
 
-      {/* Others */}
-      <div className="entourage__others">
-        <EntourageSection {...entourage.ringBearer} />
-        <EntourageSection {...entourage.flowerGirls} />
-        <EntourageSection {...entourage.coinBearer} />
-        <EntourageSection {...entourage.veilCord} />
-      </div>
+          {/* Groomsmen column */}
+          <div className="ent-party-col">
+            <p className="ent-party-col__label">Groomsmen</p>
+            {groomsmen.map((m, i) => (
+              <NameCard key={i} name={m.name} role={m.role} />
+            ))}
+          </div>
+
+          {/* Centre ornament */}
+          <div className="ent-party-center">
+            <span className="ent-party-ornament">❧</span>
+          </div>
+
+          {/* Bridesmaids column */}
+          <div className="ent-party-col">
+            <p className="ent-party-col__label">Bridesmaids</p>
+            {bridesmaids.map((m, i) => (
+              <NameCard key={i} name={m.name} role={m.role} />
+            ))}
+          </div>
+
+        </div>
+      </Section>
+
+      {/* ── Others ── */}
+      <Section icon="✿" label="Special Roles">
+        <div className="ent-others-grid">
+          {others.map((m, i) => (
+            <NameCard key={i} name={m.name} role={m.role} />
+          ))}
+        </div>
+      </Section>
+
     </div>
   )
 }

@@ -3,10 +3,11 @@ import { NavLink, Link, useLocation } from 'react-router-dom'
 import './Navbar.css'
 
 /* ============================================================
-   Navbar behavior:
-   - ALL pages: transparent at top, solid burgundy after scrolling
-   - Home page: white text + gold accents (dark hero behind it)
-   - Other pages: sage text (light background behind it)
+   Navbar
+   - Logo/icon on the left
+   - Transparent on all pages at top, solid on scroll
+   - Home: white text | Other pages: sage text
+   - Mobile drawer closes on any link click (incl. current page)
    ============================================================ */
 
 const links = [
@@ -16,6 +17,32 @@ const links = [
   { label: 'RSVP',      path: '/rsvp' },
   { label: 'Gallery',   path: '/gallery' },
 ]
+
+/* Wedding rings SVG logo — no external image needed */
+function WeddingLogo({ light }) {
+  const color = light ? 'var(--sage)' : 'var(--white)'
+  const accent = 'var(--gold)'
+  return (
+    <svg
+      className="navbar__logo-icon"
+      viewBox="0 0 48 28"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="Wedding rings logo"
+    >
+      {/* Left ring */}
+      <circle cx="16" cy="14" r="11" stroke={color} strokeWidth="2" fill="none" />
+      {/* Right ring */}
+      <circle cx="32" cy="14" r="11" stroke={color} strokeWidth="2" fill="none" />
+      {/* Overlap highlight */}
+      <path
+        d="M24 6.5 C26.5 9 26.5 19 24 21.5 C21.5 19 21.5 9 24 6.5Z"
+        fill={accent}
+        opacity="0.55"
+      />
+    </svg>
+  )
+}
 
 export default function Navbar() {
   const [scrolled,  setScrolled]  = useState(false)
@@ -31,23 +58,29 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [pathname])
 
+  // Always close menu on any nav click (including current page)
   const closeMenu = () => setMenuOpen(false)
 
-  // Classes applied to <nav>:
-  //   navbar--scrolled   → solid burgundy background (on scroll, any page)
-  //   navbar--light      → sage text (transparent state on non-home pages)
+  const isLight = !scrolled && !isHome
+
   const navClass = [
     'navbar',
-    scrolled     ? 'navbar--scrolled' : '',
-    !scrolled && !isHome ? 'navbar--light' : '',
+    scrolled ? 'navbar--scrolled' : '',
+    isLight  ? 'navbar--light'    : '',
   ].filter(Boolean).join(' ')
 
   return (
     <nav className={navClass}>
-      <Link to="/" className="navbar__logo" onClick={closeMenu}>
-        N <span>&amp;</span> J
+
+      {/* ── Left: logo mark + couple monogram ── */}
+      <Link to="/" className="navbar__brand" onClick={closeMenu}>
+        <WeddingLogo light={isLight} />
+        <span className="navbar__brand-text">
+          N <span className="navbar__brand-amp">&amp;</span> J
+        </span>
       </Link>
 
+      {/* ── Desktop links ── */}
       <ul className="navbar__links">
         {links.map(({ label, path }) => (
           <li key={path}>
@@ -64,15 +97,33 @@ export default function Navbar() {
         ))}
       </ul>
 
+      {/* ── Hamburger ── */}
       <button
         className={`navbar__hamburger ${menuOpen ? 'open' : ''}`}
-        onClick={() => setMenuOpen(!menuOpen)}
+        onClick={() => setMenuOpen(o => !o)}
         aria-label="Toggle menu"
+        aria-expanded={menuOpen}
       >
         <span /><span /><span />
       </button>
 
-      <div className={`navbar__drawer ${menuOpen ? 'navbar__drawer--open' : ''}`}>
+      {/* ── Mobile backdrop ── */}
+      {menuOpen && (
+        <div className="navbar__backdrop" onClick={closeMenu} aria-hidden="true" />
+      )}
+
+      {/* ── Mobile drawer ── */}
+      <div
+        className={`navbar__drawer ${menuOpen ? 'navbar__drawer--open' : ''}`}
+        role="dialog"
+        aria-label="Navigation menu"
+      >
+        {/* Drawer header */}
+        <div className="navbar__drawer-header">
+          <WeddingLogo light={false} />
+          <span className="navbar__drawer-monogram">N &amp; J</span>
+        </div>
+
         {links.map(({ label, path }) => (
           <NavLink
             key={path}
@@ -81,7 +132,7 @@ export default function Navbar() {
             className={({ isActive }) =>
               'navbar__drawer-link' + (isActive ? ' active' : '')
             }
-            onClick={closeMenu}
+            onClick={closeMenu}   // closes on current page too
           >
             {label}
           </NavLink>

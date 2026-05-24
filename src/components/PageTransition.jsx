@@ -3,49 +3,59 @@ import { useLocation } from 'react-router-dom'
 import './PageTransition.css'
 
 /* ============================================================
-   PageTransition
-   Wraps every page with three layered effects:
-
-   1. Progress bar  — thin gold line sweeping across the top
-   2. Curtain wipe  — burgundy panel slides down then retracts
-   3. Content fade  — page content fades + rises into place
-
-   To adjust timing, edit the CSS variables inside
-   PageTransition.css — everything is controlled there.
+   PageTransition — polished loading experience
+   
+   On first load:  curtain starts visible, then lifts after a
+                   short delay so content never flashes in raw.
+   On navigation: curtain drops to cover old page, new page
+                   mounts hidden, then curtain lifts to reveal.
+   
+   Phases:
+     'init'     → curtain fully covering (first load)
+     'entering' → curtain dropping (navigation start)
+     'visible'  → curtain lifted, content faded in
    ============================================================ */
 
 export default function PageTransition({ children }) {
   const { pathname } = useLocation()
-  // 'entering' → curtain drops + progress bar runs
-  // 'visible'  → curtain retracts, content fades in
-  const [phase, setPhase] = useState('visible')
-  const isFirst = useRef(true)
+  const isFirst      = useRef(true)
 
+  // Start in 'init' so the curtain covers the very first paint
+  const [phase, setPhase] = useState('init')
+
+  // ── First load: lift curtain after brief delay ──
   useEffect(() => {
-    // Skip the very first render (page load already has hero animation)
-    if (isFirst.current) {
-      isFirst.current = false
-      return
-    }
+    if (!isFirst.current) return
+    isFirst.current = false
 
-    // Scroll to top instantly on navigation
+    // Small delay lets the DOM fully paint before revealing
+    const t = setTimeout(() => setPhase('visible'), 350)
+    return () => clearTimeout(t)
+  }, [])
+
+  // ── Route change: drop then lift ──
+  useEffect(() => {
+    if (isFirst.current) return   // handled above
+
     window.scrollTo({ top: 0, behavior: 'instant' })
 
-    // Trigger curtain enter phase
+    // 1. Drop curtain
     setPhase('entering')
 
-    // After curtain covers screen, flip to exit phase (content fades in)
-    const timer = setTimeout(() => setPhase('visible'), 600)
-    return () => clearTimeout(timer)
-  }, [pathname])
+    // 2. Lift curtain after it's fully down
+    const t = setTimeout(() => setPhase('visible'), 650)
+    return () => clearTimeout(t)
+  }, [pathname]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={`pt-wrapper pt-wrapper--${phase}`}>
-      {/* Thin progress bar sweeping across the top */}
+      {/* Progress bar */}
       <div className={`pt-progress ${phase === 'entering' ? 'pt-progress--run' : ''}`} />
 
-      {/* Curtain overlay that slides in then out */}
-      <div className={`pt-curtain pt-curtain--${phase}`} />
+      {/* Curtain overlay */}
+      <div className={`pt-curtain pt-curtain--${phase}`}>
+        <span className="pt-curtain__monogram">N &amp; J</span>
+      </div>
 
       {/* Page content */}
       <div className="pt-content">

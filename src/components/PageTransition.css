@@ -1,15 +1,15 @@
 /* ============================================================
    Page Transition Styles
-   ✏️ Timing guide:
-     --pt-curtain-duration  : how long the curtain takes to slide
-     --pt-content-delay     : when content starts fading in
-     --pt-progress-duration : how long the top progress bar takes
+   ✏️ Adjust timing here:
+     --pt-drop   : curtain drop speed
+     --pt-lift   : curtain lift speed
+     --pt-reveal : content fade-in speed + delay
    ============================================================ */
 
 :root {
-  --pt-curtain-duration:  0.55s;
-  --pt-content-delay:     0.35s;
-  --pt-progress-duration: 0.6s;
+  --pt-drop:   0.5s;
+  --pt-lift:   0.55s;
+  --pt-reveal: 0.5s;
 }
 
 /* ---- Wrapper ---- */
@@ -18,22 +18,21 @@
   min-height: 100vh;
 }
 
-/* ---- Progress bar (top of viewport) ---- */
+/* ---- Progress bar ---- */
 .pt-progress {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   height: 2px;
   width: 0%;
-  background: linear-gradient(90deg, var(--terracotta), var(--gold));
+  background: linear-gradient(90deg, var(--btn-color), var(--gold));
   z-index: 1100;
   pointer-events: none;
+  border-radius: 0 2px 2px 0;
   transition: none;
 }
-/* Animate progress bar width when entering */
 .pt-progress--run {
-  width: 85%;
-  transition: width var(--pt-progress-duration) cubic-bezier(0.4, 0, 0.2, 1);
+  width: 88%;
+  transition: width var(--pt-drop) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ---- Curtain ---- */
@@ -43,56 +42,69 @@
   background: var(--burgundy);
   z-index: 1050;
   pointer-events: none;
-  /* Default: fully hidden above the screen */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Default: above screen */
   transform: translateY(-100%);
-  transition: transform var(--pt-curtain-duration) cubic-bezier(0.76, 0, 0.24, 1);
+  transition: transform var(--pt-lift) cubic-bezier(0.76, 0, 0.24, 1);
 }
 
-/* Curtain drops DOWN to cover screen */
+/* First load: curtain starts covering screen (no transform) */
+.pt-curtain--init {
+  transform: translateY(0%);
+  transition: none;
+}
+
+/* Navigation: curtain drops down */
 .pt-curtain--entering {
   transform: translateY(0%);
-  transition: transform var(--pt-curtain-duration) cubic-bezier(0.76, 0, 0.24, 1);
+  transition: transform var(--pt-drop) cubic-bezier(0.76, 0, 0.24, 1);
 }
 
-/* Curtain slides UP out of view */
+/* Curtain lifts up and away */
 .pt-curtain--visible {
-  transform: translateY(100%);
-  transition: transform var(--pt-curtain-duration) cubic-bezier(0.76, 0, 0.24, 1);
+  transform: translateY(-100%);
+  transition: transform var(--pt-lift) cubic-bezier(0.76, 0, 0.24, 1);
 }
 
-/* ---- Content fade + rise ---- */
+/* Monogram centered on curtain */
+.pt-curtain__monogram {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 300;
+  color: rgba(225, 202, 150, 0.3);
+  letter-spacing: 0.2em;
+  pointer-events: none;
+  user-select: none;
+  /* Fade monogram with curtain */
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.pt-curtain--init .pt-curtain__monogram,
+.pt-curtain--entering .pt-curtain__monogram {
+  opacity: 1;
+}
+
+/* ---- Content ---- */
 .pt-content {
   opacity: 1;
   transform: translateY(0);
   transition:
-    opacity  0.5s ease var(--pt-content-delay),
-    transform 0.5s ease var(--pt-content-delay);
+    opacity   var(--pt-reveal) ease 0.15s,
+    transform var(--pt-reveal) ease 0.15s;
 }
 
-/* Content hides while curtain is covering */
+/* Hide content while curtain covers screen */
+.pt-wrapper--init .pt-content,
 .pt-wrapper--entering .pt-content {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(14px);
+  pointer-events: none;
 }
 
-/* Content rises in after curtain lifts */
+/* Reveal content after curtain lifts */
 .pt-wrapper--visible .pt-content {
   opacity: 1;
   transform: translateY(0);
-}
-
-/* ---- Optional: decorative monogram on curtain ---- */
-.pt-curtain--entering::after {
-  content: 'N & J';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 6vw, 4rem);
-  font-weight: 300;
-  color: rgba(225, 202, 150, 0.35);
-  letter-spacing: 0.15em;
-  pointer-events: none;
-  white-space: nowrap;
 }
