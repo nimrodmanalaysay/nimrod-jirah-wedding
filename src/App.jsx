@@ -26,8 +26,6 @@ export default function App() {
       <Navbar />
       <PageTransition>
         <main>
-          {/* key={location.pathname} remounts routes on navigation
-              so PageTransition detects the path change */}
           <Routes location={location} key={location.pathname}>
             <Route path="/"           element={<Home />} />
             <Route path="/story"      element={<Story />} />
