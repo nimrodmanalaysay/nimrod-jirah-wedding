@@ -7,7 +7,8 @@
    Change colors here and they update everywhere on the site. */
 :root {
   --gold:       #E1CA96;   /* warm gold — hero text, accents */
-  --sage:       #556251;   /* deep sage green — buttons, backgrounds */
+  --sage:       #556251;   /* deep sage green — labels, text, backgrounds */
+  --btn-color:  #CA6641;   /* button color — edit here to change all buttons */
   --terracotta: #BD6738;   /* terracotta — highlights, borders */
   --burgundy:   #691B19;   /* deep burgundy — headings, navbar solid */
   --blush:      #FFD9DA;   /* soft blush — section backgrounds, cards */
@@ -66,7 +67,7 @@ h1, h2, h3, h4 {
   display: block;
   width: 60px;
   height: 2px;
-  background: var(--terracotta);
+  background: var(--btn-color);
   margin: 0 auto 3rem;
 }
 
@@ -86,9 +87,9 @@ h1, h2, h3, h4 {
   transition: background var(--transition), color var(--transition), transform var(--transition);
 }
 
-/* Primary button: sage background */
+/* Primary button */
 .btn-primary {
-  background: var(--sage);
+  background: var(--btn-color);
   color: var(--white);
 }
 .btn-primary:hover {
@@ -96,15 +97,15 @@ h1, h2, h3, h4 {
   transform: translateY(-2px);
 }
 
-/* Outlined button: transparent with gold border */
+/* Outlined button */
 .btn-outline {
   background: transparent;
-  color: var(--gold);
-  border: 1.5px solid var(--gold);
+  color: var(--btn-color);
+  border: 1.5px solid var(--btn-color);
 }
 .btn-outline:hover {
-  background: var(--gold);
-  color: var(--burgundy);
+  background: var(--btn-color);
+  color: var(--white);
   transform: translateY(-2px);
 }
 

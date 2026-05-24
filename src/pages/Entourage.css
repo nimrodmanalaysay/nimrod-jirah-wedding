@@ -18,7 +18,7 @@
 .entourage__sub {
   font-family: var(--font-display);
   font-style: italic;
-  color: var(--terracotta);
+  color: var(--btn-color);
   font-size: 1.05rem;
 }
 
@@ -42,7 +42,7 @@
 }
 
 .entourage__section-icon {
-  color: var(--terracotta);
+  color: var(--btn-color);
   font-size: 1rem;
 }
 

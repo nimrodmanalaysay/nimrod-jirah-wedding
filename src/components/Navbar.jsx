@@ -3,15 +3,12 @@ import { NavLink, Link, useLocation } from 'react-router-dom'
 import './Navbar.css'
 
 /* ============================================================
-   Navbar
-   - Transparent at top of Home page only
-   - Always solid (burgundy) on all other pages
-   - Becomes solid after scrolling 60px on Home
-   - Hamburger menu on mobile
-   - Edit nav links in the `links` array below
+   Navbar behavior:
+   - ALL pages: transparent at top, solid burgundy after scrolling
+   - Home page: white text + gold accents (dark hero behind it)
+   - Other pages: sage text (light background behind it)
    ============================================================ */
 
-// Navigation links — edit label & path here
 const links = [
   { label: 'Home',      path: '/' },
   { label: 'Our Story', path: '/story' },
@@ -21,36 +18,36 @@ const links = [
 ]
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled,  setScrolled]  = useState(false)
+  const [menuOpen,  setMenuOpen]  = useState(false)
   const { pathname } = useLocation()
 
-  // Only the Home page (/) gets a transparent navbar
   const isHome = pathname === '/'
 
-  // Listen for scroll — only relevant on Home page
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 60)
     window.addEventListener('scroll', handleScroll, { passive: true })
-    // Reset scroll state when route changes
     handleScroll()
     return () => window.removeEventListener('scroll', handleScroll)
   }, [pathname])
 
-  // Navbar is solid when: scrolled past threshold OR not on the Home page
-  const isSolid = scrolled || !isHome
-
-  // Close mobile menu when a link is clicked
   const closeMenu = () => setMenuOpen(false)
 
+  // Classes applied to <nav>:
+  //   navbar--scrolled   → solid burgundy background (on scroll, any page)
+  //   navbar--light      → sage text (transparent state on non-home pages)
+  const navClass = [
+    'navbar',
+    scrolled     ? 'navbar--scrolled' : '',
+    !scrolled && !isHome ? 'navbar--light' : '',
+  ].filter(Boolean).join(' ')
+
   return (
-    <nav className={`navbar ${isSolid ? 'navbar--scrolled' : ''}`}>
-      {/* Logo / Couple Name */}
+    <nav className={navClass}>
       <Link to="/" className="navbar__logo" onClick={closeMenu}>
         N <span>&amp;</span> J
       </Link>
 
-      {/* Desktop links */}
       <ul className="navbar__links">
         {links.map(({ label, path }) => (
           <li key={path}>
@@ -67,7 +64,6 @@ export default function Navbar() {
         ))}
       </ul>
 
-      {/* Hamburger (mobile) */}
       <button
         className={`navbar__hamburger ${menuOpen ? 'open' : ''}`}
         onClick={() => setMenuOpen(!menuOpen)}
@@ -76,7 +72,6 @@ export default function Navbar() {
         <span /><span /><span />
       </button>
 
-      {/* Mobile drawer */}
       <div className={`navbar__drawer ${menuOpen ? 'navbar__drawer--open' : ''}`}>
         {links.map(({ label, path }) => (
           <NavLink

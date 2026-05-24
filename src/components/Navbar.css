@@ -1,7 +1,9 @@
 /* ============================================================
    Navbar Styles
-   - Transparent → solid on scroll
-   - Mobile hamburger drawer
+   States:
+     .navbar              → transparent bg, white text (home hero)
+     .navbar--light       → transparent bg, sage text (other pages at top)
+     .navbar--scrolled    → solid burgundy bg, white text (any page scrolled)
    ============================================================ */
 
 .navbar {
@@ -14,19 +16,18 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.4rem 3rem;
-  /* Smooth transition for background and shadow */
-  transition: background 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease;
   background: transparent;
+  transition: background 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease;
 }
 
-/* Solid navbar after scrolling */
+/* Solid burgundy after scrolling (all pages) */
 .navbar--scrolled {
   background: var(--burgundy);
   padding: 1rem 3rem;
-  box-shadow: 0 2px 20px rgba(105,27,25,0.25);
+  box-shadow: 0 2px 20px rgba(105,27,25,0.2);
 }
 
-/* Couple initials logo */
+/* ── Logo ── */
 .navbar__logo {
   font-family: var(--font-display);
   font-size: 1.6rem;
@@ -40,11 +41,14 @@
   color: var(--gold);
   margin: 0 0.2rem;
 }
-.navbar__logo:hover {
-  color: var(--gold);
-}
+.navbar__logo:hover { color: var(--gold); }
 
-/* Desktop nav links */
+/* Sage logo text when transparent on non-home pages */
+.navbar--light .navbar__logo       { color: var(--sage); }
+.navbar--light .navbar__logo span  { color: var(--btn-color); }
+.navbar--light .navbar__logo:hover { color: var(--btn-color); }
+
+/* ── Desktop links ── */
 .navbar__links {
   list-style: none;
   display: flex;
@@ -58,7 +62,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   text-decoration: none;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255,255,255,0.85);   /* default: white (home hero) */
   position: relative;
   transition: color var(--transition);
 }
@@ -81,7 +85,19 @@
   width: 100%;
 }
 
-/* ---- Hamburger ---- */
+/* Sage links when transparent on non-home pages */
+.navbar--light .navbar__link {
+  color: var(--sage);
+}
+.navbar--light .navbar__link::after {
+  background: var(--btn-color);
+}
+.navbar--light .navbar__link:hover,
+.navbar--light .navbar__link--active {
+  color: var(--btn-color);
+}
+
+/* ── Hamburger ── */
 .navbar__hamburger {
   display: none;
   flex-direction: column;
@@ -96,22 +112,21 @@
   width: 24px;
   height: 1.5px;
   background: var(--white);
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease;
 }
-/* Animate to X when open */
-.navbar__hamburger.open span:nth-child(1) {
-  transform: translateY(6.5px) rotate(45deg);
-}
-.navbar__hamburger.open span:nth-child(2) {
-  opacity: 0;
-}
-.navbar__hamburger.open span:nth-child(3) {
-  transform: translateY(-6.5px) rotate(-45deg);
+/* Sage hamburger lines on light pages */
+.navbar--light .navbar__hamburger span {
+  background: var(--sage);
 }
 
-/* ---- Mobile Drawer ---- */
+/* Animate to X when open */
+.navbar__hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.navbar__hamburger.open span:nth-child(2) { opacity: 0; }
+.navbar__hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ── Mobile Drawer ── */
 .navbar__drawer {
-  display: none; /* shown via media query */
+  display: none;
   position: fixed;
   top: 0;
   right: 0;
@@ -125,9 +140,8 @@
   transition: transform 0.35s ease;
   box-shadow: -4px 0 20px rgba(0,0,0,0.2);
 }
-.navbar__drawer--open {
-  transform: translateX(0);
-}
+.navbar__drawer--open { transform: translateX(0); }
+
 .navbar__drawer-link {
   font-family: var(--font-body);
   font-size: 1rem;
@@ -138,25 +152,13 @@
   transition: color var(--transition);
 }
 .navbar__drawer-link.active,
-.navbar__drawer-link:hover {
-  color: var(--gold);
-}
+.navbar__drawer-link:hover { color: var(--gold); }
 
-/* ---- Responsive ---- */
+/* ── Responsive ── */
 @media (max-width: 768px) {
-  .navbar {
-    padding: 1.2rem 1.5rem;
-  }
-  .navbar--scrolled {
-    padding: 0.9rem 1.5rem;
-  }
-  .navbar__links {
-    display: none;
-  }
-  .navbar__hamburger {
-    display: flex;
-  }
-  .navbar__drawer {
-    display: flex;
-  }
+  .navbar         { padding: 1.2rem 1.5rem; }
+  .navbar--scrolled { padding: 0.9rem 1.5rem; }
+  .navbar__links    { display: none; }
+  .navbar__hamburger { display: flex; }
+  .navbar__drawer    { display: flex; }
 }

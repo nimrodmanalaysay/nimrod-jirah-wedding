@@ -18,7 +18,7 @@
 .rsvp-page__sub {
   font-family: var(--font-display);
   font-style: italic;
-  color: var(--terracotta);
+  color: var(--btn-color);
   font-size: 1.05rem;
 }
 
@@ -49,7 +49,7 @@
   transition: background 0.3s ease, transform 0.3s ease;
 }
 .rsvp-progress__dot.done   { background: rgba(189,103,56,0.4); }
-.rsvp-progress__dot.active { background: var(--terracotta); transform: scale(1.4); }
+.rsvp-progress__dot.active { background: var(--btn-color); transform: scale(1.4); }
 
 /* ================================================================
    GATE (Step 0)
@@ -97,7 +97,7 @@
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 .rsvp-gate__field input:focus {
-  border-color: var(--terracotta);
+  border-color: var(--btn-color);
   box-shadow: 0 0 0 3px rgba(189,103,56,0.12);
 }
 .rsvp-gate__field input::placeholder {
@@ -113,7 +113,7 @@
 }
 .rsvp-gate__msg--error {
   background: rgba(189,103,56,0.1);
-  color: var(--terracotta);
+  color: var(--btn-color);
   border: 1px solid rgba(189,103,56,0.3);
 }
 
@@ -137,7 +137,7 @@
   margin-bottom: 0.5rem;
 }
 .rsvp-step__greeting strong {
-  color: var(--terracotta);
+  color: var(--btn-color);
 }
 
 .rsvp-step__title {
@@ -163,8 +163,8 @@
 
 .rsvp-step__next { min-width: 140px; }
 .rsvp-step__back {
-  color: var(--terracotta);
-  border-color: var(--terracotta);
+  color: var(--btn-color);
+  border-color: var(--btn-color);
 }
 
 /* ================================================================
@@ -193,11 +193,11 @@
   font-family: var(--font-body);
 }
 .rsvp-attend__card:hover {
-  border-color: var(--terracotta);
+  border-color: var(--btn-color);
   transform: translateY(-3px);
 }
 .rsvp-attend__card.selected {
-  border-color: var(--terracotta);
+  border-color: var(--btn-color);
   background: rgba(189,103,56,0.07);
 }
 
@@ -256,7 +256,7 @@
 }
 .rsvp-field input:focus,
 .rsvp-field textarea:focus {
-  border-color: var(--terracotta);
+  border-color: var(--btn-color);
   box-shadow: 0 0 0 3px rgba(189,103,56,0.1);
 }
 .rsvp-field input::placeholder,
@@ -266,7 +266,7 @@
 
 .rsvp-error {
   text-align: center;
-  color: var(--terracotta);
+  color: var(--btn-color);
   font-size: 0.85rem;
   margin-top: 1rem;
   padding: 0.7rem;
