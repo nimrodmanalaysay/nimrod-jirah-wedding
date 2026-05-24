@@ -1,11 +1,7 @@
 # ============================================================
-# GitHub Actions — Auto Deploy to GitHub Pages
-#
-# This runs automatically every time you push to the `main`
-# branch. It builds the React app and publishes it to the
-# `gh-pages` branch, which GitHub Pages serves.
-#
-# You do NOT need to run this manually — just push your code.
+# GitHub Actions — Deploy to GitHub Pages
+# Triggers automatically on every push to main.
+# Uses the official GitHub Pages Actions (most reliable method).
 # ============================================================
 
 name: Deploy to GitHub Pages
@@ -13,39 +9,53 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main   # Triggers on every push to main
+      - main
+  # Allow manual trigger from the Actions tab
+  workflow_dispatch:
 
-# Allow the workflow to write to the repo (needed for gh-pages)
+# Required permissions for GitHub Pages deployment
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deployment at a time
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. Check out the code
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. Set up Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
-      # 3. Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 4. Build the production bundle
       - name: Build
         run: npm run build
 
-      # 5. Deploy the /dist folder to the gh-pages branch
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      # Upload the built /dist folder as a Pages artifact
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

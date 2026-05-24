@@ -1,72 +1,59 @@
 # 💍 Nimrod & Jirah Wedding Website
 
-A modern, elegant wedding website built with **React + Vite**.
-Automatically deploys to **GitHub Pages** on every push to `main`.
+Built with **React + Vite**. Auto-deploys to **GitHub Pages** on every push to `main`.
 
-**Wedding Date:** November 7, 2026
 **Live URL (after setup):** `https://YOUR-USERNAME.github.io/nimrod-jirah-wedding/`
 
 ---
 
-## 🚀 Deployment Guide (GitHub Pages)
-
-Follow these steps **once** to get your site live. After that, every `git push` auto-deploys.
+## 🚀 Step-by-Step Deployment
 
 ### Step 1 — Create the GitHub Repository
 
-1. Go to [github.com](https://github.com) and sign in
+1. Go to [github.com](https://github.com) → sign in
 2. Click **+** → **New repository**
 3. Name it exactly: `nimrod-jirah-wedding`
-4. Set it to **Public**
-5. Do **NOT** check "Add README" (we already have one)
+4. Set visibility to **Public**
+5. Leave everything else unchecked
 6. Click **Create repository**
 
 ---
 
 ### Step 2 — Push the Code
 
-Open your terminal inside the project folder and run:
+Open your terminal inside the unzipped project folder:
 
 ```bash
-# Initialize git
 git init
-
-# Stage all files
 git add .
-
-# First commit
 git commit -m "Initial commit: Nimrod & Jirah wedding website"
-
-# Rename branch to main
 git branch -M main
-
-# Connect to your GitHub repo (replace YOUR-USERNAME)
 git remote add origin https://github.com/YOUR-USERNAME/nimrod-jirah-wedding.git
-
-# Push to GitHub
 git push -u origin main
 ```
 
+> Replace `YOUR-USERNAME` with your actual GitHub username.
+
 ---
 
-### Step 3 — Enable GitHub Pages
+### Step 3 — Enable GitHub Pages (IMPORTANT — read carefully)
 
 1. Go to your repo on GitHub
-2. Click **Settings** → **Pages** (left sidebar)
-3. Under **Source**, select **Deploy from a branch**
-4. Set branch to **`gh-pages`** and folder to **`/ (root)`**
-5. Click **Save**
+2. Click **Settings** tab
+3. Click **Pages** in the left sidebar
+4. Under **Source** — select **"GitHub Actions"** ← this is the key step
+5. That's it — no branch to select
 
-> ⚡ The `gh-pages` branch is created automatically by GitHub Actions
-> after your first push. Wait ~1 minute for the action to finish.
+> ⚠️ Do NOT select "Deploy from a branch". Select **GitHub Actions**.
 
 ---
 
-### Step 4 — Watch it Deploy
+### Step 4 — Wait for the Action to Finish
 
-1. In your repo, click the **Actions** tab
-2. You'll see a workflow called **"Deploy to GitHub Pages"** running
-3. Once it shows a green ✅, your site is live at:
+1. Click the **Actions** tab in your repo
+2. You'll see **"Deploy to GitHub Pages"** running
+3. Wait for the green ✅ (usually under 2 minutes)
+4. Your site is live at:
 
 ```
 https://YOUR-USERNAME.github.io/nimrod-jirah-wedding/
@@ -76,129 +63,86 @@ https://YOUR-USERNAME.github.io/nimrod-jirah-wedding/
 
 ### Step 5 — Future Updates
 
-Any time you make changes, just push to main:
-
 ```bash
 git add .
-git commit -m "Update entourage names"
+git commit -m "Your update message"
 git push
 ```
 
-GitHub Actions will automatically rebuild and redeploy. ✨
+GitHub Actions rebuilds and redeploys automatically. ✨
 
 ---
 
 ## 💻 Local Development
 
 ```bash
-# Install dependencies (first time only)
-npm install
-
-# Start local dev server
-npm run dev
-
-# Open in browser
-# http://localhost:5173
+npm install   # first time only
+npm run dev   # starts at http://localhost:5173
 ```
 
 ---
 
-## ✏️ How to Edit Content
+## ✏️ Editing Content
 
-| What to change | File to edit |
+| What | File |
 |---|---|
 | Couple names & date | `src/pages/Home.jsx` |
-| Wedding countdown date | `src/components/Countdown.jsx` |
-| Venue address | `src/pages/Home.jsx` + `src/pages/RSVP.jsx` |
+| Countdown date | `src/components/Countdown.jsx` |
+| Venue & address | `src/pages/Home.jsx` + `src/pages/RSVP.jsx` |
 | Story slides | `src/pages/Story.jsx` → `slides` array |
 | Entourage names | `src/pages/Entourage.jsx` → `entourage` object |
 | Gallery photos | `src/pages/Gallery.jsx` → `photos` array |
-| Color palette | `src/styles/global.css` → `:root` variables |
-| Hero background photo | `src/pages/Home.css` → `.hero` rule |
-| Repo name in vite config | `vite.config.js` → `base` value |
+| Colors | `src/styles/global.css` → `:root` |
+| Hero background photo | `src/pages/Home.css` → `.hero` |
+| Repo name (if different) | `vite.config.js` → `base` value |
 
 ---
 
 ## 📧 Google Sheets RSVP Setup
 
-### Step 1 — Create a Google Sheet
+### 1. Create a Google Sheet
 
-1. Go to [sheets.google.com](https://sheets.google.com) → New spreadsheet
-2. Add these headers in row 1:
-   ```
-   Timestamp | First Name | Last Name | Email | Phone | Attendance
-   ```
+Headers in row 1: `Timestamp | First Name | Last Name | Email | Phone | Attendance`
 
-### Step 2 — Create an Apps Script
+### 2. Add Apps Script
 
-1. In your sheet: **Extensions → Apps Script**
-2. Delete existing code, paste this:
+**Extensions → Apps Script** → paste:
 
 ```javascript
 function doPost(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = JSON.parse(e.postData.contents);
-  sheet.appendRow([
-    new Date(),
-    data.firstName,
-    data.lastName,
-    data.email,
-    data.phone,
-    data.attendance
-  ]);
-  return ContentService
-    .createTextOutput(JSON.stringify({ result: 'success' }))
-    .setMimeType(ContentService.MimeType.JSON);
+  sheet.appendRow([new Date(), data.firstName, data.lastName, data.email, data.phone, data.attendance]);
+  return ContentService.createTextOutput(JSON.stringify({ result: 'success' })).setMimeType(ContentService.MimeType.JSON);
 }
 ```
 
-3. Click **Save**
+### 3. Deploy as Web App
 
-### Step 3 — Deploy as Web App
+**Deploy → New Deployment → Web App**
+- Execute as: **Me**
+- Who has access: **Anyone**
 
-1. Click **Deploy → New Deployment**
-2. Gear icon → **Web App**
-3. Set **Execute as: Me** | **Who has access: Anyone**
-4. Click **Deploy** → authorize → copy the **Web App URL**
+Copy the Web App URL.
 
-### Step 4 — Connect to RSVP Form
+### 4. Paste URL in RSVP.jsx
 
-Open `src/pages/RSVP.jsx` and replace:
 ```js
-const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'
+// src/pages/RSVP.jsx
+const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/YOUR_ID/exec'
 ```
-with your actual Web App URL, then push to GitHub.
+
+Then `git push` to redeploy.
 
 ---
 
-## 📁 Folder Structure
+## 📸 Adding Real Gallery Photos
 
-```
-nimrod-jirah-wedding/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml       ← Auto-deploy GitHub Action
-├── .gitignore
-├── index.html
-├── vite.config.js           ← base path set to /nimrod-jirah-wedding/
-├── package.json
-├── README.md
-└── src/
-    ├── main.jsx             ← HashRouter (GitHub Pages compatible)
-    ├── App.jsx              ← Routes + layout
-    ├── styles/
-    │   └── global.css       ← Color palette & base styles
-    ├── components/
-    │   ├── Navbar.jsx/.css
-    │   ├── Footer.jsx/.css
-    │   ├── Countdown.jsx/.css
-    │   └── PageTransition.jsx/.css
-    └── pages/
-        ├── Home.jsx/.css
-        ├── Story.jsx/.css
-        ├── Entourage.jsx/.css
-        ├── RSVP.jsx/.css
-        └── Gallery.jsx/.css
+1. Put photos in `public/photos/`
+2. In `src/pages/Gallery.jsx`, update the `photos` array:
+
+```js
+{ id: 1, src: '/nimrod-jirah-wedding/photos/photo1.jpg', alt: 'Us at the beach', span: 2 }
 ```
 
 ---
@@ -208,25 +152,10 @@ nimrod-jirah-wedding/
 | Variable | Hex | Used for |
 |---|---|---|
 | `--gold` | `#E1CA96` | Accents, hero text |
-| `--sage` | `#556251` | Buttons, form labels |
+| `--sage` | `#556251` | Buttons, labels |
 | `--terracotta` | `#BD6738` | Highlights, borders |
 | `--burgundy` | `#691B19` | Navbar, headings, footer |
 | `--blush` | `#FFD9DA` | Card backgrounds |
-
----
-
-## 📸 Adding Real Photos to Gallery
-
-1. Place your images in `public/photos/`
-2. Open `src/pages/Gallery.jsx`
-3. Update the `photos` array:
-
-```js
-{ id: 1, src: '/nimrod-jirah-wedding/photos/your-photo.jpg', alt: 'Description', span: 2 }
-```
-
-> Note the `/nimrod-jirah-wedding/` prefix — required for GitHub Pages.
-> On local dev, use just `/photos/your-photo.jpg`.
 
 ---
 
