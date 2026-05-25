@@ -5,7 +5,7 @@ import {
   findMatches,
   hasAmbiguousFirstName,
   findByFullName,
-  normalizeName,
+  findExistingRsvp,
 } from '../utils/rsvpValidation'
 import {
   loadSession,
@@ -14,176 +14,242 @@ import {
   cacheForm,
   markSubmitted,
   clearRsvpCache,
+  cacheExistingRsvp,
+  getCachedExistingRsvp,
 } from '../utils/rsvpCache'
 
 /* ============================================================
-   RSVP Page — Full flow with:
-     • Session caching (survives refresh / navigation)
-     • Duplicate-RSVP detection (skip gate if already submitted)
-     • Ambiguous first-name disambiguation
-     • Robust input validation (no gibberish, symbols, unknowns)
+   RSVP Page — Complete flow
 
-   GOOGLE SHEETS SETUP:
-   ────────────────────
-   SCRIPT A — Invitee Checker (GET, reads Column B)
-   ────────────────────
-   function doGet(e) {
-     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-     var data  = sheet.getRange('B2:B').getValues();
-     var names = data.flat().filter(function(n){ return n !== ''; });
-     return ContentService
-       .createTextOutput(JSON.stringify({ names: names }))
-       .setMimeType(ContentService.MimeType.JSON);
-   }
+   STEP FLOW:
+     null       → restoring session (spinner)
+     0          → name gate (invitee lookup)
+     'existing' → guest already in RSVP sheet → show their record
+     1          → attendance choice
+     2          → contact info (first name, last name, email)
+     3          → personal touch (notes, advice)
+     4          → success screen
+     'done'     → submitted this session tab (refresh-safe)
+
+   DUPLICATE PREVENTION:
+     After verifying the invitee name against INVITEE_SCRIPT_URL,
+     we call RSVP_SCRIPT_URL (doGet) to check for an existing record
+     in the "Invitee Name" column. If found → 'existing' step.
+     No duplicate row is written.
+
+   ─────────────────────────────────────────────────────────────
+   GOOGLE SHEETS — TWO SCRIPTS REQUIRED
+
+   ── SCRIPT A: Invitee list (INVITEE_SCRIPT_URL) ──
+   Reads column B of the invitee spreadsheet.
+
+     function doGet(e) {
+       var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+       var data  = sheet.getRange('B2:B').getValues();
+       var names = data.flat().filter(function(n){ return n !== ''; });
+       return ContentService
+         .createTextOutput(JSON.stringify({ names: names }))
+         .setMimeType(ContentService.MimeType.JSON);
+     }
+
    Deploy → Web App → Execute as: Me | Anyone
 
-   SCRIPT B — RSVP Storage (POST, writes rows)
-   ────────────────────
-   function doPost(e) {
-     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-     var data  = JSON.parse(e.postData.contents);
-     var newId = sheet.getLastRow(); // header=row1, so lastRow = auto-id
-     sheet.appendRow([
-       newId, new Date(),
-       data.inviteeName, data.attendance,
-       data.firstName, data.lastName,
-       data.email, data.phone,
-       data.notes, data.advice
-     ]);
-     return ContentService
-       .createTextOutput(JSON.stringify({ result: 'success' }))
-       .setMimeType(ContentService.MimeType.JSON);
-   }
-   Deploy → Web App → Execute as: Me | Anyone
+   ── SCRIPT B: RSVP sheet (RSVP_SCRIPT_URL) ──
+   Supports BOTH doGet (read records for duplicate check)
+   AND doPost (write new RSVP row).
 
-   Sheet columns: A:ID | B:Timestamp | C:InviteeName | D:Attendance
-                  E:FirstName | F:LastName | G:Email | H:Phone
-                  I:Notes | J:Advice
+   IMPORTANT — Sheet column headers (row 1) must be exactly:
+     ID | Timestamp | Invitee Name | Attendance |
+     First Name | Last Name | Email | Notes | Advice
+
+     function doGet(e) {
+       var sheet   = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+       var lastCol = sheet.getLastColumn();
+       var lastRow = sheet.getLastRow();
+       var headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+       if (lastRow < 2) {
+         return ContentService
+           .createTextOutput(JSON.stringify({ records: [] }))
+           .setMimeType(ContentService.MimeType.JSON);
+       }
+       var rows = sheet.getRange(2, 1, lastRow - 1, lastCol).getValues();
+       var records = rows
+         .filter(function(r) { return r[2]; })
+         .map(function(r) {
+           var obj = {};
+           headers.forEach(function(h, i) { obj[h] = r[i]; });
+           return obj;
+         });
+       return ContentService
+         .createTextOutput(JSON.stringify({ records: records }))
+         .setMimeType(ContentService.MimeType.JSON);
+     }
+
+     function doPost(e) {
+       var sheet  = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+       var data   = JSON.parse(e.postData.contents);
+       var newId  = sheet.getLastRow();
+       sheet.appendRow([
+         newId,
+         new Date(),
+         data.inviteeName,
+         data.attendance,
+         data.firstName,
+         data.lastName,
+         data.email,
+         data.notes,
+         data.advice
+       ]);
+       return ContentService
+         .createTextOutput(JSON.stringify({ result: 'success' }))
+         .setMimeType(ContentService.MimeType.JSON);
+     }
+
+   Deploy → Web App → Execute as: Me | Anyone
+   ─────────────────────────────────────────────────────────────
    ============================================================ */
 
+// ✏️ Your Apps Script Web App URLs
 const INVITEE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxsQd3L8JnIagl9VY6sVizjrl2CpJI7Z9DX5sT3uK7v_68BJ4anQ3VlzCOH7ZBu3s9T/exec'
-const RSVP_SCRIPT_URL    = 'https://script.google.com/macros/s/AKfycbzgBkS_Ej0GZpiw3wDm2Q6z7Gp7JM4wz1SXU5_--sRTSwXTl5UEjJolr0vMhwZ5ekQa/exec'
+const RSVP_SCRIPT_URL    = 'https://script.google.com/macros/s/AKfycbw6X_tfEbyjNxIVTBr3WBZQwFKuFqJGmgqXQHWZR5FKH5ECBOzd3Pwuw-LeZWcOKZiQ/exec'
 
+// Form state — phone removed entirely
 const INITIAL_FORM = {
   attendance: '',
   firstName:  '',
   lastName:   '',
   email:      '',
-  phone:      '',
   notes:      '',
   advice:     '',
 }
 
-/* ─── Shared progress bar ─── */
+/* ═══════════════════════════════════════════════════════════
+   SHARED COMPONENTS
+   ═══════════════════════════════════════════════════════════ */
+
+/* Progress dots for steps 1–3 */
 function ProgressBar({ step, total }) {
   return (
     <div className="rsvp-progress" role="progressbar" aria-valuenow={step} aria-valuemax={total}>
       {Array.from({ length: total }).map((_, i) => (
-        <div
-          key={i}
-          className={[
-            'rsvp-progress__dot',
-            i < step  ? 'done'   : '',
-            i === step ? 'active' : '',
-          ].filter(Boolean).join(' ')}
-        />
+        <div key={i} className={[
+          'rsvp-progress__dot',
+          i < step   ? 'done'   : '',
+          i === step ? 'active' : '',
+        ].filter(Boolean).join(' ')} />
       ))}
     </div>
   )
 }
 
-/* ─── STEP 0: Name Gate ───────────────────────────────────────
-   Handles:
-   • Pre-validation (gibberish, symbols, empty)
-   • API fetch with caching of the name list
-   • Ambiguous first-name → shows last-name sub-step
-   • Not-found → clear error message
-*/
-function StepGate({ onVerified }) {
-  const [nameInput,    setNameInput]    = useState('')
-  const [lastInput,    setLastInput]    = useState('')
-  const [phase,        setPhase]        = useState('name')   // name | lastname | checking | error
-  const [errorMsg,     setErrorMsg]     = useState('')
-  const [candidates,   setCandidates]   = useState([])       // ambiguous matches
+/* ═══════════════════════════════════════════════════════════
+   STEP 0 — NAME GATE
+   Lookup flow:
+     1. preValidate locally (no API for obvious junk)
+     2. Fetch INVITEE_SCRIPT_URL → find matches
+     3. If ambiguous first name → ask for last name
+     4. Fetch RSVP_SCRIPT_URL (doGet) → check "Invitee Name" column
+     5a. Record found → onDuplicate (skip form entirely)
+     5b. No record   → onVerified  (proceed to step 1)
+   ═══════════════════════════════════════════════════════════ */
+function StepGate({ onVerified, onDuplicate }) {
+  const [nameInput,  setNameInput]  = useState('')
+  const [lastInput,  setLastInput]  = useState('')
+  const [phase,      setPhase]      = useState('name') // name|lastname|checking|error
+  const [errorMsg,   setErrorMsg]   = useState('')
+  const [candidates, setCandidates] = useState([])
 
-  function resetError() { setErrorMsg('') }
+  const clearError = () => setErrorMsg('')
+  const isChecking = phase === 'checking'
 
+  // ── A: match against invitee list ──
   async function handleNameSubmit() {
-    // 1. Pre-validate input before hitting the API
-    const validErr = preValidate(nameInput)
-    if (validErr) { setErrorMsg(validErr); return }
+    const localErr = preValidate(nameInput)
+    if (localErr) { setErrorMsg(localErr); return }
 
     setPhase('checking')
-    setErrorMsg('')
+    clearError()
 
     try {
-      const res   = await fetch(INVITEE_SCRIPT_URL)
-      const data  = await res.json()
-      const names = Array.isArray(data.names) ? data.names : []
-
+      const res    = await fetch(INVITEE_SCRIPT_URL)
+      const json   = await res.json()
+      const names  = Array.isArray(json.names) ? json.names : []
       const matches = findMatches(nameInput, names)
 
       if (matches.length === 0) {
-        // No match at all
         setPhase('error')
         setErrorMsg("We couldn't find your invitation. Please double-check your name or contact us.")
         return
       }
 
       if (matches.length === 1) {
-        // Perfect single match → proceed
-        onVerified(matches[0])
+        await checkDuplicateAndProceed(matches[0])
         return
       }
 
-      // Multiple matches — check if it's a first-name collision
+      // Multiple matches — need disambiguation?
       if (hasAmbiguousFirstName(matches)) {
-        // Same first name across multiple records → ask for last name
         setCandidates(matches)
         setPhase('lastname')
-      } else {
-        // Different names but all loosely match (e.g. "Ana" matches "Ana" and "Analisa")
-        // Pick the closest one (exact or shortest)
-        const exact = matches.find(
-          m => normalizeName(m) === normalizeName(nameInput)
-        )
-        onVerified(exact || matches[0])
+        return
       }
+
+      // Different names that all loosely match — pick exact or first
+      const exact = matches.find(
+        m => m.trim().toLowerCase() === nameInput.trim().toLowerCase()
+      )
+      await checkDuplicateAndProceed(exact || matches[0])
 
     } catch {
       setPhase('error')
-      setErrorMsg('Something went wrong. Please try again.')
+      setErrorMsg('Something went wrong connecting to the guest list. Please try again.')
     }
   }
 
-  function handleLastNameSubmit() {
-    const validErr = preValidate(lastInput)
-    if (validErr) { setErrorMsg('Please enter your last name.'); return }
+  // ── B: resolve last-name disambiguation ──
+  async function handleLastNameSubmit() {
+    const localErr = preValidate(lastInput)
+    if (localErr) { setErrorMsg('Please enter a valid last name.'); return }
 
-    const firstName = nameInput.trim()
-    // Try to find the candidate whose last name matches
-    const match = findByFullName(firstName, lastInput, candidates)
-
+    const match = findByFullName(nameInput.trim(), lastInput.trim(), candidates)
     if (!match) {
-      setErrorMsg("We couldn't match that name. Please check your spelling.")
+      setErrorMsg("We couldn't find that name. Please check your spelling.")
       return
     }
 
-    onVerified(match)
+    setPhase('checking')
+    await checkDuplicateAndProceed(match)
   }
 
-  function handleKey(e, fn) {
-    if (e.key === 'Enter') fn()
-  }
+  // ── C: check RSVP sheet for existing record ──
+  // Uses RSVP_SCRIPT_URL doGet which returns rows keyed by column headers.
+  // "Invitee Name" (column C) is the authoritative match field.
+  async function checkDuplicateAndProceed(verifiedName) {
+    try {
+      const res     = await fetch(RSVP_SCRIPT_URL)
+      const json    = await res.json()
+      const records = Array.isArray(json.records) ? json.records : []
+      const existing = findExistingRsvp(verifiedName, records)
 
-  const isChecking = phase === 'checking'
+      if (existing) {
+        onDuplicate(verifiedName, existing)
+      } else {
+        onVerified(verifiedName)
+      }
+    } catch {
+      // Network hiccup on RSVP sheet — don't block the guest.
+      // They'll proceed and a duplicate-prevention re-check can
+      // be added server-side in the Apps Script doPost if needed.
+      onVerified(verifiedName)
+    }
+  }
 
   return (
     <div className="rsvp-gate fade-up">
       <div className="rsvp-gate__icon">✉</div>
       <h2 className="rsvp-gate__title">You're Invited</h2>
 
-      {/* ── Phase: name input ── */}
+      {/* ── Name input ── */}
       {(phase === 'name' || phase === 'checking' || phase === 'error') && (
         <>
           <p className="rsvp-gate__sub">
@@ -194,8 +260,8 @@ function StepGate({ onVerified }) {
               type="text"
               placeholder="Your full name"
               value={nameInput}
-              onChange={e => { setNameInput(e.target.value); resetError(); setPhase('name') }}
-              onKeyDown={e => handleKey(e, handleNameSubmit)}
+              onChange={e => { setNameInput(e.target.value); clearError(); setPhase('name') }}
+              onKeyDown={e => e.key === 'Enter' && handleNameSubmit()}
               disabled={isChecking}
               autoFocus
               autoComplete="name"
@@ -213,27 +279,33 @@ function StepGate({ onVerified }) {
             onClick={handleNameSubmit}
             disabled={isChecking || !nameInput.trim()}
           >
-            {isChecking ? (
-              <span className="rsvp-gate__spinner">Checking<span className="dots" /></span>
-            ) : 'Check My Invitation'}
+            {isChecking
+              ? <span>Checking<span className="dots" /></span>
+              : 'Check My Invitation'
+            }
           </button>
         </>
       )}
 
-      {/* ── Phase: last name disambiguation ── */}
+      {/* ── Last-name disambiguation ── */}
       {phase === 'lastname' && (
         <>
-          <p className="rsvp-gate__sub rsvp-gate__sub--disambig">
-            We found multiple guests named <strong>{nameInput.trim()}</strong>.
-            <br />Please enter your last name to continue.
-          </p>
+          <div className="rsvp-gate__disambig">
+            <span className="rsvp-gate__disambig-icon">👥</span>
+            <p>
+              We found multiple guests named{' '}
+              <strong>{nameInput.trim()}</strong>.
+              <br />Please enter your last name to continue.
+            </p>
+          </div>
+
           <div className="rsvp-gate__field">
             <input
               type="text"
               placeholder="Your last name"
               value={lastInput}
-              onChange={e => { setLastInput(e.target.value); resetError() }}
-              onKeyDown={e => handleKey(e, handleLastNameSubmit)}
+              onChange={e => { setLastInput(e.target.value); clearError() }}
+              onKeyDown={e => e.key === 'Enter' && handleLastNameSubmit()}
               autoFocus
               autoComplete="family-name"
             />
@@ -248,7 +320,7 @@ function StepGate({ onVerified }) {
           <div className="rsvp-gate__actions">
             <button
               className="btn btn-outline"
-              onClick={() => { setPhase('name'); setLastInput(''); resetError() }}
+              onClick={() => { setPhase('name'); setLastInput(''); clearError() }}
             >
               ← Back
             </button>
@@ -266,43 +338,47 @@ function StepGate({ onVerified }) {
   )
 }
 
-/* ─── STEP: Already Submitted ────────────────────────────────
-   Shown when session cache says this guest already RSVPd.
-   Skips the whole form — just shows their saved info.
-*/
-function StepAlreadyDone({ inviteeName, formData, onReset }) {
-  const attending = formData?.attendance === 'attending'
+/* ═══════════════════════════════════════════════════════════
+   STEP 'existing' — Already RSVP'd in sheet
+   Reads directly from the record returned by RSVP_SCRIPT_URL doGet.
+   "Invitee Name" column is the authoritative identifier.
+   ═══════════════════════════════════════════════════════════ */
+function StepExisting({ inviteeName, record, onReset }) {
+  const attending = String(record['Attendance'] || '').toLowerCase() === 'attending'
+  const submittedDate = record['Timestamp']
+    ? new Date(record['Timestamp']).toLocaleDateString('en-PH', {
+        month: 'long', day: 'numeric', year: 'numeric',
+      })
+    : null
+
   return (
     <div className="rsvp-done fade-up">
       <div className="rsvp-done__icon">{attending ? '🥂' : '💌'}</div>
-      <h2 className="rsvp-done__title">You're all set, {inviteeName}!</h2>
+      <h2 className="rsvp-done__title">Already received!</h2>
       <p className="rsvp-done__msg">
-        Your RSVP has already been submitted this session.
+        We already have your RSVP on file,{' '}
+        <strong className="rsvp-done__name">{inviteeName}</strong>.
+        <br />No further action needed.
       </p>
 
       <div className="rsvp-done__summary">
-        <div className="rsvp-done__row">
-          <span>Attendance</span>
-          <strong>{attending ? 'Joyfully Attending ✓' : 'Unable to Attend'}</strong>
-        </div>
-        {formData?.firstName && (
-          <div className="rsvp-done__row">
-            <span>Name on record</span>
-            <strong>{formData.firstName} {formData.lastName}</strong>
-          </div>
+        <SummaryRow label="Attendance"
+          value={attending ? 'Joyfully Attending ✓' : 'Unable to Attend'} />
+        {(record['First Name'] || record['Last Name']) && (
+          <SummaryRow label="Name on file"
+            value={[record['First Name'], record['Last Name']].filter(Boolean).join(' ')} />
         )}
-        {formData?.email && (
-          <div className="rsvp-done__row">
-            <span>Email</span>
-            <strong>{formData.email}</strong>
-          </div>
+        {record['Email'] && (
+          <SummaryRow label="Email" value={record['Email']} />
+        )}
+        {submittedDate && (
+          <SummaryRow label="Submitted" value={submittedDate} />
         )}
       </div>
 
       <p className="rsvp-done__note">
-        Need to change something? Contact us directly.
+        Need to make a change? Please contact us directly.
       </p>
-
       <button className="btn btn-outline rsvp-done__reset" onClick={onReset}>
         Submit a different RSVP
       </button>
@@ -310,18 +386,63 @@ function StepAlreadyDone({ inviteeName, formData, onReset }) {
   )
 }
 
-/* ─── STEP 1: Attendance ──────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   STEP 'done' — Submitted in this browser session
+   ═══════════════════════════════════════════════════════════ */
+function StepDone({ inviteeName, formData, onReset }) {
+  const attending = formData?.attendance === 'attending'
+  return (
+    <div className="rsvp-done fade-up">
+      <div className="rsvp-done__icon">{attending ? '🥂' : '💌'}</div>
+      <h2 className="rsvp-done__title">You're all set, {inviteeName}!</h2>
+      <p className="rsvp-done__msg">Your RSVP has been submitted successfully.</p>
+
+      <div className="rsvp-done__summary">
+        <SummaryRow label="Attendance"
+          value={attending ? 'Joyfully Attending ✓' : 'Unable to Attend'} />
+        {formData?.firstName && (
+          <SummaryRow label="Name on record"
+            value={`${formData.firstName} ${formData.lastName}`.trim()} />
+        )}
+        {formData?.email && (
+          <SummaryRow label="Email" value={formData.email} />
+        )}
+      </div>
+
+      <p className="rsvp-done__note">Need to change something? Contact us directly.</p>
+      <button className="btn btn-outline rsvp-done__reset" onClick={onReset}>
+        Submit a different RSVP
+      </button>
+    </div>
+  )
+}
+
+/* Tiny shared helper for summary rows */
+function SummaryRow({ label, value }) {
+  return (
+    <div className="rsvp-done__row">
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STEP 1 — Attendance choice
+   ═══════════════════════════════════════════════════════════ */
 function StepAttendance({ inviteeName, data, onChange, onNext }) {
   return (
     <div className="rsvp-step fade-up">
-      <p className="rsvp-step__greeting">Welcome, <strong>{inviteeName}</strong> 🎉</p>
+      <p className="rsvp-step__greeting">
+        Welcome, <strong>{inviteeName}</strong> 🎉
+      </p>
       <h2 className="rsvp-step__title">Will you be joining us?</h2>
       <p className="rsvp-step__sub">November 7, 2026 · Grass Garden</p>
 
       <div className="rsvp-attend__options">
         {[
-          { value: 'attending',     icon: '🥂', label: 'Joyfully Attending' },
-          { value: 'not-attending', icon: '💌', label: 'Regretfully Unable' },
+          { value: 'attending',     icon: '🥂', label: 'Joyfully Attending'  },
+          { value: 'not-attending', icon: '💌', label: 'Regretfully Unable'  },
         ].map(opt => (
           <button
             key={opt.value}
@@ -345,7 +466,11 @@ function StepAttendance({ inviteeName, data, onChange, onNext }) {
   )
 }
 
-/* ─── STEP 2: Contact Info ───────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   STEP 2 — Contact info
+   Phone field removed entirely.
+   Required: First name, Last name, Email.
+   ═══════════════════════════════════════════════════════════ */
 function StepContact({ data, onChange, onNext, onBack }) {
   const valid = data.firstName.trim() && data.lastName.trim() && data.email.trim()
 
@@ -355,33 +480,54 @@ function StepContact({ data, onChange, onNext, onBack }) {
       <p className="rsvp-step__sub">So we know how to reach you</p>
 
       <div className="rsvp-fields">
+        {/* First + Last name side by side */}
         <div className="rsvp-row">
           <div className="rsvp-field">
-            <label htmlFor="fn">First Name *</label>
-            <input id="fn" type="text" placeholder="First name"
-              value={data.firstName} onChange={e => onChange('firstName', e.target.value)} />
+            <label htmlFor="rsvp-fn">First Name *</label>
+            <input
+              id="rsvp-fn"
+              type="text"
+              placeholder="First name"
+              value={data.firstName}
+              onChange={e => onChange('firstName', e.target.value)}
+              autoComplete="given-name"
+            />
           </div>
           <div className="rsvp-field">
-            <label htmlFor="ln">Last Name *</label>
-            <input id="ln" type="text" placeholder="Last name"
-              value={data.lastName} onChange={e => onChange('lastName', e.target.value)} />
+            <label htmlFor="rsvp-ln">Last Name *</label>
+            <input
+              id="rsvp-ln"
+              type="text"
+              placeholder="Last name"
+              value={data.lastName}
+              onChange={e => onChange('lastName', e.target.value)}
+              autoComplete="family-name"
+            />
           </div>
         </div>
+
+        {/* Email — full width */}
         <div className="rsvp-field">
-          <label htmlFor="em">Email Address *</label>
-          <input id="em" type="email" placeholder="you@example.com"
-            value={data.email} onChange={e => onChange('email', e.target.value)} />
+          <label htmlFor="rsvp-em">Email Address *</label>
+          <input
+            id="rsvp-em"
+            type="email"
+            placeholder="you@example.com"
+            value={data.email}
+            onChange={e => onChange('email', e.target.value)}
+            autoComplete="email"
+          />
         </div>
-        <div className="rsvp-field">
-          <label htmlFor="ph">Phone Number</label>
-          <input id="ph" type="tel" placeholder="+63 9XX XXX XXXX"
-            value={data.phone} onChange={e => onChange('phone', e.target.value)} />
-        </div>
+        {/* Phone field intentionally removed */}
       </div>
 
       <div className="rsvp-step__actions">
         <button className="btn btn-outline rsvp-step__back" onClick={onBack}>← Back</button>
-        <button className="btn btn-primary rsvp-step__next" onClick={onNext} disabled={!valid}>
+        <button
+          className="btn btn-primary rsvp-step__next"
+          onClick={onNext}
+          disabled={!valid}
+        >
           Continue →
         </button>
       </div>
@@ -389,7 +535,9 @@ function StepContact({ data, onChange, onNext, onBack }) {
   )
 }
 
-/* ─── STEP 3: Personal Touch ─────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   STEP 3 — Personal touch (notes + advice)
+   ═══════════════════════════════════════════════════════════ */
 function StepPersonal({ data, onChange, onSubmit, onBack, submitting }) {
   return (
     <div className="rsvp-step fade-up">
@@ -398,22 +546,34 @@ function StepPersonal({ data, onChange, onSubmit, onBack, submitting }) {
 
       <div className="rsvp-fields">
         <div className="rsvp-field">
-          <label htmlFor="notes">Notes / Dietary Requirements</label>
-          <textarea id="notes" rows={3}
+          <label htmlFor="rsvp-notes">Notes / Dietary Requirements</label>
+          <textarea
+            id="rsvp-notes"
+            rows={3}
             placeholder="Dietary needs, song requests, anything you'd like us to know…"
-            value={data.notes} onChange={e => onChange('notes', e.target.value)} />
+            value={data.notes}
+            onChange={e => onChange('notes', e.target.value)}
+          />
         </div>
         <div className="rsvp-field">
-          <label htmlFor="advice">Best Advice for the Couple ✨</label>
-          <textarea id="advice" rows={4}
+          <label htmlFor="rsvp-advice">Best Advice for the Couple ✨</label>
+          <textarea
+            id="rsvp-advice"
+            rows={4}
             placeholder="Share your best marriage advice or a heartfelt message…"
-            value={data.advice} onChange={e => onChange('advice', e.target.value)} />
+            value={data.advice}
+            onChange={e => onChange('advice', e.target.value)}
+          />
         </div>
       </div>
 
       <div className="rsvp-step__actions">
         <button className="btn btn-outline rsvp-step__back" onClick={onBack}>← Back</button>
-        <button className="btn btn-primary rsvp-step__next" onClick={onSubmit} disabled={submitting}>
+        <button
+          className="btn btn-primary rsvp-step__next"
+          onClick={onSubmit}
+          disabled={submitting}
+        >
           {submitting ? 'Sending…' : 'Send RSVP 💌'}
         </button>
       </div>
@@ -421,7 +581,9 @@ function StepPersonal({ data, onChange, onSubmit, onBack, submitting }) {
   )
 }
 
-/* ─── STEP 4: Success ────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   STEP 4 — Success
+   ═══════════════════════════════════════════════════════════ */
 function StepSuccess({ inviteeName, attendance }) {
   return (
     <div className="rsvp-success fade-up">
@@ -441,84 +603,95 @@ function StepSuccess({ inviteeName, attendance }) {
   )
 }
 
-/* ─── MAIN RSVP COMPONENT ────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   MAIN RSVP COMPONENT
+   ═══════════════════════════════════════════════════════════ */
 export default function RSVP() {
-  const [step,        setStep]        = useState(null)    // null = loading from cache
+  const [step,        setStep]        = useState(null)  // null while restoring session
   const [inviteeName, setInviteeName] = useState('')
   const [formData,    setFormData]    = useState(INITIAL_FORM)
+  const [existingRec, setExistingRec] = useState(null)
   const [submitting,  setSubmitting]  = useState(false)
   const [submitError, setSubmitError] = useState('')
 
-  // ── Restore session on mount ──
+  // ── Restore session on mount ──────────────────────────────
   useEffect(() => {
     const session = loadSession()
+    if (!session) { setStep(0); return }
 
-    if (session) {
-      setInviteeName(session.inviteeName)
-      if (session.formData) setFormData(prev => ({ ...prev, ...session.formData }))
+    setInviteeName(session.inviteeName)
+    if (session.formData) setFormData(prev => ({ ...prev, ...session.formData }))
 
-      if (session.submitted) {
-        // Already submitted this session — show the "already done" screen
-        setStep('done')
-      } else {
-        // Restore to whichever step they were on
-        setStep(session.step)
-      }
+    if (session.submitted) {
+      setStep('done')
+    } else if (session.existingRsvp) {
+      setExistingRec(session.existingRsvp)
+      setStep('existing')
     } else {
-      // Fresh start
-      setStep(0)
+      setStep(session.step)
     }
   }, [])
 
-  // ── Sync step to cache whenever it changes ──
+  // ── Persist step to cache ─────────────────────────────────
   useEffect(() => {
-    if (step !== null && step !== 'done') cacheStep(step)
+    if (step !== null) cacheStep(step)
   }, [step])
 
-  // ── Sync form to cache whenever it changes ──
+  // ── Persist form to cache ─────────────────────────────────
   useEffect(() => {
-    if (step > 0) cacheForm(formData)
+    if (typeof step === 'number' && step > 0) cacheForm(formData)
   }, [formData]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleField(key, value) {
     setFormData(prev => ({ ...prev, [key]: value }))
   }
 
+  // Fresh invitee — no existing record found
   function handleVerified(name) {
     setInviteeName(name)
     cacheInvitee(name)
     setStep(1)
   }
 
+  // Duplicate detected — surface their existing RSVP record
+  function handleDuplicate(name, record) {
+    setInviteeName(name)
+    setExistingRec(record)
+    cacheInvitee(name)
+    cacheExistingRsvp(record)
+    setStep('existing')
+  }
+
+  // Full reset — clear cache + start over from gate
   function handleReset() {
     clearRsvpCache()
     setStep(0)
     setInviteeName('')
     setFormData(INITIAL_FORM)
+    setExistingRec(null)
     setSubmitError('')
   }
 
+  // Final form submission — POST to RSVP sheet
   async function handleSubmit() {
     setSubmitting(true)
     setSubmitError('')
-
     try {
       await fetch(RSVP_SCRIPT_URL, {
         method:  'POST',
-        mode:    'no-cors',
+        mode:    'no-cors',   // required for Apps Script
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          inviteeName,
+          inviteeName,                    // → "Invitee Name" column (col C)
           attendance: formData.attendance,
           firstName:  formData.firstName,
           lastName:   formData.lastName,
           email:      formData.email,
-          phone:      formData.phone,
           notes:      formData.notes,
           advice:     formData.advice,
+          // phone: removed — not collected
         }),
       })
-      // Mark as submitted so refresh → "already done" screen
       markSubmitted()
       cacheForm(formData)
       setStep(4)
@@ -531,7 +704,7 @@ export default function RSVP() {
 
   const TOTAL_STEPS = 3
 
-  // Show nothing while restoring session (prevents flash)
+  // ── Loading spinner while session restores ────────────────
   if (step === null) {
     return (
       <div className="rsvp-page">
@@ -551,16 +724,28 @@ export default function RSVP() {
       </div>
 
       <div className="rsvp-card">
-        {/* Progress bar for steps 1–3 */}
+        {/* Progress dots — steps 1–3 only */}
         {typeof step === 'number' && step >= 1 && step <= 3 && (
           <ProgressBar step={step - 1} total={TOTAL_STEPS} />
         )}
 
-        {/* ── Step router ── */}
-        {step === 0      && <StepGate onVerified={handleVerified} />}
+        {step === 0 && (
+          <StepGate
+            onVerified={handleVerified}
+            onDuplicate={handleDuplicate}
+          />
+        )}
+
+        {step === 'existing' && (
+          <StepExisting
+            inviteeName={inviteeName}
+            record={existingRec || getCachedExistingRsvp() || {}}
+            onReset={handleReset}
+          />
+        )}
 
         {step === 'done' && (
-          <StepAlreadyDone
+          <StepDone
             inviteeName={inviteeName}
             formData={formData}
             onReset={handleReset}

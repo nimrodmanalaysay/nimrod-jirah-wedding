@@ -1,88 +1,73 @@
 /* ============================================================
-   rsvpCache.js
-   Handles sessionStorage persistence of RSVP state.
+   rsvpCache.js — sessionStorage RSVP persistence
 
    Why sessionStorage?
-     - Persists through page refresh and SPA navigation
-     - Cleared automatically when the browser tab closes
-     - No server needed, no cookies, no login
-     - Private per-tab — multiple guests on shared devices
-       each get a fresh session when they open a new tab
+   • Survives page refresh and SPA navigation within the tab
+   • Cleared automatically when the tab is closed
+   • Each tab is isolated — safe for shared devices at a venue
 
-   Keys stored:
+   Stored keys:
      rsvp_invitee   → verified invitee name (string)
-     rsvp_step      → last completed step (number)
-     rsvp_form      → form field values (JSON)
-     rsvp_submitted → whether final submit succeeded (bool)
+     rsvp_step      → last active step number or string ('done'/'existing')
+     rsvp_form      → serialized form field object
+     rsvp_submitted → 'true' after a successful POST
+     rsvp_existing  → serialized existing RSVP record from sheet (if any)
    ============================================================ */
 
-const KEYS = {
-  invitee:   'rsvp_invitee',
-  step:      'rsvp_step',
-  form:      'rsvp_form',
-  submitted: 'rsvp_submitted',
+const K = {
+  invitee:  'rsvp_invitee',
+  step:     'rsvp_step',
+  form:     'rsvp_form',
+  submitted:'rsvp_submitted',
+  existing: 'rsvp_existing',
 }
 
-// ── Write ─────────────────────────────────────────────────────
+// ── Write helpers ─────────────────────────────────────────────
+export function cacheInvitee(name)    { try { sessionStorage.setItem(K.invitee,  name)                    } catch {} }
+export function cacheStep(step)       { try { sessionStorage.setItem(K.step,     String(step))             } catch {} }
+export function cacheForm(data)       { try { sessionStorage.setItem(K.form,     JSON.stringify(data))     } catch {} }
+export function markSubmitted()       { try { sessionStorage.setItem(K.submitted,'true')                   } catch {} }
+export function cacheExistingRsvp(r)  { try { sessionStorage.setItem(K.existing, JSON.stringify(r))        } catch {} }
 
-export function cacheInvitee(name) {
-  try { sessionStorage.setItem(KEYS.invitee, name) } catch {}
-}
-
-export function cacheStep(step) {
-  try { sessionStorage.setItem(KEYS.step, String(step)) } catch {}
-}
-
-export function cacheForm(formData) {
-  try { sessionStorage.setItem(KEYS.form, JSON.stringify(formData)) } catch {}
-}
-
-export function markSubmitted() {
-  try { sessionStorage.setItem(KEYS.submitted, 'true') } catch {}
-}
-
-// ── Read ──────────────────────────────────────────────────────
-
-export function getCachedInvitee() {
-  try { return sessionStorage.getItem(KEYS.invitee) || null } catch { return null }
-}
+// ── Read helpers ──────────────────────────────────────────────
+export function getCachedInvitee()    { try { return sessionStorage.getItem(K.invitee) || null             } catch { return null } }
+export function isSubmitted()         { try { return sessionStorage.getItem(K.submitted) === 'true'        } catch { return false } }
 
 export function getCachedStep() {
   try {
-    const s = sessionStorage.getItem(KEYS.step)
-    return s !== null ? parseInt(s, 10) : null
+    const s = sessionStorage.getItem(K.step)
+    if (s === null) return null
+    const n = parseInt(s, 10)
+    return isNaN(n) ? s : n   // preserve string steps like 'done' / 'existing'
   } catch { return null }
 }
 
 export function getCachedForm() {
-  try {
-    const raw = sessionStorage.getItem(KEYS.form)
-    return raw ? JSON.parse(raw) : null
-  } catch { return null }
+  try { const r = sessionStorage.getItem(K.form); return r ? JSON.parse(r) : null } catch { return null }
 }
 
-export function isSubmitted() {
-  try { return sessionStorage.getItem(KEYS.submitted) === 'true' } catch { return false }
+export function getCachedExistingRsvp() {
+  try { const r = sessionStorage.getItem(K.existing); return r ? JSON.parse(r) : null } catch { return null }
 }
 
-// ── Clear ─────────────────────────────────────────────────────
-
+// ── Clear everything ──────────────────────────────────────────
 export function clearRsvpCache() {
-  try {
-    Object.values(KEYS).forEach(k => sessionStorage.removeItem(k))
-  } catch {}
+  try { Object.values(K).forEach(k => sessionStorage.removeItem(k)) } catch {}
 }
 
-// ── Load full session state ───────────────────────────────────
-// Returns null if no session found, or a state snapshot object
+// ── Load full session snapshot ────────────────────────────────
+// Returns null if no session exists, otherwise a complete state object
+// that the RSVP component uses on mount to restore exactly where the
+// guest left off.
 export function loadSession() {
   const invitee = getCachedInvitee()
-  if (!invitee) return null   // no session at all
+  if (!invitee) return null
 
   return {
-    inviteeName: invitee,
-    step:        getCachedStep()      ?? 1,
-    formData:    getCachedForm()      ?? null,
-    submitted:   isSubmitted(),
+    inviteeName:  invitee,
+    step:         getCachedStep()         ?? 1,
+    formData:     getCachedForm()         ?? null,
+    submitted:    isSubmitted(),
+    existingRsvp: getCachedExistingRsvp() ?? null,
   }
 }
