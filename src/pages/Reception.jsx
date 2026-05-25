@@ -13,7 +13,7 @@ const program = [
   { time: '5:15 PM', event: 'Grand Entrance',        note: 'Introduction of the newly married couple.' },
   { time: '5:30 PM', event: 'Opening Prayer & Toast', note: 'Blessing of the meal led by a principal sponsor.' },
   { time: '5:45 PM', event: 'Dinner Service Begins', note: 'Seven-course plated dinner.' },
-  { time: '6:30 PM', event: 'First Dance',           note: 'Couple's first dance as husband and wife.' },
+  { time: '6:30 PM', event: 'First Dance',           note: "Couple's first dance as husband and wife."},
   { time: '6:45 PM', event: 'Parent Dances',         note: 'Father–Daughter and Mother–Son dances.' },
   { time: '7:00 PM', event: 'Speeches & Toasts',     note: 'Best Man, Maid of Honor, and sponsors.' },
   { time: '7:30 PM', event: 'Cake Cutting',          note: 'Followed by dessert service.' },
