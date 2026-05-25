@@ -1,0 +1,107 @@
+/* ============================================================
+   Ceremony Hub Styles
+   ============================================================ */
+.ceremony-hub {
+  min-height: 100vh;
+  background: var(--off-white);
+  padding-top: 6rem;
+  padding-bottom: 5rem;
+}
+
+.ceremony-hub__header {
+  text-align: center;
+  padding: 2rem 1.5rem 0;
+}
+
+.ceremony-hub__sub {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--btn-color);
+  font-size: 1.05rem;
+}
+
+/* Breadcrumb */
+.ceremony-hub__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 1.5rem 0 3rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(105,27,25,0.45);
+}
+.crumb-sep { color: var(--btn-color); }
+.crumb-current { color: var(--burgundy); }
+
+/* Cards grid */
+.ceremony-hub__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.ceremony-hub__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 2.5rem 2rem;
+  background: var(--card-bg);
+  border-radius: 3px;
+  text-decoration: none;
+  transition: transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 4px 20px rgba(105,27,25,0.08);
+  position: relative;
+  overflow: hidden;
+}
+.ceremony-hub__card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 36px rgba(105,27,25,0.16);
+}
+
+.ceremony-hub__card-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.ceremony-hub__card-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--card-text);
+  line-height: 1.2;
+}
+
+.ceremony-hub__card-desc {
+  font-size: 0.83rem;
+  color: var(--card-text);
+  opacity: 0.75;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.ceremony-hub__card-arrow {
+  font-size: 1.2rem;
+  color: var(--card-text);
+  opacity: 0.6;
+  align-self: flex-end;
+  transition: transform var(--transition);
+}
+.ceremony-hub__card:hover .ceremony-hub__card-arrow {
+  transform: translateX(4px);
+  opacity: 1;
+}
+
+@media (max-width: 700px) {
+  .ceremony-hub__cards {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+  }
+}

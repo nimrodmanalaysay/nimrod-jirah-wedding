@@ -201,3 +201,185 @@
   .navbar__hamburger { display: flex; }
   .navbar__drawer    { display: flex; }
 }
+
+/* ══════════════════════════════════════════════════════════
+   Ceremony Dropdown (desktop)
+   ══════════════════════════════════════════════════════════ */
+
+.navbar__dropdown-wrap {
+  position: relative;
+}
+
+/* The "Ceremony" trigger button styled identically to navbar__link */
+.navbar__dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  /* Inherits font/color from .navbar__link */
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.85);
+  transition: color var(--transition);
+}
+.navbar__dropdown-trigger::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 1px;
+  background: var(--gold);
+  transition: width var(--transition);
+}
+.navbar__dropdown-trigger:hover,
+.navbar__dropdown-trigger.navbar__link--active { color: var(--gold); }
+.navbar__dropdown-trigger:hover::after,
+.navbar__dropdown-trigger.navbar__link--active::after { width: 100%; }
+
+/* Light state */
+.navbar--light .navbar__dropdown-trigger { color: var(--sage); }
+.navbar--light .navbar__dropdown-trigger::after { background: var(--btn-color); }
+.navbar--light .navbar__dropdown-trigger:hover,
+.navbar--light .navbar__dropdown-trigger.navbar__link--active { color: var(--btn-color); }
+
+.navbar__dropdown-chevron {
+  font-size: 0.7rem;
+  display: inline-block;
+  transition: transform 0.2s ease;
+  margin-left: 1px;
+}
+.navbar__dropdown-chevron.open { transform: rotate(180deg); }
+
+/* Dropdown panel */
+.navbar__dropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 200px;
+  background: var(--burgundy);
+  border-radius: 3px;
+  list-style: none;
+  padding: 0.4rem 0;
+  box-shadow: 0 10px 32px rgba(0,0,0,0.25);
+  animation: dropdownIn 0.2s ease both;
+  z-index: 1000;
+}
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* Arrow pointer */
+.navbar__dropdown::before {
+  content: '';
+  position: absolute;
+  top: -6px; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: var(--burgundy);
+  border-top: none;
+}
+
+.navbar__dropdown-item {
+  display: block;
+  padding: 0.65rem 1.4rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(255,255,255,0.75);
+  transition: color var(--transition), background var(--transition);
+  white-space: nowrap;
+}
+.navbar__dropdown-item:hover,
+.navbar__dropdown-item.active {
+  color: var(--gold);
+  background: rgba(255,255,255,0.05);
+}
+.navbar__dropdown-item--hub {
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.4);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 0.2rem;
+}
+.navbar__dropdown-item--hub:hover { color: var(--gold); }
+
+/* ══════════════════════════════════════════════════════════
+   Mobile Drawer — Ceremony accordion
+   ══════════════════════════════════════════════════════════ */
+
+.navbar__drawer-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar__drawer-group-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 2rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+  background: none;
+  border: none;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  transition: color var(--transition), background var(--transition), border-color var(--transition);
+  text-align: left;
+}
+.navbar__drawer-group-toggle:hover,
+.navbar__drawer-group-toggle.active {
+  color: var(--gold);
+  background: rgba(225,202,150,0.06);
+  border-left-color: var(--gold);
+}
+
+.navbar__drawer-chevron {
+  display: inline-block;
+  transition: transform 0.25s ease;
+  font-style: normal;
+}
+.navbar__drawer-chevron.open { transform: rotate(90deg); }
+
+/* Collapsible submenu — CSS grid trick */
+.navbar__drawer-sub {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.4,0,0.2,1);
+  background: rgba(0,0,0,0.15);
+  overflow: hidden;
+}
+.navbar__drawer-sub--open {
+  grid-template-rows: 1fr;
+}
+.navbar__drawer-sub > * {
+  overflow: hidden;
+}
+
+.navbar__drawer-sublink {
+  display: block;
+  padding: 0.7rem 2rem 0.7rem 3rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(255,255,255,0.55);
+  border-left: 2px solid transparent;
+  transition: color var(--transition), border-color var(--transition);
+}
+.navbar__drawer-sublink:hover,
+.navbar__drawer-sublink.active {
+  color: var(--gold);
+  border-left-color: var(--btn-color);
+}

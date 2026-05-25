@@ -1,0 +1,179 @@
+/* ============================================================
+   FAQs Page Styles — accordion with smooth expand/collapse
+   ============================================================ */
+
+.faqs-page {
+  min-height: 100vh;
+  background: var(--off-white);
+  padding-top: 6rem;
+  padding-bottom: 5rem;
+}
+
+.faqs-page__header {
+  text-align: center;
+  padding: 2rem 1.5rem 0;
+}
+
+.faqs-page__sub {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--btn-color);
+  font-size: 1.05rem;
+}
+
+/* Search bar */
+.faqs-search {
+  max-width: 500px;
+  margin: 2.5rem auto 1rem;
+  padding: 0 1.5rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.faqs-search input {
+  width: 100%;
+  background: var(--white);
+  border: 1.5px solid rgba(105,27,25,0.18);
+  border-radius: 2px;
+  padding: 0.75rem 3rem 0.75rem 1.2rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--burgundy);
+  outline: none;
+  transition: border-color var(--transition);
+}
+.faqs-search input:focus {
+  border-color: var(--btn-color);
+  box-shadow: 0 0 0 3px rgba(202,102,65,0.1);
+}
+.faqs-search input::placeholder { color: rgba(105,27,25,0.35); }
+.faqs-search button {
+  position: absolute;
+  right: 2.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(105,27,25,0.4);
+  font-size: 0.8rem;
+  transition: color var(--transition);
+}
+.faqs-search button:hover { color: var(--btn-color); }
+
+/* FAQ list */
+.faqs-list {
+  max-width: 720px;
+  margin: 1.5rem auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* FAQ item */
+.faq-item {
+  background: var(--white);
+  border: 1px solid rgba(225,202,150,0.4);
+  border-radius: 2px;
+  overflow: hidden;
+  transition: box-shadow var(--transition);
+}
+.faq-item--open {
+  box-shadow: 0 4px 20px rgba(105,27,25,0.08);
+  border-color: rgba(202,102,65,0.3);
+}
+
+/* Question row */
+.faq-item__q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.2rem 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: var(--burgundy);
+  text-align: left;
+  transition: background var(--transition), color var(--transition);
+}
+.faq-item__q:hover {
+  background: rgba(225,202,150,0.08);
+  color: var(--btn-color);
+}
+.faq-item--open .faq-item__q {
+  color: var(--btn-color);
+  background: rgba(225,202,150,0.1);
+  border-bottom: 1px solid rgba(225,202,150,0.3);
+}
+
+.faq-item__chevron {
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: var(--btn-color);
+  flex-shrink: 0;
+  line-height: 1;
+  transition: transform var(--transition);
+}
+
+/* Answer — CSS grid trick for smooth height animation */
+.faq-item__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.faq-item--open .faq-item__body {
+  grid-template-rows: 1fr;
+}
+.faq-item__body > * {
+  overflow: hidden;
+}
+
+.faq-item__a {
+  padding: 0 1.5rem 1.2rem;
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: rgba(105,27,25,0.72);
+}
+/* First p gets some top spacing */
+.faq-item--open .faq-item__a {
+  padding-top: 0.9rem;
+}
+
+/* Empty state */
+.faqs-empty {
+  text-align: center;
+  color: rgba(105,27,25,0.45);
+  font-style: italic;
+  padding: 2rem;
+}
+
+/* Footer CTA */
+.faqs-footer {
+  max-width: 720px;
+  margin: 3rem auto 0;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  border-top: 1px solid rgba(225,202,150,0.35);
+}
+.faqs-footer p {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--burgundy);
+}
+.faqs-footer__contact {
+  font-family: var(--font-body) !important;
+  font-size: 0.9rem !important;
+  color: rgba(105,27,25,0.6) !important;
+  margin-top: 0.4rem;
+}
+.faqs-footer__contact a {
+  color: var(--btn-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition);
+}
+.faqs-footer__contact a:hover { color: var(--burgundy); }

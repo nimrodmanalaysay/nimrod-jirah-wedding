@@ -3,36 +3,63 @@ import { Link } from 'react-router-dom'
 import './Footer.css'
 
 /* ============================================================
-   Footer — couple names, nav links, and credit line
-   ✏️ Edit the links array to add/remove pages.
+   Footer — all nav links including new pages
+   ✏️ Edit the columns array to add/remove links.
    ============================================================ */
 
-const links = [
-  { label: 'Home',      path: '/' },
-  { label: 'Our Story', path: '/story' },
-  { label: 'Entourage', path: '/entourage' },
-  { label: 'RSVP',      path: '/rsvp' },
-  { label: 'Gallery',   path: '/gallery' },
+const columns = [
+  {
+    heading: 'Navigate',
+    links: [
+      { label: 'Home',      path: '/' },
+      { label: 'Our Story', path: '/story' },
+      { label: 'Entourage', path: '/entourage' },
+      { label: 'Gallery',   path: '/gallery' },
+    ],
+  },
+  {
+    heading: 'Ceremony',
+    links: [
+      { label: 'Overview',          path: '/ceremony' },
+      { label: 'Wedding Ceremony',  path: '/ceremony/wedding' },
+      { label: 'Reception',         path: '/ceremony/reception' },
+      { label: 'Dress Code',        path: '/ceremony/dresscode' },
+    ],
+  },
+  {
+    heading: 'More',
+    links: [
+      { label: 'RSVP',   path: '/rsvp' },
+      { label: 'FAQs',   path: '/faqs' },
+      { label: 'Gifts',  path: '/gifts' },
+    ],
+  },
 ]
 
 export default function Footer() {
   return (
     <footer className="footer">
+      {/* Couple names */}
       <p className="footer__names">Nimrod &amp; Jirah</p>
       <p className="footer__date">November 7, 2026</p>
 
       <div className="footer__rule" />
 
-      <nav className="footer__nav">
-        {links.map(({ label, path }) => (
-          <Link key={path} to={path} className="footer__link">
-            {label}
-          </Link>
+      {/* Multi-column nav */}
+      <div className="footer__columns">
+        {columns.map(col => (
+          <div key={col.heading} className="footer__col">
+            <p className="footer__col-heading">{col.heading}</p>
+            {col.links.map(({ label, path }) => (
+              <Link key={path} to={path} className="footer__link">
+                {label}
+              </Link>
+            ))}
+          </div>
         ))}
-      </nav>
+      </div>
 
       <div className="footer__rule" />
-
       <p className="footer__copy">Made with love ♥</p>
     </footer>
   )

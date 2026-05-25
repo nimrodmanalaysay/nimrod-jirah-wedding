@@ -1,0 +1,402 @@
+/* ============================================================
+   Shared CSS for WeddingCeremony, Reception, DressCode pages
+   ============================================================ */
+
+.cp-page {
+  min-height: 100vh;
+  background: var(--off-white);
+  padding-top: 4.5rem; /* navbar height */
+  padding-bottom: 5rem;
+}
+
+/* ── Breadcrumb ── */
+.cp-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.2rem 3rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--white);
+  border-bottom: 1px solid rgba(225,202,150,0.3);
+}
+.cp-breadcrumb a {
+  color: var(--btn-color);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+.cp-breadcrumb a:hover { color: var(--burgundy); }
+.cp-breadcrumb span:last-child { color: var(--burgundy); }
+.cp-breadcrumb span:not(:last-child):not(a) { color: rgba(105,27,25,0.35); }
+
+/* ── Hero banner ── */
+.cp-hero {
+  position: relative;
+  width: 100%;
+  height: clamp(200px, 35vw, 400px);
+  overflow: hidden;
+}
+.cp-hero__img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.cp-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(105,27,25,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
+}
+.cp-hero__overlay--light {
+  background: rgba(255,255,255,0.55);
+}
+.cp-hero__pre {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+.cp-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 300;
+  color: var(--white);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+.cp-hero__date {
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+  margin-top: 0.6rem;
+}
+
+/* ── Content wrapper ── */
+.cp-content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ── Section ── */
+.cp-section {
+  padding: 4rem 3rem;
+  border-bottom: 1px solid rgba(225,202,150,0.2);
+}
+.cp-section--blush {
+  background: rgba(255,217,218,0.2);
+}
+.cp-section:last-child { border-bottom: none; }
+
+.cp-section__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  color: var(--burgundy);
+  text-align: center;
+  margin-bottom: 0.4rem;
+  position: relative;
+}
+.cp-section__title::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 2px;
+  background: var(--btn-color);
+  margin: 0.6rem auto 2rem;
+}
+
+/* ── Detail cards ── */
+.cp-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  justify-content: center;
+}
+.cp-card {
+  background: var(--white);
+  border: 1px solid rgba(225,202,150,0.4);
+  border-radius: 2px;
+  padding: 2rem 1.8rem;
+  text-align: center;
+  min-width: 200px;
+  flex: 1;
+  max-width: 260px;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.cp-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(105,27,25,0.1);
+}
+.cp-card__icon {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 0.8rem;
+}
+.cp-card h4 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--burgundy);
+  margin-bottom: 0.4rem;
+}
+.cp-card p {
+  font-size: 0.95rem;
+  color: var(--sage);
+  font-weight: 500;
+}
+.cp-card__sub {
+  font-size: 0.78rem !important;
+  color: rgba(105,27,25,0.45) !important;
+  font-weight: 300 !important;
+  margin-top: 0.2rem;
+}
+
+/* ── Arrival reminders list ── */
+.cp-reminders {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  max-width: 680px;
+  margin: 0 auto;
+}
+.cp-reminders li {
+  padding: 0.8rem 1.2rem 0.8rem 2.8rem;
+  background: var(--white);
+  border-left: 3px solid var(--btn-color);
+  border-radius: 0 2px 2px 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(105,27,25,0.8);
+  position: relative;
+}
+.cp-reminders li::before {
+  content: '✦';
+  position: absolute;
+  left: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--btn-color);
+  font-size: 0.7rem;
+}
+
+/* ── Timeline ── */
+.cp-timeline {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.cp-timeline__item {
+  display: grid;
+  grid-template-columns: 80px 24px 1fr;
+  align-items: flex-start;
+  gap: 0 1rem;
+  position: relative;
+  padding-bottom: 1.6rem;
+}
+.cp-timeline__item:last-child { padding-bottom: 0; }
+
+/* Vertical connector line */
+.cp-timeline__item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: calc(80px + 1rem + 11px);
+  top: 12px;
+  width: 2px;
+  height: calc(100% - 12px);
+  background: rgba(225,202,150,0.4);
+}
+
+.cp-timeline__time {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--btn-color);
+  text-align: right;
+  padding-top: 2px;
+  white-space: nowrap;
+}
+.cp-timeline__dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--btn-color);
+  border: 2px solid var(--off-white);
+  box-shadow: 0 0 0 2px var(--btn-color);
+  flex-shrink: 0;
+  margin-top: 3px;
+  position: relative;
+  z-index: 1;
+}
+.cp-timeline__body { padding-top: 0; }
+.cp-timeline__event {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--burgundy);
+  font-weight: 400;
+}
+.cp-timeline__note {
+  font-size: 0.82rem;
+  color: rgba(105,27,25,0.58);
+  margin-top: 0.15rem;
+  line-height: 1.5;
+}
+
+/* ── Image grid ── */
+.cp-img-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.cp-img-grid img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 2px;
+  display: block;
+}
+.cp-img-grid--4 {
+  grid-template-columns: repeat(4, 1fr);
+  align-items: start;
+}
+.cp-inspo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+.cp-inspo-card img {
+  border-radius: 2px;
+  width: 100%;
+  height: auto;
+}
+.cp-inspo-card p {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(105,27,25,0.55);
+  text-align: center;
+}
+
+/* ── Dress Code specific ── */
+.cp-attire-theme {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--btn-color);
+  font-style: italic;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.cp-attire-desc {
+  font-size: 0.95rem;
+  color: rgba(105,27,25,0.7);
+  line-height: 1.8;
+  max-width: 580px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Color palette swatches */
+.cp-palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+.cp-swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 100px;
+}
+.cp-swatch__color {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.8);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transition: transform var(--transition);
+}
+.cp-swatch:hover .cp-swatch__color { transform: scale(1.08); }
+.cp-swatch__label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--burgundy);
+  text-align: center;
+}
+.cp-swatch__note {
+  font-size: 0.7rem;
+  color: rgba(105,27,25,0.5);
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Dos & Don'ts */
+.cp-dos-donts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.cp-dos__title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--sage);
+  margin-bottom: 1rem;
+}
+.cp-donts__title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--burgundy);
+  margin-bottom: 1rem;
+}
+.cp-dos ul, .cp-donts ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.cp-dos ul li, .cp-donts ul li {
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: rgba(105,27,25,0.78);
+  padding-left: 1.4rem;
+  position: relative;
+}
+.cp-dos ul li::before {
+  content: '✓';
+  position: absolute; left: 0;
+  color: var(--sage);
+  font-weight: 600;
+}
+.cp-donts ul li::before {
+  content: '✕';
+  position: absolute; left: 0;
+  color: var(--burgundy);
+  font-weight: 600;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .cp-section       { padding: 3rem 1.5rem; }
+  .cp-breadcrumb    { padding: 1rem 1.5rem; }
+  .cp-img-grid      { grid-template-columns: 1fr 1fr; }
+  .cp-img-grid--4   { grid-template-columns: repeat(2, 1fr); }
+  .cp-dos-donts     { grid-template-columns: 1fr; gap: 1.5rem; }
+  .cp-timeline__item { grid-template-columns: 70px 20px 1fr; }
+}
+@media (max-width: 480px) {
+  .cp-img-grid      { grid-template-columns: 1fr; }
+  .cp-cards         { flex-direction: column; align-items: center; }
+  .cp-card          { max-width: 100%; }
+}
