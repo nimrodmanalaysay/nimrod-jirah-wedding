@@ -472,3 +472,76 @@
   .rsvp-done__summary { padding: 0.8rem 1rem; }
   .rsvp-gate__actions { flex-direction: column; }
 }
+
+/* ================================================================
+   PLUS ONE STEP STYLES
+   ================================================================ */
+
+/* Eligibility badge */
+.rsvp-plusone__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(225,202,150,0.18);
+  border: 1px solid rgba(225,202,150,0.5);
+  border-radius: 20px;
+  padding: 0.35rem 1rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--btn-color);
+  margin-bottom: 1.4rem;
+}
+.rsvp-plusone__badge span { color: var(--gold); }
+
+/* Smaller attendance cards for yes/no choice */
+.rsvp-attend__options--sm {
+  gap: 0.8rem;
+}
+.rsvp-attend__card--mini {
+  min-width: 120px;
+  padding: 0.9rem 1rem;
+}
+
+/* Plus one details form — revealed on "yes" */
+.rsvp-plusone__form {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+/* Decorative divider between yes/no and form */
+.rsvp-plusone__divider {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.4rem;
+}
+.rsvp-plusone__divider::before,
+.rsvp-plusone__divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(225,202,150,0.4);
+}
+.rsvp-plusone__divider span {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(105,27,25,0.45);
+  white-space: nowrap;
+}
+
+/* Success screen plus one note */
+.rsvp-success__plus-one {
+  font-size: 0.9rem;
+  color: var(--sage);
+  margin-top: 1rem;
+  padding: 0.7rem 1.2rem;
+  background: rgba(85,98,81,0.08);
+  border-radius: 2px;
+  border: 1px solid rgba(85,98,81,0.2);
+  line-height: 1.6;
+}
+.rsvp-success__plus-one strong { color: var(--btn-color); }

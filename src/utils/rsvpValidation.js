@@ -125,3 +125,13 @@ export function findExistingRsvp(inviteeName, rsvpRecords) {
     return recorded !== '' && recorded === target
   }) || null
 }
+
+// ── Plus One eligibility check ─────────────────────────────────
+// Reads the "Additional Invitee" value (column C of invitee sheet).
+// Truthy values: TRUE, true, yes, YES, 1, y, Y
+// Everything else (FALSE, empty, undefined) → not eligible.
+export function isPlusOneEligible(value) {
+  if (value === null || value === undefined) return false
+  const v = String(value).trim().toLowerCase()
+  return v === 'true' || v === 'yes' || v === '1' || v === 'y'
+}

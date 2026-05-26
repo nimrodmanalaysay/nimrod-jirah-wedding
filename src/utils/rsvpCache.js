@@ -20,6 +20,8 @@ const K = {
   form:     'rsvp_form',
   submitted:'rsvp_submitted',
   existing: 'rsvp_existing',
+  plusOne:  'rsvp_plus_one',
+  eligible: 'rsvp_eligible',
 }
 
 // ── Write helpers ─────────────────────────────────────────────
@@ -28,6 +30,9 @@ export function cacheStep(step)       { try { sessionStorage.setItem(K.step,    
 export function cacheForm(data)       { try { sessionStorage.setItem(K.form,     JSON.stringify(data))     } catch {} }
 export function markSubmitted()       { try { sessionStorage.setItem(K.submitted,'true')                   } catch {} }
 export function cacheExistingRsvp(r)  { try { sessionStorage.setItem(K.existing, JSON.stringify(r))        } catch {} }
+
+export function cachePlusOneForm(data)  { try { sessionStorage.setItem(K.plusOne,  JSON.stringify(data)) } catch {} }
+export function cachePlusOneEligible(v){ try { sessionStorage.setItem(K.eligible, String(v))               } catch {} }
 
 // ── Read helpers ──────────────────────────────────────────────
 export function getCachedInvitee()    { try { return sessionStorage.getItem(K.invitee) || null             } catch { return null } }
@@ -50,6 +55,16 @@ export function getCachedExistingRsvp() {
   try { const r = sessionStorage.getItem(K.existing); return r ? JSON.parse(r) : null } catch { return null }
 }
 
+export function getCachedPlusOneForm() {
+  try { const r = sessionStorage.getItem(K.plusOne); return r ? JSON.parse(r) : null } catch { return null }
+}
+export function getCachedPlusOneEligible() {
+  try {
+    const v = sessionStorage.getItem(K.eligible)
+    return v === null ? null : v === 'true'
+  } catch { return null }
+}
+
 // ── Clear everything ──────────────────────────────────────────
 export function clearRsvpCache() {
   try { Object.values(K).forEach(k => sessionStorage.removeItem(k)) } catch {}
@@ -64,10 +79,12 @@ export function loadSession() {
   if (!invitee) return null
 
   return {
-    inviteeName:  invitee,
-    step:         getCachedStep()         ?? 1,
-    formData:     getCachedForm()         ?? null,
-    submitted:    isSubmitted(),
-    existingRsvp: getCachedExistingRsvp() ?? null,
+    inviteeName:    invitee,
+    step:           getCachedStep()           ?? 1,
+    formData:       getCachedForm()           ?? null,
+    submitted:      isSubmitted(),
+    existingRsvp:   getCachedExistingRsvp()   ?? null,
+    plusOneForm:    getCachedPlusOneForm()     ?? null,
+    plusOneEligible:getCachedPlusOneEligible() ?? false,
   }
 }
