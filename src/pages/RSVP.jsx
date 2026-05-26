@@ -7,6 +7,7 @@ import {
   findByFullName,
   findExistingRsvp,
   isPlusOneEligible,
+  toTitleCase,
 } from '../utils/rsvpValidation'
 import {
   loadSession,
@@ -726,15 +727,15 @@ export default function RSVP() {
         mode:    'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          inviteeName,
-          attendance:       formData.attendance,
-          firstName:        formData.firstName,
-          lastName:         formData.lastName,
-          email:            formData.email,
-          notes:            formData.notes,
-          advice:           formData.advice,
+          inviteeName:       toTitleCase(inviteeName),
+          attendance:        formData.attendance,
+          firstName:         toTitleCase(formData.firstName),
+          lastName:          toTitleCase(formData.lastName),
+          email:             formData.email.trim().toLowerCase(),
+          notes:             toTitleCase(formData.notes),
+          advice:            toTitleCase(formData.advice),
           // Plus One fields — empty strings if not bringing
-          plusOneName:       plusOneBringing ? plusOneData.fullName   : '',
+          plusOneName:       plusOneBringing ? toTitleCase(plusOneData.fullName)   : '',
           plusOneAttendance: plusOneBringing ? plusOneData.attendance : '',
         }),
       })

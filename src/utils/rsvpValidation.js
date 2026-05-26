@@ -135,3 +135,22 @@ export function isPlusOneEligible(value) {
   const v = String(value).trim().toLowerCase()
   return v === 'true' || v === 'yes' || v === '1' || v === 'y'
 }
+
+// ── Title Case ─────────────────────────────────────────────────
+// Capitalizes the first letter of every word.
+// Used before sending any text data to the spreadsheet so all
+// entries are consistently formatted.
+// Examples:
+//   "john doe"       → "John Doe"
+//   "jOHN dOE"       → "John Doe"
+//   "notes here"     → "Notes Here"
+//   "" / null / undefined → ""
+export function toTitleCase(str) {
+  if (!str) return ''
+  return String(str)
+    .trim()
+    .replace(/\s+/g, ' ')
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
+}
