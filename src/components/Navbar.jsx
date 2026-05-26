@@ -2,30 +2,21 @@ import React, { useState, useEffect, useRef } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import './Navbar.css'
 
-/* ============================================================
-   Navbar
-   • Logo left, links right
-   • Transparent (home: white text, others: sage text)
-   • Solid burgundy on scroll
-   • Ceremony has a dropdown for sub-pages
-   • Mobile drawer with collapsible Ceremony submenu
-   ============================================================ */
-
 const CEREMONY_CHILDREN = [
-  { label: 'Wedding Ceremony', path: '/ceremony/wedding'   },
-  { label: 'Reception',        path: '/ceremony/reception' },
-  { label: 'Dress Code',       path: '/ceremony/dresscode' },
+  { label: 'Overview',         path: '/ceremony'            },
+  { label: 'Wedding Ceremony', path: '/ceremony/wedding'    },
+  { label: 'Reception',        path: '/ceremony/reception'  },
+  { label: 'Dress Code',       path: '/ceremony/dresscode'  },
 ]
 
-// Flat links (non-dropdown)
 const FLAT_LINKS = [
-  { label: 'Home',      path: '/'           },
-  { label: 'Our Story', path: '/story'      },
-  { label: 'Entourage', path: '/entourage'  },
-  { label: 'FAQs',      path: '/faqs'       },
-  { label: 'RSVP',      path: '/rsvp'       },
-  { label: 'Gallery',   path: '/gallery'    },
-  { label: 'Gifts',     path: '/gifts'      },
+  { label: 'Home',      path: '/'          },
+  { label: 'Our Story', path: '/story'     },
+  { label: 'Entourage', path: '/entourage' },
+  { label: 'FAQs',      path: '/faqs'      },
+  { label: 'RSVP',      path: '/rsvp'      },
+  { label: 'Gallery',   path: '/gallery'   },
+  { label: 'Gifts',     path: '/gifts'     },
 ]
 
 function WeddingLogo({ light }) {
@@ -41,15 +32,15 @@ function WeddingLogo({ light }) {
   )
 }
 
-/* Ceremony dropdown (desktop) */
-function CeremonyDropdown({ isLight, closeMenu }) {
-  const [open, setOpen] = useState(false)
-  const ref             = useRef(null)
-  const { pathname }    = useLocation()
+/* ── Desktop Ceremony dropdown ──
+   Uses a plain <li> + <NavLink> identical to all other tabs.
+   Dropdown opens on click, closes on outside click.         */
+function CeremonyDropdown({ closeMenu }) {
+  const [open, setOpen]  = useState(false)
+  const ref              = useRef(null)
+  const { pathname }     = useLocation()
+  const isActive         = pathname.startsWith('/ceremony')
 
-  const isActive = pathname.startsWith('/ceremony')
-
-  // Close on outside click
   useEffect(() => {
     function handler(e) {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false)
@@ -60,37 +51,29 @@ function CeremonyDropdown({ isLight, closeMenu }) {
 
   return (
     <li className="navbar__dropdown-wrap" ref={ref}>
-      <button
-        className={[
-          'navbar__link navbar__dropdown-trigger',
-          isActive    ? 'navbar__link--active' : '',
-          isLight     ? 'navbar__link--light'  : '',
-        ].filter(Boolean).join(' ')}
-        onClick={() => setOpen(o => !o)}
-        aria-haspopup="true"
-        aria-expanded={open}
+      {/* Rendered exactly like every other tab — same tag, same class */}
+      <NavLink
+        to="/ceremony"
+        className={({ isActive }) =>
+          'navbar__link navbar__link--has-dropdown' +
+          (isActive || open ? ' navbar__link--active' : '')
+        }
+        onClick={e => {
+          e.preventDefault()       // don't navigate on click — open dropdown instead
+          setOpen(o => !o)
+        }}
       >
         Ceremony
         <span className={`navbar__dropdown-chevron ${open ? 'open' : ''}`}>▾</span>
-      </button>
+      </NavLink>
 
       {open && (
         <ul className="navbar__dropdown">
-          {/* Hub link */}
-          <li>
-            <NavLink
-              to="/ceremony"
-              end
-              className="navbar__dropdown-item navbar__dropdown-item--hub"
-              onClick={() => { setOpen(false); closeMenu() }}
-            >
-              Overview
-            </NavLink>
-          </li>
           {CEREMONY_CHILDREN.map(({ label, path }) => (
             <li key={path}>
               <NavLink
                 to={path}
+                end={path === '/ceremony'}
                 className={({ isActive }) =>
                   'navbar__dropdown-item' + (isActive ? ' active' : '')
                 }
@@ -107,13 +90,18 @@ function CeremonyDropdown({ isLight, closeMenu }) {
 }
 
 export default function Navbar() {
-  const [scrolled,        setScrolled]        = useState(false)
-  const [menuOpen,        setMenuOpen]        = useState(false)
+  const [scrolled,         setScrolled]         = useState(false)
+  const [menuOpen,         setMenuOpen]         = useState(false)
   const [ceremonyExpanded, setCeremonyExpanded] = useState(false)
-  const { pathname }    = useLocation()
+  const { pathname } = useLocation()
 
   const isHome  = pathname === '/'
   const isLight = !scrolled && !isHome
+
+  // Reset ceremony submenu whenever route changes
+  useEffect(() => {
+    setCeremonyExpanded(false)
+  }, [pathname])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60)
@@ -122,7 +110,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [pathname])
 
-  // Collapse ceremony submenu when closing drawer
   const closeMenu = () => {
     setMenuOpen(false)
     setCeremonyExpanded(false)
@@ -145,10 +132,9 @@ export default function Navbar() {
         </span>
       </Link>
 
-      {/* Desktop links */}
+      {/* Desktop links — all items rendered uniformly */}
       <ul className="navbar__links">
-        {/* Home + Our Story */}
-        {FLAT_LINKS.slice(0, 2).map(({ label, path }) => (
+        {FLAT_LINKS.slice(0, 3).map(({ label, path }) => (
           <li key={path}>
             <NavLink to={path} end
               className={({ isActive }) =>
@@ -158,19 +144,9 @@ export default function Navbar() {
           </li>
         ))}
 
-        {/* Entourage */}
-        <li>
-          <NavLink to="/entourage" end
-            className={({ isActive }) =>
-              'navbar__link' + (isActive ? ' navbar__link--active' : '')
-            }
-          >Entourage</NavLink>
-        </li>
+        {/* Ceremony — same visual as other tabs, with dropdown */}
+        <CeremonyDropdown closeMenu={closeMenu} />
 
-        {/* Ceremony dropdown */}
-        <CeremonyDropdown isLight={isLight} closeMenu={closeMenu} />
-
-        {/* FAQs, RSVP, Gallery, Gifts */}
         {FLAT_LINKS.slice(3).map(({ label, path }) => (
           <li key={path}>
             <NavLink to={path} end
@@ -208,7 +184,6 @@ export default function Navbar() {
           <span className="navbar__drawer-monogram">N &amp; J</span>
         </div>
 
-        {/* Flat links before Ceremony */}
         {FLAT_LINKS.slice(0, 3).map(({ label, path }) => (
           <NavLink key={path} to={path} end
             className={({ isActive }) =>
@@ -218,7 +193,7 @@ export default function Navbar() {
           >{label}</NavLink>
         ))}
 
-        {/* Ceremony accordion */}
+        {/* Ceremony accordion in mobile drawer */}
         <div className="navbar__drawer-group">
           <button
             className={`navbar__drawer-group-toggle ${pathname.startsWith('/ceremony') ? 'active' : ''}`}
@@ -229,21 +204,23 @@ export default function Navbar() {
             <span className={`navbar__drawer-chevron ${ceremonyExpanded ? 'open' : ''}`}>›</span>
           </button>
 
+          {/* Submenu — outer div handles grid animation,
+              inner div provides the overflow:hidden boundary */}
           <div className={`navbar__drawer-sub ${ceremonyExpanded ? 'navbar__drawer-sub--open' : ''}`}>
-            <NavLink to="/ceremony" end
-              className={({ isActive }) => 'navbar__drawer-sublink' + (isActive ? ' active' : '')}
-              onClick={closeMenu}
-            >Overview</NavLink>
-            {CEREMONY_CHILDREN.map(({ label, path }) => (
-              <NavLink key={path} to={path}
-                className={({ isActive }) => 'navbar__drawer-sublink' + (isActive ? ' active' : '')}
-                onClick={closeMenu}
-              >{label}</NavLink>
-            ))}
+            <div className="navbar__drawer-sub-inner">
+              {CEREMONY_CHILDREN.map(({ label, path }) => (
+                <NavLink key={path} to={path}
+                  end={path === '/ceremony'}
+                  className={({ isActive }) =>
+                    'navbar__drawer-sublink' + (isActive ? ' active' : '')
+                  }
+                  onClick={closeMenu}
+                >{label}</NavLink>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Remaining flat links */}
         {FLAT_LINKS.slice(3).map(({ label, path }) => (
           <NavLink key={path} to={path} end
             className={({ isActive }) =>

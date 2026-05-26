@@ -23,7 +23,7 @@
   box-shadow: 0 2px 20px rgba(105,27,25,0.2);
 }
 
-/* ── Brand (logo mark + N & J) ── */
+/* ── Brand ── */
 .navbar__brand {
   display: flex;
   align-items: center;
@@ -31,15 +31,11 @@
   text-decoration: none;
   flex-shrink: 0;
 }
-
 .navbar__logo-icon {
-  width: 38px;
-  height: 22px;
+  width: 38px; height: 22px;
   transition: opacity var(--transition);
 }
-.navbar__brand:hover .navbar__logo-icon {
-  opacity: 0.8;
-}
+.navbar__brand:hover .navbar__logo-icon { opacity: 0.8; }
 
 .navbar__brand-text {
   font-family: var(--font-display);
@@ -50,19 +46,13 @@
   transition: color var(--transition);
   line-height: 1;
 }
-.navbar__brand-amp {
-  color: var(--gold);
-  font-style: italic;
-  margin: 0 0.1rem;
-}
-
-/* Light state overrides */
-.navbar--light .navbar__brand-text { color: var(--sage); }
-.navbar--light .navbar__brand-amp  { color: var(--btn-color); }
+.navbar__brand-amp { color: var(--gold); font-style: italic; margin: 0 0.1rem; }
+.navbar--light .navbar__brand-text      { color: var(--sage); }
+.navbar--light .navbar__brand-amp       { color: var(--btn-color); }
 .navbar__brand:hover .navbar__brand-text { color: var(--gold); }
 .navbar--light .navbar__brand:hover .navbar__brand-text { color: var(--btn-color); }
 
-/* ── Desktop links ── */
+/* ── Desktop nav list ── */
 .navbar__links {
   list-style: none;
   display: flex;
@@ -70,6 +60,7 @@
   gap: 2.5rem;
 }
 
+/* ── Every tab — anchor AND the Ceremony NavLink — identical style ── */
 .navbar__link {
   font-size: 0.75rem;
   font-weight: 500;
@@ -79,6 +70,17 @@
   color: rgba(255,255,255,0.85);
   position: relative;
   transition: color var(--transition);
+  /* Reset any browser default for the element type */
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  line-height: inherit;
+  font-family: var(--font-body);
+  /* Flex only for tabs that have a chevron */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 .navbar__link::after {
   content: '';
@@ -89,15 +91,77 @@
   transition: width var(--transition);
 }
 .navbar__link:hover,
-.navbar__link--active           { color: var(--gold); }
+.navbar__link--active                { color: var(--gold); }
 .navbar__link:hover::after,
-.navbar__link--active::after    { width: 100%; }
+.navbar__link--active::after         { width: 100%; }
 
-/* Light state */
-.navbar--light .navbar__link           { color: var(--sage); }
-.navbar--light .navbar__link::after    { background: var(--btn-color); }
+/* Light state (inner pages, top of scroll) */
+.navbar--light .navbar__link         { color: var(--sage); }
+.navbar--light .navbar__link::after  { background: var(--btn-color); }
 .navbar--light .navbar__link:hover,
-.navbar--light .navbar__link--active   { color: var(--btn-color); }
+.navbar--light .navbar__link--active { color: var(--btn-color); }
+
+/* ── Ceremony dropdown wrapper ── */
+.navbar__dropdown-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Tiny chevron beside "Ceremony" text */
+.navbar__dropdown-chevron {
+  font-size: 0.6rem;
+  display: inline-block;
+  transition: transform 0.2s ease;
+  line-height: 1;
+}
+.navbar__dropdown-chevron.open { transform: rotate(180deg); }
+
+/* Dropdown panel */
+.navbar__dropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 200px;
+  background: var(--burgundy);
+  border-radius: 3px;
+  list-style: none;
+  padding: 0.4rem 0;
+  box-shadow: 0 10px 32px rgba(0,0,0,0.25);
+  animation: dropdownIn 0.2s ease both;
+  z-index: 1000;
+}
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.navbar__dropdown::before {
+  content: '';
+  position: absolute;
+  top: -6px; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: var(--burgundy);
+  border-top: none;
+}
+.navbar__dropdown-item {
+  display: block;
+  padding: 0.65rem 1.4rem;
+  font-size: 0.73rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(255,255,255,0.7);
+  transition: color var(--transition), background var(--transition);
+  white-space: nowrap;
+}
+.navbar__dropdown-item:hover,
+.navbar__dropdown-item.active {
+  color: var(--gold);
+  background: rgba(255,255,255,0.05);
+}
 
 /* ── Hamburger ── */
 .navbar__hamburger {
@@ -112,30 +176,26 @@
 }
 .navbar__hamburger span {
   display: block;
-  width: 24px;
-  height: 1.5px;
+  width: 24px; height: 1.5px;
   background: var(--white);
   transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease;
 }
 .navbar--light .navbar__hamburger span { background: var(--sage); }
-/* Always white when drawer is open (dark bg behind) */
 .navbar__hamburger.open span           { background: var(--white); }
-
 .navbar__hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
 .navbar__hamburger.open span:nth-child(2) { opacity: 0; }
 .navbar__hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-/* ── Backdrop (mobile) ── */
+/* ── Mobile backdrop ── */
 .navbar__backdrop {
-  position: fixed;
-  inset: 0;
+  position: fixed; inset: 0;
   background: rgba(0,0,0,0.35);
   z-index: 1000;
   animation: fadeIn 0.25s ease;
 }
-@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* ── Mobile Drawer ── */
+/* ── Mobile drawer ── */
 .navbar__drawer {
   display: none;
   position: fixed;
@@ -154,7 +214,6 @@
 }
 .navbar__drawer--open { transform: translateX(0); }
 
-/* Drawer header */
 .navbar__drawer-header {
   display: flex;
   align-items: center;
@@ -183,144 +242,18 @@
   border-left: 2px solid transparent;
   transition: color var(--transition), border-color var(--transition), background var(--transition);
 }
-.navbar__drawer-link:hover {
+.navbar__drawer-link:hover,
+.navbar__drawer-link.active {
   color: var(--gold);
   background: rgba(225,202,150,0.06);
   border-left-color: var(--gold);
 }
-.navbar__drawer-link.active {
-  color: var(--gold);
-  border-left-color: var(--btn-color);
-  background: rgba(202,102,65,0.1);
-}
 
-/* ── Responsive ── */
-@media (max-width: 768px) {
-  .navbar         { padding: 1rem 1.2rem; }
-  .navbar--scrolled { padding: 0.8rem 1.2rem; }
-  .navbar__links    { display: none; }
-  .navbar__hamburger { display: flex; }
-  .navbar__drawer    { display: flex; }
-}
-
-/* ══════════════════════════════════════════════════════════
-   Ceremony Dropdown (desktop)
-   ══════════════════════════════════════════════════════════ */
-
-.navbar__dropdown-wrap {
-  position: relative;
-}
-
-/* The "Ceremony" trigger button styled identically to navbar__link */
-.navbar__dropdown-trigger {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  /* Inherits font/color from .navbar__link */
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.85);
-  transition: color var(--transition);
-}
-.navbar__dropdown-trigger::after {
-  content: '';
-  position: absolute;
-  bottom: -4px; left: 0;
-  width: 0; height: 1px;
-  background: var(--gold);
-  transition: width var(--transition);
-}
-.navbar__dropdown-trigger:hover,
-.navbar__dropdown-trigger.navbar__link--active { color: var(--gold); }
-.navbar__dropdown-trigger:hover::after,
-.navbar__dropdown-trigger.navbar__link--active::after { width: 100%; }
-
-/* Light state */
-.navbar--light .navbar__dropdown-trigger { color: var(--sage); }
-.navbar--light .navbar__dropdown-trigger::after { background: var(--btn-color); }
-.navbar--light .navbar__dropdown-trigger:hover,
-.navbar--light .navbar__dropdown-trigger.navbar__link--active { color: var(--btn-color); }
-
-.navbar__dropdown-chevron {
-  font-size: 0.7rem;
-  display: inline-block;
-  transition: transform 0.2s ease;
-  margin-left: 1px;
-}
-.navbar__dropdown-chevron.open { transform: rotate(180deg); }
-
-/* Dropdown panel */
-.navbar__dropdown {
-  position: absolute;
-  top: calc(100% + 14px);
-  left: 50%;
-  transform: translateX(-50%);
-  min-width: 200px;
-  background: var(--burgundy);
-  border-radius: 3px;
-  list-style: none;
-  padding: 0.4rem 0;
-  box-shadow: 0 10px 32px rgba(0,0,0,0.25);
-  animation: dropdownIn 0.2s ease both;
-  z-index: 1000;
-}
-@keyframes dropdownIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-
-/* Arrow pointer */
-.navbar__dropdown::before {
-  content: '';
-  position: absolute;
-  top: -6px; left: 50%;
-  transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-bottom-color: var(--burgundy);
-  border-top: none;
-}
-
-.navbar__dropdown-item {
-  display: block;
-  padding: 0.65rem 1.4rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: rgba(255,255,255,0.75);
-  transition: color var(--transition), background var(--transition);
-  white-space: nowrap;
-}
-.navbar__dropdown-item:hover,
-.navbar__dropdown-item.active {
-  color: var(--gold);
-  background: rgba(255,255,255,0.05);
-}
-.navbar__dropdown-item--hub {
-  font-size: 0.65rem;
-  letter-spacing: 0.18em;
-  color: rgba(255,255,255,0.4);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  margin-bottom: 0.2rem;
-}
-.navbar__dropdown-item--hub:hover { color: var(--gold); }
-
-/* ══════════════════════════════════════════════════════════
-   Mobile Drawer — Ceremony accordion
-   ══════════════════════════════════════════════════════════ */
-
+/* ── Mobile Ceremony accordion ── */
 .navbar__drawer-group {
   display: flex;
   flex-direction: column;
 }
-
 .navbar__drawer-group-toggle {
   display: flex;
   align-items: center;
@@ -337,6 +270,8 @@
   cursor: pointer;
   transition: color var(--transition), background var(--transition), border-color var(--transition);
   text-align: left;
+  width: 100%;
+  font-family: var(--font-body);
 }
 .navbar__drawer-group-toggle:hover,
 .navbar__drawer-group-toggle.active {
@@ -344,7 +279,6 @@
   background: rgba(225,202,150,0.06);
   border-left-color: var(--gold);
 }
-
 .navbar__drawer-chevron {
   display: inline-block;
   transition: transform 0.25s ease;
@@ -352,19 +286,22 @@
 }
 .navbar__drawer-chevron.open { transform: rotate(90deg); }
 
-/* Collapsible submenu — CSS grid trick */
+/* Collapsible submenu — outer div animates height via max-height */
 .navbar__drawer-sub {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.3s cubic-bezier(0.4,0,0.2,1);
-  background: rgba(0,0,0,0.15);
+  max-height: 0;
   overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(0,0,0,0.15);
 }
 .navbar__drawer-sub--open {
-  grid-template-rows: 1fr;
+  /* Large enough to fit all links; adjust if you add more */
+  max-height: 300px;
 }
-.navbar__drawer-sub > * {
-  overflow: hidden;
+
+/* Inner div sits inside the overflow:hidden boundary */
+.navbar__drawer-sub-inner {
+  display: flex;
+  flex-direction: column;
 }
 
 .navbar__drawer-sublink {
@@ -383,4 +320,13 @@
 .navbar__drawer-sublink.active {
   color: var(--gold);
   border-left-color: var(--btn-color);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .navbar           { padding: 1rem 1.2rem; }
+  .navbar--scrolled { padding: 0.8rem 1.2rem; }
+  .navbar__links    { display: none; }
+  .navbar__hamburger { display: flex; }
+  .navbar__drawer   { display: flex; }
 }
