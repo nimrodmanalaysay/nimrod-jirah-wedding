@@ -123,6 +123,7 @@ const INITIAL_PLUS_ONE = {
   bringing:   '',      // 'yes' | 'no' | ''
   fullName:   '',
   attendance: '',
+  email:      '',
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -521,6 +522,7 @@ function StepPlusOne({ inviteeName, data, onChange, onSubmit, onBack, submitting
   const bringingYes   = data.bringing === 'yes'
   const canSubmit     = data.bringing === 'no' ||
     (bringingYes && data.fullName.trim() && data.attendance)
+  // email is optional for plus one
 
   return (
     <div className="rsvp-step fade-up">
@@ -565,6 +567,18 @@ function StepPlusOne({ inviteeName, data, onChange, onSubmit, onBack, submitting
                 onChange={e => onChange('fullName', e.target.value)}
                 autoComplete="off"
                 autoFocus
+              />
+            </div>
+
+            <div className="rsvp-field">
+              <label htmlFor="po-email">Guest Email <span style={{ fontWeight: 300, opacity: 0.6 }}>(optional)</span></label>
+              <input
+                id="po-email"
+                type="email"
+                placeholder="guest@example.com"
+                value={data.email}
+                onChange={e => onChange('email', e.target.value)}
+                autoComplete="off"
               />
             </div>
 
@@ -715,30 +729,52 @@ export default function RSVP() {
     }
   }
 
-  // Final submission — primary + optional plus one in one POST
+  // Helper — sends one RSVP row to the sheet (same format every time)
+  async function postRsvpRow(payload) {
+    await fetch(RSVP_SCRIPT_URL, {
+      method:  'POST',
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+  }
+
+  // Final submission — primary invitee + optional plus one as separate rows
+  // Both rows use the exact same column format so the sheet stays uniform.
   async function handleSubmit() {
     setSubmitting(true)
     setSubmitError('')
     try {
       const plusOneBringing = plusOneData.bringing === 'yes'
 
-      await fetch(RSVP_SCRIPT_URL, {
-        method:  'POST',
-        mode:    'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          inviteeName:       toTitleCase(inviteeName),
-          attendance:        formData.attendance,
-          firstName:         toTitleCase(formData.firstName),
-          lastName:          toTitleCase(formData.lastName),
-          email:             formData.email.trim().toLowerCase(),
-          notes:             toTitleCase(formData.notes),
-          advice:            toTitleCase(formData.advice),
-          // Plus One fields — empty strings if not bringing
-          plusOneName:       plusOneBringing ? toTitleCase(plusOneData.fullName)   : '',
-          plusOneAttendance: plusOneBringing ? plusOneData.attendance : '',
-        }),
+      // ── Row 1: Primary invitee ──
+      await postRsvpRow({
+        inviteeName: toTitleCase(inviteeName),
+        attendance:  formData.attendance,
+        firstName:   toTitleCase(formData.firstName),
+        lastName:    toTitleCase(formData.lastName),
+        email:       formData.email.trim().toLowerCase(),
+        notes:       toTitleCase(formData.notes),
+        advice:      toTitleCase(formData.advice),
       })
+
+      // ── Row 2: Plus one (only if bringing one) ──
+      // Same columns, no invite validation, no email required.
+      // inviteeName is marked as "(Plus One of <Primary>)" for traceability.
+      if (plusOneBringing && plusOneData.fullName.trim()) {
+        const [poFirst, ...poRest] = toTitleCase(plusOneData.fullName).split(' ')
+        const poLast = poRest.join(' ')
+        await postRsvpRow({
+          inviteeName: `Plus One of ${toTitleCase(inviteeName)}`,
+          attendance:  plusOneData.attendance,
+          firstName:   poFirst,
+          lastName:    poLast,
+          email:       plusOneData.email ? plusOneData.email.trim().toLowerCase() : '',
+          notes:       '',
+          advice:      '',
+        })
+      }
+
       markSubmitted()
       cacheForm(formData)
       setStep(4)
