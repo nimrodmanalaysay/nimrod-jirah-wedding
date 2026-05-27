@@ -618,26 +618,41 @@ function StepPlusOne({ inviteeName, data, onChange, onSubmit, onBack, submitting
 /* ═══════════════════════════════════════════════════════════
    STEP 4 — Success
    ═══════════════════════════════════════════════════════════ */
-function StepSuccess({ inviteeName, attendance, plusOneData }) {
-  const plusOneCame = plusOneData?.bringing === 'yes' && plusOneData?.fullName
+function StepSuccess({ inviteeName, attendance, plusOneData, email }) {
+  const plusOneCame   = plusOneData?.bringing === 'yes' && plusOneData?.fullName
+  const isAttending   = attendance === 'attending'
+  const hasEmail      = !!email
+
   return (
     <div className="rsvp-success fade-up">
       <div className="rsvp-success__icon">
-        {attendance === 'attending' ? '🥂' : '💌'}
+        {isAttending ? '🥂' : '💌'}
       </div>
       <h2 className="rsvp-success__title">
-        {attendance === 'attending' ? 'See you there!' : "We'll miss you!"}
+        {isAttending ? 'See you there!' : "We'll miss you!"}
       </h2>
       <p className="rsvp-success__msg">
-        {attendance === 'attending'
+        {isAttending
           ? `Thank you, ${inviteeName}! We can't wait to celebrate with you on November 7. 🎉`
           : `Thank you, ${inviteeName}. We're sad you can't make it, but we appreciate you letting us know. 💛`
         }
       </p>
+
       {plusOneCame && (
         <p className="rsvp-success__plus-one">
           We're also looking forward to seeing <strong>{plusOneData.fullName}</strong>! 🎊
         </p>
+      )}
+
+      {/* Email confirmation notice */}
+      {hasEmail && (
+        <div className="rsvp-success__email-note">
+          <span className="rsvp-success__email-icon">✉</span>
+          <p>
+            A confirmation email{isAttending ? ' with a calendar invite' : ''} has been
+            sent to <strong>{email}</strong>.
+          </p>
+        </div>
       )}
     </div>
   )
@@ -739,15 +754,21 @@ export default function RSVP() {
     })
   }
 
-  // Final submission — primary invitee + optional plus one as separate rows
+  // Final submission — primary invitee + optional plus one as separate rows.
   // Both rows use the exact same column format so the sheet stays uniform.
+  // The Apps Script doPost handles sending the confirmation email server-side
+  // using GmailApp — no credentials ever touch the browser.
   async function handleSubmit() {
     setSubmitting(true)
     setSubmitError('')
     try {
-      const plusOneBringing = plusOneData.bringing === 'yes'
+      const plusOneBringing  = plusOneData.bringing === 'yes'
+      const plusOneFullName  = plusOneBringing && plusOneData.fullName.trim()
+        ? toTitleCase(plusOneData.fullName)
+        : ''
 
       // ── Row 1: Primary invitee ──
+      // plusOneName is passed so the email template can reference it
       await postRsvpRow({
         inviteeName: toTitleCase(inviteeName),
         attendance:  formData.attendance,
@@ -756,13 +777,12 @@ export default function RSVP() {
         email:       formData.email.trim().toLowerCase(),
         notes:       toTitleCase(formData.notes),
         advice:      toTitleCase(formData.advice),
+        plusOneName: plusOneFullName,   // used by Apps Script for email only
       })
 
-      // ── Row 2: Plus one (only if bringing one) ──
-      // Same columns, no invite validation, no email required.
-      // inviteeName is marked as "(Plus One of <Primary>)" for traceability.
-      if (plusOneBringing && plusOneData.fullName.trim()) {
-        const [poFirst, ...poRest] = toTitleCase(plusOneData.fullName).split(' ')
+      // ── Row 2: Plus one row (same columns, separate row) ──
+      if (plusOneFullName) {
+        const [poFirst, ...poRest] = plusOneFullName.split(' ')
         const poLast = poRest.join(' ')
         await postRsvpRow({
           inviteeName: `Plus One of ${toTitleCase(inviteeName)}`,
@@ -772,6 +792,7 @@ export default function RSVP() {
           email:       plusOneData.email ? plusOneData.email.trim().toLowerCase() : '',
           notes:       '',
           advice:      '',
+          plusOneName: '',   // no nested plus one
         })
       }
 
@@ -880,6 +901,7 @@ export default function RSVP() {
             inviteeName={inviteeName}
             attendance={formData.attendance}
             plusOneData={plusOneData}
+            email={formData.email}
           />
         )}
       </div>

@@ -545,3 +545,41 @@
   line-height: 1.6;
 }
 .rsvp-success__plus-one strong { color: var(--btn-color); }
+
+/* ================================================================
+   EMAIL CONFIRMATION NOTICE (Success screen)
+   ================================================================ */
+.rsvp-success__email-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+  padding: 1rem 1.2rem;
+  background: rgba(225,202,150,0.12);
+  border: 1px solid rgba(225,202,150,0.4);
+  border-radius: 3px;
+  text-align: left;
+  max-width: 380px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rsvp-success__email-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  color: var(--btn-color);
+  margin-top: 1px;
+}
+
+.rsvp-success__email-note p {
+  font-size: 0.85rem;
+  color: rgba(105,27,25,0.7);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.rsvp-success__email-note strong {
+  color: var(--burgundy);
+  font-weight: 600;
+  word-break: break-all;
+}
