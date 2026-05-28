@@ -108,7 +108,7 @@ import {
    ============================================================ */
 
 const INVITEE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4krEOAYvMChZ5m9Eak9bg5u7oInMJ15QuZTOlekmAtv6CEpk324tTwjY8tWPZRBgb/exec'
-const RSVP_SCRIPT_URL    = 'https://script.google.com/macros/s/AKfycbwOdKcB_IIM-ftqoVO58cIC8djxcPoazDe2YdRNaN8ImhrUszPubT5tdA65y5RaDPiq/exec'
+const RSVP_SCRIPT_URL    = 'https://script.google.com/macros/s/AKfycby91SfSwvyh8Q5l78Y3xdvXJ291QVW2p7ffaHooWgRv4VIekhGZ9jX3tyFFGDfD6kiR/exec'
 
 const INITIAL_FORM = {
   attendance: '',
