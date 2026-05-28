@@ -127,6 +127,34 @@ const INITIAL_PLUS_ONE = {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   KEYBOARD HOOKS
+   ═══════════════════════════════════════════════════════════ */
+
+// Fires `fn` when Enter is pressed globally (not inside a textarea)
+// deps array optional — re-registers when deps change
+function useEnterKey(fn, deps = []) {
+  useEffect(() => {
+    function handler(e) {
+      if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') fn()
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, deps) // eslint-disable-line react-hooks/exhaustive-deps
+}
+
+// Fires `fn` when Ctrl+Enter (or Cmd+Enter on Mac) is pressed anywhere
+// Safe to use inside textareas — doesn't interfere with plain Enter
+function useCtrlEnterKey(fn) {
+  useEffect(() => {
+    function handler(e) {
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) fn()
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+}
+
+/* ═══════════════════════════════════════════════════════════
    SHARED COMPONENTS
    ═══════════════════════════════════════════════════════════ */
 
@@ -415,6 +443,8 @@ function StepDone({ inviteeName, formData, plusOneData, onReset }) {
    STEP 1 — Attendance
    ═══════════════════════════════════════════════════════════ */
 function StepAttendance({ inviteeName, data, onChange, onNext }) {
+  // Enter key — proceed if an option is already selected
+  useEnterKey(() => { if (data.attendance) onNext() })
   return (
     <div className="rsvp-step fade-up">
       <p className="rsvp-step__greeting">Welcome, <strong>{inviteeName}</strong> 🎉</p>
@@ -445,6 +475,8 @@ function StepAttendance({ inviteeName, data, onChange, onNext }) {
    ═══════════════════════════════════════════════════════════ */
 function StepContact({ data, onChange, onNext, onBack }) {
   const valid = data.firstName.trim() && data.lastName.trim() && data.email.trim()
+  // Enter key — proceed only when all required fields are filled
+  useEnterKey(() => { if (valid) onNext() }, [valid])
   return (
     <div className="rsvp-step fade-up">
       <h2 className="rsvp-step__title">Your Details</h2>
@@ -483,24 +515,38 @@ function StepContact({ data, onChange, onNext, onBack }) {
 
 /* ═══════════════════════════════════════════════════════════
    STEP 3 — Personal touch
+   Enter key on either textarea advances to the next step.
+   Shift+Enter still inserts a newline for multi-line input.
    ═══════════════════════════════════════════════════════════ */
 function StepPersonal({ data, onChange, onNext, onBack }) {
+  // Plain Enter = continue; Shift+Enter = new line in textarea
+  function handleTextareaKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()   // stop the newline from being inserted
+      onNext()
+    }
+  }
+
   return (
     <div className="rsvp-step fade-up">
       <h2 className="rsvp-step__title">A Little Extra</h2>
-      <p className="rsvp-step__sub">Share something special with us</p>
+      <p className="rsvp-step__sub">Share something special with us · Press Enter to continue</p>
       <div className="rsvp-fields">
         <div className="rsvp-field">
           <label htmlFor="rsvp-notes">Notes / Dietary Requirements</label>
           <textarea id="rsvp-notes" rows={3}
             placeholder="Dietary needs, song requests, anything you'd like us to know…"
-            value={data.notes} onChange={e => onChange('notes', e.target.value)} />
+            value={data.notes}
+            onChange={e => onChange('notes', e.target.value)}
+            onKeyDown={handleTextareaKey} />
         </div>
         <div className="rsvp-field">
           <label htmlFor="rsvp-advice">Best Advice for the Couple ✨</label>
           <textarea id="rsvp-advice" rows={4}
             placeholder="Share your best marriage advice or a heartfelt message…"
-            value={data.advice} onChange={e => onChange('advice', e.target.value)} />
+            value={data.advice}
+            onChange={e => onChange('advice', e.target.value)}
+            onKeyDown={handleTextareaKey} />
         </div>
       </div>
       <div className="rsvp-step__actions">
