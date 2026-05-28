@@ -108,7 +108,7 @@ import {
    ============================================================ */
 
 const INVITEE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4krEOAYvMChZ5m9Eak9bg5u7oInMJ15QuZTOlekmAtv6CEpk324tTwjY8tWPZRBgb/exec'
-const RSVP_SCRIPT_URL    = 'https://script.google.com/macros/s/AKfycbwnDcEGtOK5lWZXQ1hG6r3dtcbescSqCH11t56WJZW-FZv8YxNf_iNmbU_u6njtcnRi/exec'
+const RSVP_SCRIPT_URL    = 'https://script.google.com/macros/s/AKfycbxg7j66YG1qZ3BmhWAjinsC58QA3SlG7j1QMHfHV4KjJyNr-r8Ct_GcATvPSI0C8neV/exec'
 
 const INITIAL_FORM = {
   attendance: '',
@@ -734,8 +734,9 @@ export default function RSVP() {
     setSubmitError('')
   }
 
-  // After step 3 — decide whether to show plus one step
+  // After step 3 — decide whether to show plus one step or submit directly
   function handleAfterPersonal() {
+    if (submitting) return   // prevent double-fire
     const isAttending = formData.attendance === 'attending'
     if (plusOneElig && isAttending) {
       setStep('plusone')
@@ -759,6 +760,7 @@ export default function RSVP() {
   // The Apps Script doPost handles sending the confirmation email server-side
   // using GmailApp — no credentials ever touch the browser.
   async function handleSubmit() {
+    if (submitting) return   // prevent duplicate submissions
     setSubmitting(true)
     setSubmitError('')
     try {
