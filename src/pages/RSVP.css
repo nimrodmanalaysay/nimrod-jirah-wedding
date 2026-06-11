@@ -321,26 +321,6 @@
    NEW STATES — added with RSVP refactor
    ================================================================ */
 
-/* ---- Loading skeleton while session restores ---- */
-.rsvp-card--loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 200px;
-}
-
-.rsvp-spinner {
-  width: 32px;
-  height: 32px;
-  border: 2px solid rgba(202,102,65,0.2);
-  border-top-color: var(--btn-color);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
 /* Animated ellipsis on "Checking..." */
 .dots::after {
   content: '';
