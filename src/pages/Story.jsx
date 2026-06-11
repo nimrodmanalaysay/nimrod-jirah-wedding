@@ -1,8 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './Story.css'
 
 /* ============================================================
-   Our Story Page — slideshow with images per slide
+   Our Story Page — scroll-driven chapters
+
+   Each chapter is a full-height section. As the reader scrolls,
+   sections snap into place and reveal with a soft fade/slide.
+   No buttons — the story unfolds with the scroll until the end.
+
    ✏️ Replace `image` URLs with your real prenup/couple photos.
       Images live in /public/photos/ — reference as /photos/name.jpg
    ============================================================ */
@@ -62,91 +67,85 @@ const slides = [
 ]
 
 export default function Story() {
-  const [current, setCurrent] = useState(0)
-  const [animKey, setAnimKey] = useState(0)
+  const scrollRef   = useRef(null)
+  const sectionRefs = useRef([])
+  const [active, setActive] = useState(0)
 
-  function goTo(i) {
-    setCurrent(i)
-    setAnimKey(k => k + 1) // re-trigger card animation
-  }
-  const prev = () => goTo(Math.max(0, current - 1))
-  const next = () => goTo(Math.min(slides.length - 1, current + 1))
+  // Reveal each section as it scrolls into view and track the active one.
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view')
+            const idx = Number(entry.target.dataset.index)
+            if (!Number.isNaN(idx)) setActive(idx)
+          }
+        })
+      },
+      { root: scrollRef.current, threshold: 0.55 }
+    )
 
-  const slide = slides[current]
+    sectionRefs.current.forEach(el => el && observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
 
   return (
-    <div className="story">
+    <div className="story" ref={scrollRef}>
 
-      {/* Page header */}
-      <div className="story__header">
-        <h1 className="section-title">Our Story</h1>
-        <span className="section-divider" />
-        <p className="story__sub">The journey that brought us here</p>
-      </div>
-
-      {/* Slideshow */}
-      <div className="story__stage">
-
-        {/* Progress dots */}
-        <div className="story__dots">
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              className={`story__dot ${i === current ? 'active' : ''}`}
-              onClick={() => goTo(i)}
-              aria-label={`Go to slide ${i + 1}`}
-            />
-          ))}
-        </div>
-
-        {/* Slide card — key forces re-animation on change */}
-        <div className="story__card" key={animKey}>
-
-          {/* Photo */}
-          <div className="story__img-wrap">
-            <img
-              src={slide.image}
-              alt={slide.imageAlt}
-              className="story__img"
-              loading="lazy"
-            />
+      {/* Intro section */}
+      <section
+        className="story__section story__section--intro in-view"
+        data-index="0"
+        ref={el => (sectionRefs.current[0] = el)}
+      >
+        <div className="story__intro-inner">
+          <h1 className="section-title">Our Story</h1>
+          <span className="section-divider" />
+          <p className="story__sub">The journey that brought us here</p>
+          <div className="story__scroll-cue">
+            <span>Scroll to begin</span>
+            <span className="story__scroll-arrow">↓</span>
           </div>
-
-          {/* Text content */}
-          <div className="story__card-body">
-            <span className="story__chapter-icon">{slide.icon}</span>
-            <p className="story__chapter">{slide.chapter}</p>
-            <h2 className="story__title">{slide.title}</h2>
-            <p className="story__date">{slide.date}</p>
-            <p className="story__body">{slide.body}</p>
-          </div>
-
         </div>
+      </section>
 
-        {/* Navigation */}
-        <div className="story__nav">
-          <button className="story__nav-btn" onClick={prev} disabled={current === 0}>
-            ← Prev
-          </button>
-          <span className="story__counter">{current + 1} / {slides.length}</span>
-          <button className="story__nav-btn" onClick={next} disabled={current === slides.length - 1}>
-            Next →
-          </button>
-        </div>
+      {/* Chapter sections */}
+      {slides.map((slide, i) => (
+        <section
+          key={slide.id}
+          className={`story__section story__section--chapter ${i % 2 === 1 ? 'reverse' : ''}`}
+          data-index={i + 1}
+          ref={el => (sectionRefs.current[i + 1] = el)}
+        >
+          <div className="story__chapter-inner">
+            <div className="story__img-wrap">
+              <img
+                src={slide.image}
+                alt={slide.imageAlt}
+                className="story__img"
+                loading="lazy"
+              />
+            </div>
 
-      </div>
-
-      {/* Timeline strip */}
-      <div className="story__timeline">
-        {slides.map((s, i) => (
-          <div
-            key={s.id}
-            className={`story__timeline-item ${i <= current ? 'passed' : ''}`}
-            onClick={() => goTo(i)}
-          >
-            <div className="story__timeline-dot" />
-            <p className="story__timeline-label">{s.title}</p>
+            <div className="story__card-body">
+              <span className="story__chapter-icon">{slide.icon}</span>
+              <p className="story__chapter">{slide.chapter}</p>
+              <h2 className="story__title">{slide.title}</h2>
+              <p className="story__date">{slide.date}</p>
+              <p className="story__body">{slide.body}</p>
+            </div>
           </div>
+        </section>
+      ))}
+
+      {/* Scroll progress indicator (non-interactive) */}
+      <div className="story__progress" aria-hidden="true">
+        {[{ id: 'intro' }, ...slides].map((_, i) => (
+          <span
+            key={i}
+            className={`story__progress-dot ${i === active ? 'active' : ''} ${i < active ? 'passed' : ''}`}
+          />
         ))}
       </div>
 

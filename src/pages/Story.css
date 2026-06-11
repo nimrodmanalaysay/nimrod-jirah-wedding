@@ -1,78 +1,106 @@
 /* ============================================================
-   Our Story — Slideshow with images
+   Our Story — scroll-driven full-height chapters
    ============================================================ */
 
 .story {
-  min-height: 100vh;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
   background: var(--off-white);
-  padding-top: 6rem;
-  padding-bottom: 4rem;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;          /* Firefox */
+}
+.story::-webkit-scrollbar { display: none; }   /* WebKit */
+
+/* ---- Sections ---- */
+.story__section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  padding: 6rem 1.5rem 3rem;
+  box-sizing: border-box;
 }
 
-.story__header {
+/* ---- Intro section ---- */
+.story__section--intro {
   text-align: center;
-  padding: 2rem 1.5rem 0;
+}
+
+.story__intro-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .story__sub {
   font-family: var(--font-display);
   font-style: italic;
   color: var(--btn-color);
-  font-size: 1.05rem;
-  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  margin-top: 0.6rem;
 }
 
-/* ---- Stage ---- */
-.story__stage {
-  max-width: 760px;
-  margin: 3rem auto;
-  padding: 0 1.5rem;
+.story__scroll-cue {
+  margin-top: 3.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
-}
-
-/* Progress dots */
-.story__dots {
-  display: flex;
   gap: 0.6rem;
-}
-.story__dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: rgba(105,27,25,0.18);
-  border: none;
-  cursor: pointer;
-  transition: background var(--transition), transform var(--transition);
-}
-.story__dot.active {
-  background: var(--btn-color);
-  transform: scale(1.4);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sage);
 }
 
-/* ---- Slide card ---- */
-.story__card {
+.story__scroll-arrow {
+  font-size: 1.3rem;
+  color: var(--btn-color);
+  animation: storyBounce 1.8s ease-in-out infinite;
+}
+@keyframes storyBounce {
+  0%, 100% { transform: translateY(0);   opacity: 0.5; }
+  50%      { transform: translateY(8px); opacity: 1;   }
+}
+
+/* ---- Chapter section ---- */
+.story__chapter-inner {
+  max-width: 980px;
   width: 100%;
-  background: var(--white);
-  border: 1px solid rgba(225,202,150,0.4);
-  border-radius: 4px;
-  overflow: hidden;
-  box-shadow: 0 8px 40px rgba(105,27,25,0.08);
-  animation: storySlideIn 0.45s cubic-bezier(0.4,0,0.2,1) both;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: 3rem;
+
+  /* hidden until revealed */
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1),
+              transform 0.8s cubic-bezier(0.4,0,0.2,1);
 }
 
-@keyframes storySlideIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+.story__section.in-view .story__chapter-inner {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-/* Photo area */
+/* Alternating layout — image on the right for odd chapters */
+.story__section--chapter.reverse .story__chapter-inner {
+  grid-template-columns: 1fr 1.1fr;
+}
+.story__section--chapter.reverse .story__img-wrap { order: 2; }
+.story__section--chapter.reverse .story__card-body { order: 1; }
+
+/* Photo */
 .story__img-wrap {
-  width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
+  border-radius: 4px;
   background: var(--blush);
+  box-shadow: 0 12px 50px rgba(105,27,25,0.12);
 }
 
 .story__img {
@@ -80,29 +108,26 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.6s ease;
+  transition: transform 0.8s ease;
 }
-.story__card:hover .story__img {
-  transform: scale(1.03);
-}
+.story__section.in-view .story__img { transform: scale(1.04); }
 
-/* Text content under image */
+/* Text content */
 .story__card-body {
-  padding: 2.5rem 2.8rem;
-  text-align: center;
+  text-align: left;
 }
 
 .story__chapter-icon {
   display: block;
-  font-size: 1.8rem;
+  font-size: 1.9rem;
   color: var(--gold);
   margin-bottom: 0.8rem;
 }
 
 .story__chapter {
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 500;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--btn-color);
   margin-bottom: 0.6rem;
@@ -110,9 +135,9 @@
 
 .story__title {
   font-family: var(--font-display);
-  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  font-size: clamp(1.9rem, 4.5vw, 3rem);
   color: var(--burgundy);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
 }
 
 .story__date {
@@ -120,109 +145,65 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--sage);
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.4rem;
 }
 
 .story__body {
-  font-size: 0.97rem;
-  line-height: 1.9;
+  font-size: 1rem;
+  line-height: 1.95;
   color: rgba(105,27,25,0.72);
-  max-width: 520px;
-  margin: 0 auto;
+  max-width: 480px;
 }
 
-/* ---- Nav buttons ---- */
-.story__nav {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-
-.story__nav-btn {
-  background: none;
-  border: 1.5px solid var(--btn-color);
-  color: var(--btn-color);
-  padding: 0.55rem 1.3rem;
-  font-family: var(--font-body);
-  font-size: 0.76rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: background var(--transition), color var(--transition);
-}
-.story__nav-btn:hover:not(:disabled) {
-  background: var(--btn-color);
-  color: var(--white);
-}
-.story__nav-btn:disabled { opacity: 0.22; cursor: default; }
-
-.story__counter {
-  font-size: 0.78rem;
-  color: var(--sage);
-  letter-spacing: 0.1em;
-}
-
-/* ---- Timeline strip ---- */
-.story__timeline {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-  overflow-x: auto;
-}
-
-.story__timeline-item {
+/* ---- Scroll progress rail (non-interactive) ---- */
+.story__progress {
+  position: fixed;
+  right: 1.6rem;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  flex: 1;
-  min-width: 80px;
-  cursor: pointer;
-  position: relative;
-  padding-top: 0.5rem;
+  gap: 0.7rem;
+  z-index: 20;
 }
-.story__timeline-item::before {
-  content: '';
-  position: absolute;
-  top: 12px; left: 50%;
-  width: 100%; height: 1px;
-  background: rgba(105,27,25,0.14);
-  z-index: 0;
-}
-.story__timeline-item:last-child::before { display: none; }
 
-.story__timeline-dot {
-  width: 13px; height: 13px;
+.story__progress-dot {
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  background: rgba(105,27,25,0.15);
-  border: 2px solid transparent;
-  position: relative; z-index: 1;
-  transition: background var(--transition), border-color var(--transition);
+  background: rgba(105,27,25,0.18);
+  transition: background var(--transition), transform var(--transition);
 }
-.story__timeline-item.passed .story__timeline-dot {
+.story__progress-dot.passed { background: rgba(189,103,56,0.5); }
+.story__progress-dot.active {
   background: var(--btn-color);
-  border-color: var(--btn-color);
+  transform: scale(1.5);
 }
-.story__timeline-item:hover .story__timeline-dot {
-  border-color: var(--burgundy);
-}
-
-.story__timeline-label {
-  font-size: 0.63rem;
-  font-weight: 500;
-  text-align: center;
-  color: rgba(105,27,25,0.5);
-  margin-top: 0.45rem;
-  transition: color var(--transition);
-}
-.story__timeline-item.passed .story__timeline-label { color: var(--btn-color); }
 
 /* ---- Responsive ---- */
-@media (max-width: 540px) {
-  .story__card-body { padding: 1.8rem 1.3rem; }
-  .story__timeline-label { display: none; }
+@media (max-width: 760px) {
+  .story__chapter-inner,
+  .story__section--chapter.reverse .story__chapter-inner {
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+    text-align: center;
+  }
+  .story__section--chapter.reverse .story__img-wrap { order: 1; }
+  .story__section--chapter.reverse .story__card-body { order: 2; }
+
+  .story__card-body { text-align: center; }
+  .story__body { margin: 0 auto; }
+
+  .story__progress { right: 0.8rem; }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .story { scroll-behavior: auto; }
+  .story__chapter-inner {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .story__scroll-arrow { animation: none; }
 }
