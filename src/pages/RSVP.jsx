@@ -26,37 +26,54 @@ import {
 } from '../utils/rsvpCache'
 import { toTitleCase } from '../utils/rsvpValidation'
 
+// Compute the starting state synchronously from any cached session, so the
+// page renders its real first step on the very first paint (no spinner flash).
+function initFromSession() {
+  const session = loadSession()
+  if (!session) {
+    return {
+      step: 0,
+      inviteeName: '',
+      formData: INITIAL_FORM,
+      plusOneData: INITIAL_PLUS_ONE,
+      plusOneElig: false,
+      existingRec: null,
+    }
+  }
+
+  let step
+  let existingRec = null
+  if (session.submitted) {
+    step = 'done'
+  } else if (session.existingRsvp) {
+    step = 'existing'
+    existingRec = session.existingRsvp
+  } else {
+    step = session.step
+  }
+
+  return {
+    step,
+    inviteeName: session.inviteeName,
+    formData:    session.formData    ? { ...INITIAL_FORM,     ...session.formData }    : INITIAL_FORM,
+    plusOneData: session.plusOneForm ? { ...INITIAL_PLUS_ONE, ...session.plusOneForm } : INITIAL_PLUS_ONE,
+    plusOneElig: session.plusOneEligible ?? false,
+    existingRec,
+  }
+}
+
 export default function RSVP() {
-  const [step,          setStep]          = useState(null)
-  const [inviteeName,   setInviteeName]   = useState('')
-  const [formData,      setFormData]      = useState(INITIAL_FORM)
-  const [plusOneData,   setPlusOneData]   = useState(INITIAL_PLUS_ONE)
-  const [plusOneElig,   setPlusOneElig]   = useState(false)
-  const [existingRec,   setExistingRec]   = useState(null)
+  const [init] = useState(initFromSession)
+  const [step,          setStep]          = useState(init.step)
+  const [inviteeName,   setInviteeName]   = useState(init.inviteeName)
+  const [formData,      setFormData]      = useState(init.formData)
+  const [plusOneData,   setPlusOneData]   = useState(init.plusOneData)
+  const [plusOneElig,   setPlusOneElig]   = useState(init.plusOneElig)
+  const [existingRec,   setExistingRec]   = useState(init.existingRec)
   const [submitting,    setSubmitting]    = useState(false)
   const [submitError,   setSubmitError]   = useState('')
 
-  // ── Restore session on mount ──
-  useEffect(() => {
-    const session = loadSession()
-    if (!session) { setStep(0); return }
-
-    setInviteeName(session.inviteeName)
-    if (session.formData)    setFormData(prev => ({ ...prev, ...session.formData }))
-    if (session.plusOneForm) setPlusOneData(prev => ({ ...prev, ...session.plusOneForm }))
-    if (session.plusOneEligible !== null) setPlusOneElig(session.plusOneEligible)
-
-    if (session.submitted) {
-      setStep('done')
-    } else if (session.existingRsvp) {
-      setExistingRec(session.existingRsvp)
-      setStep('existing')
-    } else {
-      setStep(session.step)
-    }
-  }, [])
-
-  useEffect(() => { if (step !== null) cacheStep(step) }, [step])
+  useEffect(() => { cacheStep(step) }, [step])
   useEffect(() => {
     if (typeof step === 'number' && step > 0) cacheForm(formData)
   }, [formData]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -168,16 +185,6 @@ export default function RSVP() {
   const showPlusOneStep = plusOneElig && formData.attendance === 'attending'
   const TOTAL_STEPS     = showPlusOneStep ? 4 : 3
   const stepIndex       = step === 'plusone' ? 3 : (typeof step === 'number' ? step - 1 : 0)
-
-  if (step === null) {
-    return (
-      <div className="rsvp-page">
-        <div className="rsvp-card rsvp-card--loading">
-          <div className="rsvp-spinner" aria-label="Loading…" />
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="rsvp-page">
