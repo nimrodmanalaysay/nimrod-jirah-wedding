@@ -67,48 +67,32 @@ const slides = [
 ]
 
 export default function Story() {
+  const scrollRef   = useRef(null)
   const sectionRefs = useRef([])
   const [active, setActive] = useState(0)
 
-  // Reveal each section only once it has genuinely scrolled into view.
-  // rootMargin trims the bottom of the viewport so the reveal fires when
-  // the section is well inside the frame — not while it's still peeking in.
+  // As each section snaps into view, reveal its content and mark it active.
+  // Observer root is the snap container so it tracks the in-page scroll.
   useEffect(() => {
-    const revealer = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('in-view')
-            revealer.unobserve(entry.target)   // reveal once, then leave it
-          }
-        })
-      },
-      { threshold: 0, rootMargin: '0px 0px -25% 0px' }
-    )
-
-    // Separate observer to track which chapter is centered (progress rail).
-    const tracker = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
             const idx = Number(entry.target.dataset.index)
             if (!Number.isNaN(idx)) setActive(idx)
           }
         })
       },
-      { threshold: 0.5 }
+      { root: scrollRef.current, threshold: 0.4 }
     )
 
-    sectionRefs.current.forEach(el => {
-      if (!el) return
-      revealer.observe(el)
-      tracker.observe(el)
-    })
-    return () => { revealer.disconnect(); tracker.disconnect() }
+    sectionRefs.current.forEach(el => el && observer.observe(el))
+    return () => observer.disconnect()
   }, [])
 
   return (
-    <div className="story">
+    <div className="story" ref={scrollRef}>
 
       {/* Intro section */}
       <section
