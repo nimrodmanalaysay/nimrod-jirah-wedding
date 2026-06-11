@@ -1,8 +1,8 @@
 # 💍 Nimrod & Jirah Wedding Website
 
-Built with **React + Vite**. Auto-deploys to **GitHub Pages** on every push to `main`.
+Built with **React + Vite**. Auto-deploys to **GitHub Pages** on every push to `master`.
 
-**Live URL (after setup):** `https://YOUR-USERNAME.github.io/nimrod-jirah-wedding/`
+**Live URL:** `https://nimrodmanalaysay.github.io/nimrod-jirah-wedding/`
 
 ---
 
@@ -27,9 +27,9 @@ Open your terminal inside the unzipped project folder:
 git init
 git add .
 git commit -m "Initial commit: Nimrod & Jirah wedding website"
-git branch -M main
-git remote add origin https://github.com/YOUR-USERNAME/nimrod-jirah-wedding.git
-git push -u origin main
+git branch -M master
+git remote add origin https://github.com/nimrodmanalaysay/nimrod-jirah-wedding.git
+git push -u origin master
 ```
 
 > Replace `YOUR-USERNAME` with your actual GitHub username.
@@ -56,7 +56,7 @@ git push -u origin main
 4. Your site is live at:
 
 ```
-https://YOUR-USERNAME.github.io/nimrod-jirah-wedding/
+https://nimrodmanalaysay.github.io/nimrod-jirah-wedding/
 ```
 
 ---
