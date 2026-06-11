@@ -3,15 +3,9 @@
    ============================================================ */
 
 .story {
-  height: 100vh;
-  overflow-y: scroll;
-  overflow-x: hidden;
   background: var(--off-white);
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-  scrollbar-width: none;          /* Firefox */
+  overflow-x: hidden;
 }
-.story::-webkit-scrollbar { display: none; }   /* WebKit */
 
 /* ---- Sections ---- */
 .story__section {
@@ -19,8 +13,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   padding: 6rem 1.5rem 3rem;
   box-sizing: border-box;
 }
@@ -74,17 +66,6 @@
   grid-template-columns: 1.1fr 1fr;
   align-items: center;
   gap: 3rem;
-
-  /* hidden until revealed */
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1),
-              transform 0.8s cubic-bezier(0.4,0,0.2,1);
-}
-
-.story__section.in-view .story__chapter-inner {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 /* Alternating layout — image on the right for odd chapters */
@@ -93,6 +74,29 @@
 }
 .story__section--chapter.reverse .story__img-wrap { order: 2; }
 .story__section--chapter.reverse .story__card-body { order: 1; }
+
+/* ---- Reveal on scroll ----
+   Image slides in from the outer edge, text rises from below.
+   The text is nudged slightly later for a layered, modern feel. */
+.story__img-wrap,
+.story__card-body {
+  opacity: 0;
+  transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+              transform 0.9s cubic-bezier(0.16,1,0.3,1);
+  will-change: opacity, transform;
+}
+
+.story__img-wrap  { transform: translateX(-48px); }
+.story__card-body { transform: translateY(48px); transition-delay: 0.12s; }
+
+/* Mirror the image slide direction on reversed chapters */
+.story__section--chapter.reverse .story__img-wrap { transform: translateX(48px); }
+
+.story__section.in-view .story__img-wrap,
+.story__section.in-view .story__card-body {
+  opacity: 1;
+  transform: translate(0, 0);
+}
 
 /* Photo */
 .story__img-wrap {
@@ -108,9 +112,10 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.8s ease;
+  transform: scale(1.08);
+  transition: transform 1.4s cubic-bezier(0.16,1,0.3,1);
 }
-.story__section.in-view .story__img { transform: scale(1.04); }
+.story__section.in-view .story__img { transform: scale(1); }
 
 /* Text content */
 .story__card-body {
@@ -199,8 +204,9 @@
 
 /* Respect reduced-motion preferences */
 @media (prefers-reduced-motion: reduce) {
-  .story { scroll-behavior: auto; }
-  .story__chapter-inner {
+  .story__img-wrap,
+  .story__card-body,
+  .story__img {
     opacity: 1;
     transform: none;
     transition: none;
