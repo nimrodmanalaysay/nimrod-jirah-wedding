@@ -98,6 +98,37 @@
   opacity: 0.85;
 }
 
+/* "Watch from the top" replay button (closing frame) */
+.film__replay {
+  margin-top: 2.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: transparent;
+  border: 1px solid rgba(225,202,150,0.5);
+  color: var(--off-white,#f3e9da);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.9rem 1.9rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.35s ease, color 0.35s ease,
+              border-color 0.35s ease, transform 0.35s ease;
+}
+.film__replay:hover {
+  background: var(--gold,#e1ca96);
+  border-color: var(--gold,#e1ca96);
+  color: #2a1a10;
+  transform: translateY(-2px);
+}
+.film__replay-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
 /* scroll cue */
 .film__cue {
   position: absolute;

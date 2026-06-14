@@ -183,6 +183,13 @@ export default function Story() {
           <h1 className="film__maintitle film__maintitle--sm">See you there</h1>
           <span className="film__rule" />
           <p className="film__tagline">November 7, 2026</p>
+          <button
+            className="film__replay"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            <span className="film__replay-icon">↺</span>
+            Watch from the top
+          </button>
         </div>
       </section>
 
