@@ -131,7 +131,7 @@
    ════════════════════════════════════════════════════════════ */
 .reel {
   position: relative;
-  height: 240vh;            /* pin (100vh) + scrub travel — slow & cinematic */
+  height: 185vh;            /* pin (100vh) + scrub travel — lower = faster scrub */
 
   /* scrub variables (set by JS) */
   --p: 0;
