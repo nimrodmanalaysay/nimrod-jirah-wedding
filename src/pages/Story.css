@@ -1,32 +1,20 @@
 /* ============================================================
-   Our Story — scroll-driven full-height chapters
+   Our Story — scroll-scrubbed pinned chapters
    ============================================================ */
 
 .story {
-  height: 100vh;
-  overflow-y: scroll;
-  overflow-x: hidden;
   background: var(--off-white);
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-  scrollbar-width: none;          /* Firefox */
+  overflow-x: hidden;
 }
-.story::-webkit-scrollbar { display: none; }   /* WebKit */
 
-/* ---- Sections ---- */
-.story__section {
+/* ---- Intro screen ---- */
+.story__section--intro {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   padding: 6rem 1.5rem 3rem;
   box-sizing: border-box;
-}
-
-/* ---- Intro section ---- */
-.story__section--intro {
   text-align: center;
 }
 
@@ -66,7 +54,28 @@
   50%      { transform: translateY(8px); opacity: 1;   }
 }
 
-/* ---- Chapter section ---- */
+/* ---- Track: provides the scroll distance for the scrub ---- */
+.story__track {
+  position: relative;
+  height: 200vh;          /* 100vh pinned + 100vh of scrub travel */
+  --p: 0;                 /* raw progress 0 → 1 (set by JS)        */
+  --img: 0;               /* image scrub (leads)                   */
+  --txt: 0;               /* text scrub  (follows)                 */
+}
+
+/* The panel that pins while you scroll through the track */
+.story__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 1.5rem 3rem;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
 .story__chapter-inner {
   max-width: 980px;
   width: 100%;
@@ -77,42 +86,26 @@
 }
 
 /* Alternating layout — image on the right for odd chapters */
-.story__section--chapter.reverse .story__chapter-inner {
+.story__track.reverse .story__chapter-inner {
   grid-template-columns: 1fr 1.1fr;
 }
-.story__section--chapter.reverse .story__img-wrap { order: 2; }
-.story__section--chapter.reverse .story__card-body { order: 1; }
+.story__track.reverse .story__img-wrap { order: 2; }
+.story__track.reverse .story__card-body { order: 1; }
 
-/* ---- Reveal on scroll ----
-   Image slides in from the outer edge, text rises from below.
-   The text is nudged slightly later for a layered, modern feel. */
-.story__img-wrap,
-.story__card-body {
-  opacity: 0;
-  transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
-              transform 0.9s cubic-bezier(0.16,1,0.3,1);
-  will-change: opacity, transform;
-}
-
-.story__img-wrap  { transform: translateX(-48px); }
-.story__card-body { transform: translateY(48px); transition-delay: 0.12s; }
-
-/* Mirror the image slide direction on reversed chapters */
-.story__section--chapter.reverse .story__img-wrap { transform: translateX(48px); }
-
-.story__section.in-view .story__img-wrap,
-.story__section.in-view .story__card-body {
-  opacity: 1;
-  transform: translate(0, 0);
-}
-
-/* Photo */
+/* ---- Scrubbed image ---- */
 .story__img-wrap {
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: 4px;
   background: var(--blush);
   box-shadow: 0 12px 50px rgba(105,27,25,0.12);
+
+  /* slides in from the outer edge as --img scrubs 0 → 1 */
+  opacity: var(--img);
+  transform: translateX(calc((1 - var(--img)) * -60px));
+}
+.story__track.reverse .story__img-wrap {
+  transform: translateX(calc((1 - var(--img)) * 60px));
 }
 
 .story__img {
@@ -120,14 +113,16 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transform: scale(1.08);
-  transition: transform 1.4s cubic-bezier(0.16,1,0.3,1);
+  /* eases out of a zoom, plus continuous parallax drift across the pin */
+  transform: scale(calc(1.25 - 0.25 * var(--img)))
+             translateY(calc((var(--p) - 0.5) * 48px));
 }
-.story__section.in-view .story__img { transform: scale(1); }
 
-/* Text content */
+/* ---- Scrubbed text ---- */
 .story__card-body {
   text-align: left;
+  opacity: var(--txt);
+  transform: translateY(calc((1 - var(--txt)) * 64px));
 }
 
 .story__chapter-icon {
@@ -196,13 +191,13 @@
 /* ---- Responsive ---- */
 @media (max-width: 760px) {
   .story__chapter-inner,
-  .story__section--chapter.reverse .story__chapter-inner {
+  .story__track.reverse .story__chapter-inner {
     grid-template-columns: 1fr;
     gap: 1.8rem;
     text-align: center;
   }
-  .story__section--chapter.reverse .story__img-wrap { order: 1; }
-  .story__section--chapter.reverse .story__card-body { order: 2; }
+  .story__track.reverse .story__img-wrap { order: 1; }
+  .story__track.reverse .story__card-body { order: 2; }
 
   .story__card-body { text-align: center; }
   .story__body { margin: 0 auto; }
@@ -212,13 +207,14 @@
 
 /* Respect reduced-motion preferences */
 @media (prefers-reduced-motion: reduce) {
-  .story { scroll-behavior: auto; scroll-snap-type: none; }
-  .story__img-wrap,
-  .story__card-body,
-  .story__img {
-    opacity: 1;
-    transform: none;
-    transition: none;
+  .story__track { height: auto; }
+  .story__pin {
+    position: static;
+    height: auto;
+    min-height: 100vh;
   }
+  .story__img-wrap,
+  .story__card-body { opacity: 1; transform: none; }
+  .story__img { transform: none; }
   .story__scroll-arrow { animation: none; }
 }

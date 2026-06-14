@@ -2,11 +2,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import './Story.css'
 
 /* ============================================================
-   Our Story Page — scroll-driven chapters
+   Our Story Page — scroll-scrubbed chapters
 
-   Each chapter is a full-height section. As the reader scrolls,
-   sections snap into place and reveal with a soft fade/slide.
-   No buttons — the story unfolds with the scroll until the end.
+   Each chapter sits in a tall "track". Inside it, a sticky panel
+   pins to the screen while you scroll through the track, and the
+   animation (image scale/parallax, text rise + fade) is scrubbed
+   directly from scroll progress — forward when you scroll down,
+   backward when you scroll up. Apple-style scroll storytelling.
 
    ✏️ Replace `image` URLs with your real prenup/couple photos.
       Images live in /public/photos/ — reference as /photos/name.jpg
@@ -66,40 +68,74 @@ const slides = [
   },
 ]
 
+const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
+
 export default function Story() {
-  const scrollRef   = useRef(null)
-  const sectionRefs = useRef([])
+  const trackRefs = useRef([])
   const [active, setActive] = useState(0)
 
-  // As each section snaps into view, reveal its content and mark it active.
-  // Observer root is the snap container so it tracks the in-page scroll.
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in-view')
-            const idx = Number(entry.target.dataset.index)
-            if (!Number.isNaN(idx)) setActive(idx)
-          }
-        })
-      },
-      { root: scrollRef.current, threshold: 0.4 }
-    )
+    const tracks = trackRefs.current.filter(Boolean)
 
-    sectionRefs.current.forEach(el => el && observer.observe(el))
-    return () => observer.disconnect()
+    // Reduced motion: show everything fully assembled, skip scrubbing.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      tracks.forEach(t => {
+        t.style.setProperty('--img', '1')
+        t.style.setProperty('--txt', '1')
+        t.style.setProperty('--p', '0.5')
+      })
+      return
+    }
+
+    let raf = 0
+    function update() {
+      raf = 0
+      const vh = window.innerHeight
+      let current = 0
+
+      tracks.forEach(track => {
+        const rect  = track.getBoundingClientRect()
+        const total = rect.height - vh           // scroll distance while pinned
+
+        // p: 0 when the panel first pins, 1 when the track scrolls out
+        const p = total > 0 ? clamp(-rect.top / total, 0, 1) : (rect.top <= 0 ? 1 : 0)
+
+        // Staggered scrub values — image leads, text follows
+        const img = clamp((p - 0.05) / 0.40, 0, 1)
+        const txt = clamp((p - 0.16) / 0.40, 0, 1)
+
+        track.style.setProperty('--p',   p.toFixed(4))
+        track.style.setProperty('--img', img.toFixed(4))
+        track.style.setProperty('--txt', txt.toFixed(4))
+
+        // Active chapter = the one straddling the viewport's middle
+        if (rect.top <= vh * 0.5 && rect.bottom >= vh * 0.5) {
+          current = Number(track.dataset.index)
+        }
+      })
+
+      setActive(current)
+    }
+
+    function onScroll() {
+      if (!raf) raf = requestAnimationFrame(update)
+    }
+
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
   }, [])
 
   return (
-    <div className="story" ref={scrollRef}>
+    <div className="story">
 
-      {/* Intro section */}
-      <section
-        className="story__section story__section--intro in-view"
-        data-index="0"
-        ref={el => (sectionRefs.current[0] = el)}
-      >
+      {/* Intro screen */}
+      <section className="story__section story__section--intro">
         <div className="story__intro-inner">
           <h1 className="section-title">Our Story</h1>
           <span className="section-divider" />
@@ -111,33 +147,35 @@ export default function Story() {
         </div>
       </section>
 
-      {/* Chapter sections */}
+      {/* Scroll-scrubbed chapters */}
       {slides.map((slide, i) => (
-        <section
+        <div
           key={slide.id}
-          className={`story__section story__section--chapter ${i % 2 === 1 ? 'reverse' : ''}`}
+          className={`story__track ${i % 2 === 1 ? 'reverse' : ''}`}
           data-index={i + 1}
-          ref={el => (sectionRefs.current[i + 1] = el)}
+          ref={el => (trackRefs.current[i] = el)}
         >
-          <div className="story__chapter-inner">
-            <div className="story__img-wrap">
-              <img
-                src={slide.image}
-                alt={slide.imageAlt}
-                className="story__img"
-                loading="lazy"
-              />
-            </div>
+          <div className="story__pin">
+            <div className="story__chapter-inner">
+              <div className="story__img-wrap">
+                <img
+                  src={slide.image}
+                  alt={slide.imageAlt}
+                  className="story__img"
+                  loading="lazy"
+                />
+              </div>
 
-            <div className="story__card-body">
-              <span className="story__chapter-icon">{slide.icon}</span>
-              <p className="story__chapter">{slide.chapter}</p>
-              <h2 className="story__title">{slide.title}</h2>
-              <p className="story__date">{slide.date}</p>
-              <p className="story__body">{slide.body}</p>
+              <div className="story__card-body">
+                <span className="story__chapter-icon">{slide.icon}</span>
+                <p className="story__chapter">{slide.chapter}</p>
+                <h2 className="story__title">{slide.title}</h2>
+                <p className="story__date">{slide.date}</p>
+                <p className="story__body">{slide.body}</p>
+              </div>
             </div>
           </div>
-        </section>
+        </div>
       ))}
 
       {/* Scroll progress indicator (non-interactive) */}
