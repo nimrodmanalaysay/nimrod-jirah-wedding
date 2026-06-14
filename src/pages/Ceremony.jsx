@@ -13,9 +13,9 @@ import './Ceremony.css'
 const subPages = [
   {
     path:    '/ceremony/wedding',
-    icon:    '💒',
-    title:   'Wedding Ceremony',
-    desc:    'Ceremony time, venue, arrival guide, and timeline.',
+    icon:    '⛪',
+    title:   'Wedding Service',
+    desc:    'Order of service, venue, arrival guide, and what to expect.',
     color:   'var(--blush)',
     textCol: 'var(--burgundy)',
   },
@@ -43,7 +43,7 @@ export default function Ceremony() {
       <div className="ceremony-hub__header">
         <h1 className="section-title">Ceremony</h1>
         <span className="section-divider" />
-        <p className="ceremony-hub__sub">Everything you need to know about our special day</p>
+        <p className="ceremony-hub__sub">Join us as we celebrate God's gift of marriage</p>
       </div>
 
       {/* Breadcrumb nav */}

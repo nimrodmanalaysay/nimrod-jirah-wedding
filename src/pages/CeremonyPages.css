@@ -88,6 +88,35 @@
 }
 
 /* ── Section ── */
+/* ── Scripture verse banner ── */
+.cp-verse {
+  text-align: center;
+  padding: 3.2rem 2rem;
+  background: var(--white);
+  border-bottom: 1px solid rgba(225,202,150,0.3);
+}
+.cp-verse__mark {
+  display: block;
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+.cp-verse__text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.15rem, 2.6vw, 1.7rem);
+  line-height: 1.6;
+  color: var(--burgundy);
+  max-width: 680px;
+  margin: 0 auto 0.9rem;
+}
+.cp-verse__ref {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--btn-color);
+}
+
 .cp-section {
   padding: 4rem 3rem;
   border-bottom: 1px solid rgba(225,202,150,0.2);

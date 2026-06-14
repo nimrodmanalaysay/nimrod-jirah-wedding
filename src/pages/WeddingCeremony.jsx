@@ -3,18 +3,23 @@ import { Link } from 'react-router-dom'
 import './CeremonyPages.css'
 
 /* ============================================================
-   Wedding Ceremony Page
+   Wedding Ceremony Page — Christian wedding service
    ✏️ Replace all placeholder values with real details.
    ============================================================ */
 
-const timeline = [
-  { time: '2:30 PM', event: 'Venue Opens', note: 'Guests may begin arriving and be seated.' },
-  { time: '3:00 PM', event: 'Ceremony Begins', note: 'Please be seated before the processional.' },
-  { time: '3:05 PM', event: 'Processional', note: 'Bridal party and couple enter.' },
-  { time: '3:20 PM', event: 'Exchange of Vows', note: 'The most sacred moment of our day.' },
-  { time: '3:40 PM', event: 'Pronouncement & Kiss', note: 'The couple is officially married!' },
-  { time: '3:45 PM', event: 'Recessional', note: 'Couple exits followed by bridal party.' },
-  { time: '4:00 PM', event: 'Cocktail Hour Begins', note: 'Transition to reception venue.' },
+const orderOfService = [
+  { time: '2:30 PM', event: 'Prelude & Seating',                  note: 'Guests arrive and are seated as the music plays.' },
+  { time: '3:00 PM', event: 'Processional',                       note: 'Entrance of the wedding party, then the bride.' },
+  { time: '3:10 PM', event: 'Call to Worship & Opening Prayer',   note: 'Our pastor welcomes everyone and opens in prayer.' },
+  { time: '3:15 PM', event: 'Praise & Worship',                   note: 'We lift our voices to God together in song.' },
+  { time: '3:25 PM', event: 'Scripture Reading',                  note: "God's Word on love and marriage." },
+  { time: '3:30 PM', event: 'The Message',                        note: 'A word of exhortation for the couple and all present.' },
+  { time: '3:45 PM', event: 'Exchange of Vows',                   note: 'Our sacred covenant before God and witnesses.' },
+  { time: '3:50 PM', event: 'Exchange of Rings',                  note: 'A symbol of our unending promise.' },
+  { time: '3:55 PM', event: 'Cord of Three Strands',             note: 'Christ at the center of our marriage.' },
+  { time: '4:00 PM', event: 'Prayer & Blessing',                  note: 'The couple is covered in prayer.' },
+  { time: '4:05 PM', event: 'Pronouncement & First Kiss',         note: 'Presented before God as husband and wife!' },
+  { time: '4:10 PM', event: 'Recessional',                        note: 'The newlyweds exit, followed by the wedding party.' },
 ]
 
 export default function WeddingCeremony() {
@@ -24,7 +29,7 @@ export default function WeddingCeremony() {
       <div className="cp-breadcrumb">
         <Link to="/ceremony">Ceremony</Link>
         <span>›</span>
-        <span>Wedding Ceremony</span>
+        <span>Wedding Service</span>
       </div>
 
       {/* Hero banner */}
@@ -35,11 +40,21 @@ export default function WeddingCeremony() {
           className="cp-hero__img"
         />
         <div className="cp-hero__overlay">
-          <p className="cp-hero__pre">The Ceremony</p>
+          <p className="cp-hero__pre">A Christ-Centered Wedding Service</p>
           <h1 className="cp-hero__title">Nimrod &amp; Jirah</h1>
           <p className="cp-hero__date">November 7, 2026</p>
         </div>
       </div>
+
+      {/* Scripture verse */}
+      <section className="cp-verse">
+        <span className="cp-verse__mark">✝</span>
+        <p className="cp-verse__text">
+          “Though one may be overpowered, two can defend themselves.
+          A cord of three strands is not quickly broken.”
+        </p>
+        <p className="cp-verse__ref">Ecclesiastes 4:12</p>
+      </section>
 
       <div className="cp-content">
 
@@ -75,19 +90,19 @@ export default function WeddingCeremony() {
         <section className="cp-section cp-section--blush">
           <h2 className="cp-section__title">Arrival Reminders</h2>
           <ul className="cp-reminders">
-            <li>Please arrive by <strong>2:45 PM</strong> to be seated before the ceremony begins.</li>
+            <li>Please arrive by <strong>2:45 PM</strong> to be seated before the service begins.</li>
             <li>Parking is available on-site. Attendants will guide you upon arrival.</li>
-            <li>The ceremony venue will be <strong>outdoors</strong>. Please dress comfortably and bring a fan.</li>
-            <li>Kindly switch your mobile phone to silent mode during the ceremony.</li>
-            <li>Photography during the ceremony is permitted from your seat only.</li>
+            <li>The service will be held <strong>outdoors</strong>. Please dress comfortably and bring a fan.</li>
+            <li>Kindly switch your mobile phone to silent mode and join us in worship.</li>
+            <li>Photography during the service is permitted from your seat only.</li>
           </ul>
         </section>
 
-        {/* Timeline */}
+        {/* Order of Service */}
         <section className="cp-section">
-          <h2 className="cp-section__title">Ceremony Timeline</h2>
+          <h2 className="cp-section__title">Order of Service</h2>
           <div className="cp-timeline">
-            {timeline.map((item, i) => (
+            {orderOfService.map((item, i) => (
               <div key={i} className="cp-timeline__item">
                 <div className="cp-timeline__time">{item.time}</div>
                 <div className="cp-timeline__dot" />

@@ -128,8 +128,12 @@
 .faq-item--open .faq-item__body {
   grid-template-rows: 1fr;
 }
+/* The inner wrapper is the grid item that gets clipped. It carries no
+   padding of its own, so a 0fr track collapses the answer (and its
+   padding, which lives on .faq-item__a inside) completely to zero. */
 .faq-item__body > * {
   overflow: hidden;
+  min-height: 0;
 }
 
 .faq-item__a {

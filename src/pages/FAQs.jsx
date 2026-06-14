@@ -64,8 +64,11 @@ function FAQItem({ question, answer }) {
           {open ? '−' : '+'}
         </span>
       </button>
-      <div className="faq-item__body" style={{ '--height': open ? 'auto' : '0' }}>
-        <p className="faq-item__a">{answer}</p>
+      <div className="faq-item__body">
+        {/* inner wrapper holds the padding so it collapses fully when closed */}
+        <div className="faq-item__body-inner">
+          <p className="faq-item__a">{answer}</p>
+        </div>
       </div>
     </div>
   )

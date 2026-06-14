@@ -4,7 +4,7 @@ import './Navbar.css'
 
 const CEREMONY_CHILDREN = [
   { label: 'Overview',         path: '/ceremony'            },
-  { label: 'Wedding Ceremony', path: '/ceremony/wedding'    },
+  { label: 'Wedding Service',  path: '/ceremony/wedding'    },
   { label: 'Reception',        path: '/ceremony/reception'  },
   { label: 'Dress Code',       path: '/ceremony/dresscode'  },
 ]
