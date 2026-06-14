@@ -4,7 +4,9 @@
 
 .story {
   background: var(--off-white);
-  overflow-x: hidden;
+  /* `clip` (not `hidden`) so this stays a non-scrolling ancestor and the
+     sticky chapter pins below keep working. */
+  overflow-x: clip;
 }
 
 /* ---- Intro screen ---- */

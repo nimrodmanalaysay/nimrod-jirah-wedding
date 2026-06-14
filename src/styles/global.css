@@ -43,7 +43,10 @@ body {
   color: var(--burgundy);
   font-weight: 300;
   line-height: 1.7;
-  overflow-x: hidden;
+  /* `clip` prevents horizontal scrollbars WITHOUT creating a scroll
+     container — `hidden` would break `position: sticky` descendants
+     (e.g. the scroll-scrubbed Our Story chapters). */
+  overflow-x: clip;
 }
 
 /* --- Typography Helpers --- */
