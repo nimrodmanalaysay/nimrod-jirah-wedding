@@ -162,7 +162,6 @@ export default function Story() {
               />
             </div>
             <div className="reel__scrim" aria-hidden="true" />
-            <div className="reel__bars" aria-hidden="true" />
 
             <div className="reel__content">
               <span className="reel__num">{String(i + 1).padStart(2, '0')}</span>
