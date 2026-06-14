@@ -72,16 +72,9 @@ export default function Story() {
   useEffect(() => {
     const reels = reelRefs.current.filter(Boolean)
 
-    // Reduced motion: present every scene fully assembled, no scrub.
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      reels.forEach(r => {
-        ;['--e0', '--e1', '--e2', '--e3'].forEach(v => r.style.setProperty(v, '1'))
-        r.style.setProperty('--exit', '0')
-        r.style.setProperty('--fade', '0')
-        r.style.setProperty('--p', '0.5')
-      })
-      return
-    }
+    // The scrub runs for everyone. Under reduced-motion we keep this gentle
+    // scroll-linked OPACITY fade but the CSS strips the zoom/parallax/loops,
+    // so the story still "plays" as you scroll without the heavy motion.
 
     let raf = 0
     function update() {

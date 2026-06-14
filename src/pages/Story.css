@@ -327,19 +327,26 @@
 }
 
 /* ════════════════════════════════════════════════════════════
-   REDUCED MOTION — static, readable, no scrub/grain
+   REDUCED MOTION
+   Keep the pinning + gentle scroll-linked OPACITY fades (calm,
+   non-vestibular), but drop the zoom, parallax, slide-ins,
+   blur and looping animations.
    ════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
-  .reel { height: auto; }
-  .reel__pin { position: static; height: 100vh; }
+  /* no zoom / parallax push on the image, no looping Ken Burns */
   .reel__media { transform: none; }
-  .reel__bg { animation: none; transform: scale(1.05); }
-  .reel__fade { display: none; }
-  .reel__num, .reel__title, .reel__date, .reel__text {
-    opacity: 1 !important;
-    transform: none !important;
-  }
+  .reel__bg { animation: none; transform: scale(1.04); }
+
+  /* no continuous grain, no cue pulse, no intro blur-slide */
   .film__grain { display: none; }
   .film__cue-line { animation: none; }
-  .film__intro-inner, .film__cue { animation: none; }
+  .film__intro-inner,
+  .film__cue { animation: none; }
+
+  /* text still fades with scroll (opacity) but no vertical slide */
+  .reel__content { transform: none; }
+  .reel__num,
+  .reel__title,
+  .reel__date,
+  .reel__text { transform: none; }
 }
