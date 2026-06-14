@@ -1,222 +1,345 @@
 /* ============================================================
-   Our Story — scroll-scrubbed pinned chapters
+   Our Story — "The Film"
+   Cinematic, scroll-scrubbed story reel.
    ============================================================ */
 
-.story {
-  background: var(--off-white);
-  /* `clip` (not `hidden`) so this stays a non-scrolling ancestor and the
-     sticky chapter pins below keep working. */
+.film {
+  position: relative;
+  background: #0a0605;            /* cinema black between scenes */
+  /* clip (not hidden) keeps this a non-scrolling ancestor so the
+     sticky scene pins below keep working */
   overflow-x: clip;
 }
 
-/* ---- Intro screen ---- */
-.story__section--intro {
+/* ── Moving film grain over the whole reel ── */
+.film__grain {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 40;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grainShift 0.6s steps(3) infinite;
+}
+@keyframes grainShift {
+  0%   { transform: translate(0, 0); }
+  33%  { transform: translate(-4%, 3%); }
+  66%  { transform: translate(3%, -2%); }
+  100% { transform: translate(-2%, 1%); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   TITLE CARDS (intro + closing)
+   ════════════════════════════════════════════════════════════ */
+.film__intro {
+  position: relative;
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at center, rgba(60,30,20,0.35) 0%, rgba(10,6,5,0.95) 70%),
+    #0a0605;
+  color: var(--off-white, #f3e9da);
   padding: 6rem 1.5rem 3rem;
   box-sizing: border-box;
-  text-align: center;
 }
 
-.story__intro-inner {
+.film__intro-inner {
   display: flex;
   flex-direction: column;
   align-items: center;
+  animation: filmFadeUp 1.6s cubic-bezier(0.16,1,0.3,1) both;
 }
 
-.story__sub {
+@keyframes filmFadeUp {
+  from { opacity: 0; transform: translateY(28px); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0);    filter: blur(0);   }
+}
+
+.film__credit {
+  font-size: 0.72rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--gold, #e1ca96);
+  margin-bottom: 1.4rem;
+  padding-left: 0.5em;      /* balance the letter-spacing */
+}
+
+.film__maintitle {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3rem, 11vw, 7rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: #fff;
+  text-shadow: 0 4px 60px rgba(0,0,0,0.6);
+}
+.film__maintitle--sm { font-size: clamp(2.4rem, 8vw, 5rem); }
+
+.film__rule {
+  display: block;
+  width: 60px;
+  height: 1px;
+  margin: 1.8rem 0;
+  background: linear-gradient(90deg, transparent, var(--gold,#e1ca96), transparent);
+}
+
+.film__tagline {
   font-family: var(--font-display);
   font-style: italic;
-  color: var(--btn-color);
-  font-size: 1.1rem;
-  margin-top: 0.6rem;
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
+  color: var(--off-white,#f3e9da);
+  opacity: 0.85;
 }
 
-.story__scroll-cue {
-  margin-top: 3.5rem;
+/* scroll cue */
+.film__cue {
+  position: absolute;
+  bottom: 2.4rem;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
+  gap: 0.8rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--sage);
+  color: rgba(243,233,218,0.6);
+  animation: filmFadeUp 2s 0.6s cubic-bezier(0.16,1,0.3,1) both;
+}
+.film__cue-line {
+  width: 1px;
+  height: 46px;
+  background: linear-gradient(to bottom, var(--gold,#e1ca96), transparent);
+  animation: cuePulse 2s ease-in-out infinite;
+  transform-origin: top;
+}
+@keyframes cuePulse {
+  0%, 100% { transform: scaleY(0.4); opacity: 0.4; }
+  50%      { transform: scaleY(1);   opacity: 1;   }
 }
 
-.story__scroll-arrow {
-  font-size: 1.3rem;
-  color: var(--btn-color);
-  animation: storyBounce 1.8s ease-in-out infinite;
-}
-@keyframes storyBounce {
-  0%, 100% { transform: translateY(0);   opacity: 0.5; }
-  50%      { transform: translateY(8px); opacity: 1;   }
-}
-
-/* ---- Track: provides the scroll distance for the scrub ---- */
-.story__track {
+/* ════════════════════════════════════════════════════════════
+   SCENES
+   ════════════════════════════════════════════════════════════ */
+.reel {
   position: relative;
-  height: 200vh;          /* 100vh pinned + 100vh of scrub travel */
-  --p: 0;                 /* raw progress 0 → 1 (set by JS)        */
-  --img: 0;               /* image scrub (leads)                   */
-  --txt: 0;               /* text scrub  (follows)                 */
+  height: 240vh;            /* pin (100vh) + scrub travel — slow & cinematic */
+
+  /* scrub variables (set by JS) */
+  --p: 0;
+  --e0: 0; --e1: 0; --e2: 0; --e3: 0;
+  --exit: 0;
+  --fade: 1;
 }
 
-/* The panel that pins while you scroll through the track */
-.story__pin {
+.reel__pin {
   position: sticky;
   top: 0;
   height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6rem 1.5rem 3rem;
-  box-sizing: border-box;
   overflow: hidden;
+  background: #0a0605;
 }
 
-.story__chapter-inner {
-  max-width: 980px;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  align-items: center;
-  gap: 3rem;
+/* ── Image (two motion layers: scrub push + slow Ken Burns) ── */
+.reel__media {
+  position: absolute;
+  inset: 0;
+  /* scrub push: image eases forward as you scroll through the scene */
+  transform: scale(calc(1.02 + var(--p) * 0.10))
+             translate3d(0, calc(var(--p) * -3vh), 0);
+  will-change: transform;
+}
+.reel__bg {
+  position: absolute;
+  inset: -4%;               /* bleed so Ken Burns never shows an edge */
+  background-size: cover;
+  background-position: center;
+  animation: kenburns 26s ease-in-out infinite alternate;
+}
+@keyframes kenburns {
+  from { transform: scale(1.05) translate3d(0, 0, 0); }
+  to   { transform: scale(1.16) translate3d(-2%, -1.5%, 0); }
 }
 
-/* Alternating layout — image on the right for odd chapters */
-.story__track.reverse .story__chapter-inner {
-  grid-template-columns: 1fr 1.1fr;
-}
-.story__track.reverse .story__img-wrap { order: 2; }
-.story__track.reverse .story__card-body { order: 1; }
-
-/* ---- Scrubbed image ---- */
-.story__img-wrap {
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border-radius: 4px;
-  background: var(--blush);
-  box-shadow: 0 12px 50px rgba(105,27,25,0.12);
-
-  /* slides in from the outer edge as --img scrubs 0 → 1 */
-  opacity: var(--img);
-  transform: translateX(calc((1 - var(--img)) * -60px));
-}
-.story__track.reverse .story__img-wrap {
-  transform: translateX(calc((1 - var(--img)) * 60px));
+/* ── Scrim: vignette + gradient for mood and legibility ── */
+.reel__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 38%, transparent 30%, rgba(10,6,5,0.55) 100%),
+    linear-gradient(to top, rgba(8,4,3,0.92) 0%, rgba(8,4,3,0.35) 45%, rgba(8,4,3,0.6) 100%);
 }
 
-.story__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+/* ── Letterbox bars ── */
+.reel__bars { position: absolute; inset: 0; pointer-events: none; }
+.reel__bars::before,
+.reel__bars::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 7vh;
+  background: #070403;
+  z-index: 3;
+}
+.reel__bars::before { top: 0; }
+.reel__bars::after  { bottom: 0; }
+
+/* ── Black crossfade between scenes ── */
+.reel__fade {
+  position: absolute;
+  inset: 0;
+  background: #070403;
+  opacity: var(--fade);
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* ── Content (staggered title-card text) ── */
+.reel__content {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 16vh;
+  z-index: 3;
+  padding: 0 2rem;
+  text-align: center;
+  color: #fff;
+  /* whole block drifts up slightly as the scene exits */
+  transform: translateY(calc(var(--exit) * -3vh));
+}
+
+.reel__content > * {
+  text-shadow: 0 2px 40px rgba(0,0,0,0.6);
+}
+
+.reel__num {
   display: block;
-  /* eases out of a zoom, plus continuous parallax drift across the pin */
-  transform: scale(calc(1.25 - 0.25 * var(--img)))
-             translateY(calc((var(--p) - 0.5) * 48px));
-}
-
-/* ---- Scrubbed text ---- */
-.story__card-body {
-  text-align: left;
-  opacity: var(--txt);
-  transform: translateY(calc((1 - var(--txt)) * 64px));
-}
-
-.story__chapter-icon {
-  display: block;
-  font-size: 1.9rem;
-  color: var(--gold);
-  margin-bottom: 0.8rem;
-}
-
-.story__chapter {
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--btn-color);
-  margin-bottom: 0.6rem;
-}
-
-.story__title {
   font-family: var(--font-display);
-  font-size: clamp(1.9rem, 4.5vw, 3rem);
-  color: var(--burgundy);
-  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.4em;
+  color: var(--gold,#e1ca96);
+  margin-bottom: 1rem;
+  opacity: calc(var(--e0) * (1 - var(--exit)));
+  transform: translateY(calc((1 - var(--e0)) * 30px));
+}
+.reel__num::before,
+.reel__num::after {
+  content: '—';
+  margin: 0 0.7em;
+  opacity: 0.5;
 }
 
-.story__date {
-  font-size: 0.78rem;
-  letter-spacing: 0.18em;
+.reel__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 7vw, 4.6rem);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  margin-bottom: 0.6rem;
+  opacity: calc(var(--e1) * (1 - var(--exit)));
+  transform: translateY(calc((1 - var(--e1)) * 44px));
+}
+
+.reel__date {
+  display: block;
+  font-size: 0.74rem;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--sage);
-  margin-bottom: 1.4rem;
+  color: var(--blush,#ffd9da);
+  margin-bottom: 1.6rem;
+  opacity: calc(var(--e2) * (1 - var(--exit)));
+  transform: translateY(calc((1 - var(--e2)) * 52px));
 }
 
-.story__body {
-  font-size: 1rem;
-  line-height: 1.95;
-  color: rgba(105,27,25,0.72);
-  max-width: 480px;
+.reel__text {
+  max-width: 560px;
+  margin: 0 auto;
+  font-size: clamp(0.98rem, 2vw, 1.15rem);
+  line-height: 1.9;
+  font-weight: 300;
+  color: rgba(255,255,255,0.92);
+  opacity: calc(var(--e3) * (1 - var(--exit)));
+  transform: translateY(calc((1 - var(--e3)) * 60px));
 }
 
-/* ---- Scroll progress rail (non-interactive) ---- */
-.story__progress {
+/* ════════════════════════════════════════════════════════════
+   HUD — counter + progress
+   ════════════════════════════════════════════════════════════ */
+.film__counter {
   position: fixed;
-  right: 1.6rem;
+  left: 2rem;
+  bottom: 2rem;
+  z-index: 30;
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-family: var(--font-display);
+  color: var(--off-white,#f3e9da);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  mix-blend-mode: difference;
+}
+.film__counter.show { opacity: 0.9; transform: translateY(0); }
+.film__counter-num   { font-size: 1.8rem; line-height: 1; }
+.film__counter-sep   { font-size: 1rem; opacity: 0.5; }
+.film__counter-total { font-size: 1rem; opacity: 0.6; }
+
+.film__progress {
+  position: fixed;
+  right: 1.8rem;
   top: 50%;
   transform: translateY(-50%);
+  z-index: 30;
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
-  z-index: 20;
+  gap: 0.8rem;
+}
+.film__progress-dot {
+  width: 2px;
+  height: 22px;
+  border-radius: 2px;
+  background: rgba(243,233,218,0.25);
+  transition: background 0.4s ease, transform 0.4s ease;
+  transform-origin: center;
+}
+.film__progress-dot.passed { background: rgba(225,202,150,0.55); }
+.film__progress-dot.active {
+  background: var(--gold,#e1ca96);
+  transform: scaleY(1.5);
 }
 
-.story__progress-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: rgba(105,27,25,0.18);
-  transition: background var(--transition), transform var(--transition);
-}
-.story__progress-dot.passed { background: rgba(189,103,56,0.5); }
-.story__progress-dot.active {
-  background: var(--btn-color);
-  transform: scale(1.5);
+/* ════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  .reel__content { bottom: 12vh; padding: 0 1.4rem; }
+  .reel__bars::before, .reel__bars::after { height: 4vh; }
+  .film__counter { left: 1.1rem; bottom: 1.1rem; }
+  .film__progress { right: 1rem; }
 }
 
-/* ---- Responsive ---- */
-@media (max-width: 760px) {
-  .story__chapter-inner,
-  .story__track.reverse .story__chapter-inner {
-    grid-template-columns: 1fr;
-    gap: 1.8rem;
-    text-align: center;
-  }
-  .story__track.reverse .story__img-wrap { order: 1; }
-  .story__track.reverse .story__card-body { order: 2; }
-
-  .story__card-body { text-align: center; }
-  .story__body { margin: 0 auto; }
-
-  .story__progress { right: 0.8rem; }
-}
-
-/* Respect reduced-motion preferences */
+/* ════════════════════════════════════════════════════════════
+   REDUCED MOTION — static, readable, no scrub/grain
+   ════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
-  .story__track { height: auto; }
-  .story__pin {
-    position: static;
-    height: auto;
-    min-height: 100vh;
+  .reel { height: auto; }
+  .reel__pin { position: static; height: 100vh; }
+  .reel__media { transform: none; }
+  .reel__bg { animation: none; transform: scale(1.05); }
+  .reel__fade { display: none; }
+  .reel__num, .reel__title, .reel__date, .reel__text {
+    opacity: 1 !important;
+    transform: none !important;
   }
-  .story__img-wrap,
-  .story__card-body { opacity: 1; transform: none; }
-  .story__img { transform: none; }
-  .story__scroll-arrow { animation: none; }
+  .film__grain { display: none; }
+  .film__cue-line { animation: none; }
+  .film__intro-inner, .film__cue { animation: none; }
 }

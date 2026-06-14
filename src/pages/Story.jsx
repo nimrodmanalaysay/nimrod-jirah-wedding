@@ -2,87 +2,83 @@ import React, { useEffect, useRef, useState } from 'react'
 import './Story.css'
 
 /* ============================================================
-   Our Story Page — scroll-scrubbed chapters
+   Our Story — "The Film"
 
-   Each chapter sits in a tall "track". Inside it, a sticky panel
-   pins to the screen while you scroll through the track, and the
-   animation (image scale/parallax, text rise + fade) is scrubbed
-   directly from scroll progress — forward when you scroll down,
-   backward when you scroll up. Apple-style scroll storytelling.
+   A cinematic, scroll-controlled story reel. Each chapter is a
+   full-bleed scene that pins to the screen while you scroll
+   through it. Scroll position scrubs the whole frame:
+
+     • the image drifts/zooms (Ken Burns) as you move
+     • title-card text rises in staggered, like film credits
+     • each scene fades through black on the way in and out
+
+   Built with React refs + a rAF scroll loop feeding CSS custom
+   properties; all the motion lives in CSS. No libraries.
 
    ✏️ Replace `image` URLs with your real prenup/couple photos.
       Images live in /public/photos/ — reference as /photos/name.jpg
    ============================================================ */
 
-const slides = [
+const scenes = [
   {
     id: 1,
-    chapter: 'Chapter 1',
-    title: 'How We Met',
+    chapter: 'How We Met',
     date: '2020',
-    icon: '✦',
     // ✏️ Replace with your real photo: '/photos/how-we-met.jpg'
-    image: 'https://placehold.co/680x380/E1CA96/691B19?text=How+We+Met',
+    image: 'https://placehold.co/1600x900/3a2d22/E1CA96?text=How+We+Met',
     imageAlt: 'How we met',
-    body: `Every love story begins with a moment — and ours was no different. We crossed paths at a time neither of us expected, and in that ordinary moment, something extraordinary quietly began. It started simply: a glance, a smile, a conversation that stretched beyond any expected end.`,
+    body: `Every love story begins with a moment — and ours was no different. We crossed paths at a time neither of us expected, and in that ordinary moment, something extraordinary quietly began.`,
   },
   {
     id: 2,
-    chapter: 'Chapter 2',
-    title: 'The First Date',
+    chapter: 'The First Date',
     date: '2021',
-    icon: '♡',
-    image: 'https://placehold.co/680x380/FFD9DA/691B19?text=The+First+Date',
+    image: 'https://placehold.co/1600x900/5b2b2c/FFD9DA?text=The+First+Date',
     imageAlt: 'Our first date',
-    body: `Nervous and excited in equal measure, we shared our first real evening together. Simple as it was — coffee, laughter, the kind of honest talk that feels rare — it was enough to make us both certain we wanted a second. Time moved differently that night.`,
+    body: `Nervous and excited in equal measure, we shared our first real evening together — coffee, laughter, the kind of honest talk that feels rare. It was enough to make us both certain we wanted a second.`,
   },
   {
     id: 3,
-    chapter: 'Chapter 3',
-    title: 'Growing Together',
+    chapter: 'Growing Together',
     date: '2022 – 2024',
-    icon: '❧',
-    image: 'https://placehold.co/680x380/556251/E1CA96?text=Growing+Together',
+    image: 'https://placehold.co/1600x900/2f3a2c/E1CA96?text=Growing+Together',
     imageAlt: 'Growing together',
-    body: `Seasons changed, and so did we — together. Through ordinary Tuesdays and milestone moments, through challenges that tested us and joys that defined us, we chose each other, again and again. Distance was just distance. Silence was never empty.`,
+    body: `Seasons changed, and so did we — together. Through ordinary Tuesdays and milestone moments, through challenges that tested us and joys that defined us, we chose each other, again and again.`,
   },
   {
     id: 4,
-    chapter: 'Chapter 4',
-    title: 'The Proposal',
+    chapter: 'The Proposal',
     date: '2025',
-    icon: '◈',
-    image: 'https://placehold.co/680x380/691B19/E1CA96?text=The+Proposal',
+    image: 'https://placehold.co/1600x900/4a120f/E1CA96?text=The+Proposal',
     imageAlt: 'The proposal',
-    body: `Under a sky neither of us will ever forget, the words finally came — simple, honest, from the heart. There was no need for grand gestures. The moment was already perfect. She said yes before the question was even finished.`,
+    body: `Under a sky neither of us will ever forget, the words finally came — simple, honest, from the heart. There was no need for grand gestures. The moment was already perfect.`,
   },
   {
     id: 5,
-    chapter: 'Chapter 5',
-    title: 'Forever Begins',
+    chapter: 'Forever Begins',
     date: 'November 7, 2026',
-    icon: '✿',
-    image: 'https://placehold.co/680x380/BD6738/FFD9DA?text=Forever+Begins',
+    image: 'https://placehold.co/1600x900/7a3f1f/FFD9DA?text=Forever+Begins',
     imageAlt: 'Forever begins',
-    body: `And now we stand at the beginning of forever. We invite our family and friends to witness us take this sacred step — to celebrate with us, to laugh and dance, and to remind us that love is always worth it. We cannot wait to see you there.`,
+    body: `And now we stand at the beginning of forever. We invite our family and friends to witness us take this sacred step — to celebrate, to laugh and dance, and to remind us that love is always worth it.`,
   },
 ]
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
 
 export default function Story() {
-  const trackRefs = useRef([])
+  const reelRefs = useRef([])
   const [active, setActive] = useState(0)
 
   useEffect(() => {
-    const tracks = trackRefs.current.filter(Boolean)
+    const reels = reelRefs.current.filter(Boolean)
 
-    // Reduced motion: show everything fully assembled, skip scrubbing.
+    // Reduced motion: present every scene fully assembled, no scrub.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      tracks.forEach(t => {
-        t.style.setProperty('--img', '1')
-        t.style.setProperty('--txt', '1')
-        t.style.setProperty('--p', '0.5')
+      reels.forEach(r => {
+        ;['--e0', '--e1', '--e2', '--e3'].forEach(v => r.style.setProperty(v, '1'))
+        r.style.setProperty('--exit', '0')
+        r.style.setProperty('--fade', '0')
+        r.style.setProperty('--p', '0.5')
       })
       return
     }
@@ -93,24 +89,28 @@ export default function Story() {
       const vh = window.innerHeight
       let current = 0
 
-      tracks.forEach(track => {
-        const rect  = track.getBoundingClientRect()
-        const total = rect.height - vh           // scroll distance while pinned
-
-        // p: 0 when the panel first pins, 1 when the track scrolls out
+      reels.forEach(reel => {
+        const rect  = reel.getBoundingClientRect()
+        const total = rect.height - vh
+        // p: 0 as the scene pins, 1 as it scrolls away
         const p = total > 0 ? clamp(-rect.top / total, 0, 1) : (rect.top <= 0 ? 1 : 0)
 
-        // Staggered scrub values — image leads, text follows
-        const img = clamp((p - 0.05) / 0.40, 0, 1)
-        const txt = clamp((p - 0.16) / 0.40, 0, 1)
+        // staggered entrances (image → number → title → text)
+        const tier = off => clamp((p - off) / 0.24, 0, 1)
+        const exit = clamp((p - 0.74) / 0.18, 0, 1)
+        // black crossfade at the very start and end of each scene
+        const fade = clamp(Math.max((0.14 - p) / 0.14, (p - 0.86) / 0.14), 0, 1)
 
-        track.style.setProperty('--p',   p.toFixed(4))
-        track.style.setProperty('--img', img.toFixed(4))
-        track.style.setProperty('--txt', txt.toFixed(4))
+        reel.style.setProperty('--p',    p.toFixed(4))
+        reel.style.setProperty('--e0',   tier(0.06).toFixed(4))
+        reel.style.setProperty('--e1',   tier(0.12).toFixed(4))
+        reel.style.setProperty('--e2',   tier(0.18).toFixed(4))
+        reel.style.setProperty('--e3',   tier(0.24).toFixed(4))
+        reel.style.setProperty('--exit', exit.toFixed(4))
+        reel.style.setProperty('--fade', fade.toFixed(4))
 
-        // Active chapter = the one straddling the viewport's middle
         if (rect.top <= vh * 0.5 && rect.bottom >= vh * 0.5) {
-          current = Number(track.dataset.index)
+          current = Number(reel.dataset.index)
         }
       })
 
@@ -132,58 +132,81 @@ export default function Story() {
   }, [])
 
   return (
-    <div className="story">
+    <div className="film">
 
-      {/* Intro screen */}
-      <section className="story__section story__section--intro">
-        <div className="story__intro-inner">
-          <h1 className="section-title">Our Story</h1>
-          <span className="section-divider" />
-          <p className="story__sub">The journey that brought us here</p>
-          <div className="story__scroll-cue">
-            <span>Scroll to begin</span>
-            <span className="story__scroll-arrow">↓</span>
-          </div>
+      {/* Moving film grain over everything */}
+      <div className="film__grain" aria-hidden="true" />
+
+      {/* ── Opening title card ── */}
+      <section className="film__intro">
+        <div className="film__intro-inner">
+          <p className="film__credit">A Love Story</p>
+          <h1 className="film__maintitle">Our Story</h1>
+          <span className="film__rule" />
+          <p className="film__tagline">Nimrod &amp; Jirah</p>
+        </div>
+        <div className="film__cue" aria-hidden="true">
+          <span>Scroll to play</span>
+          <span className="film__cue-line" />
         </div>
       </section>
 
-      {/* Scroll-scrubbed chapters */}
-      {slides.map((slide, i) => (
-        <div
-          key={slide.id}
-          className={`story__track ${i % 2 === 1 ? 'reverse' : ''}`}
+      {/* ── Scenes ── */}
+      {scenes.map((s, i) => (
+        <section
+          className="reel"
+          key={s.id}
           data-index={i + 1}
-          ref={el => (trackRefs.current[i] = el)}
+          ref={el => (reelRefs.current[i] = el)}
         >
-          <div className="story__pin">
-            <div className="story__chapter-inner">
-              <div className="story__img-wrap">
-                <img
-                  src={slide.image}
-                  alt={slide.imageAlt}
-                  className="story__img"
-                  loading="lazy"
-                />
-              </div>
-
-              <div className="story__card-body">
-                <span className="story__chapter-icon">{slide.icon}</span>
-                <p className="story__chapter">{slide.chapter}</p>
-                <h2 className="story__title">{slide.title}</h2>
-                <p className="story__date">{slide.date}</p>
-                <p className="story__body">{slide.body}</p>
-              </div>
+          <div className="reel__pin">
+            <div className="reel__media">
+              <div
+                className="reel__bg"
+                style={{ backgroundImage: `url(${s.image})` }}
+                role="img"
+                aria-label={s.imageAlt}
+              />
             </div>
+            <div className="reel__scrim" aria-hidden="true" />
+            <div className="reel__bars" aria-hidden="true" />
+
+            <div className="reel__content">
+              <span className="reel__num">{String(i + 1).padStart(2, '0')}</span>
+              <h2 className="reel__title">{s.chapter}</h2>
+              <span className="reel__date">{s.date}</span>
+              <p className="reel__text">{s.body}</p>
+            </div>
+
+            {/* black crossfade overlay */}
+            <div className="reel__fade" aria-hidden="true" />
           </div>
-        </div>
+        </section>
       ))}
 
-      {/* Scroll progress indicator (non-interactive) */}
-      <div className="story__progress" aria-hidden="true">
-        {[{ id: 'intro' }, ...slides].map((_, i) => (
+      {/* ── Closing frame ── */}
+      <section className="film__intro film__intro--end">
+        <div className="film__intro-inner">
+          <p className="film__credit">The Beginning</p>
+          <h1 className="film__maintitle film__maintitle--sm">See you there</h1>
+          <span className="film__rule" />
+          <p className="film__tagline">November 7, 2026</p>
+        </div>
+      </section>
+
+      {/* Scene counter */}
+      <div className={`film__counter ${active > 0 ? 'show' : ''}`} aria-hidden="true">
+        <span className="film__counter-num">{String(active).padStart(2, '0')}</span>
+        <span className="film__counter-sep">/</span>
+        <span className="film__counter-total">{String(scenes.length).padStart(2, '0')}</span>
+      </div>
+
+      {/* Progress ticks */}
+      <div className="film__progress" aria-hidden="true">
+        {scenes.map((_, i) => (
           <span
             key={i}
-            className={`story__progress-dot ${i === active ? 'active' : ''} ${i < active ? 'passed' : ''}`}
+            className={`film__progress-dot ${i + 1 === active ? 'active' : ''} ${i + 1 < active ? 'passed' : ''}`}
           />
         ))}
       </div>
