@@ -190,63 +190,116 @@
   flex-shrink: 0;
 }
 
-/* ---- Quick nav teasers ---- */
-.home__teasers {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  min-height: 220px;
+/* ---- Page showcase sections ---- */
+.home__pages {
+  background: var(--off-white);
 }
 
-.teaser__card {
+.home__pages-intro {
+  text-align: center;
+  padding: var(--section-pad);
+  padding-bottom: 1rem;
+}
+.home__pages-sub {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--btn-color);
+  font-size: 1.05rem;
+  margin-top: -1.6rem;
+}
+
+/* Each page gets a full-width split section */
+.page-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  min-height: 62vh;
+}
+.page-section:nth-child(even) { background: var(--white); }
+
+/* Media side */
+.page-section__media {
+  position: relative;
+  overflow: hidden;
+  min-height: 300px;
+}
+.page-section__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.9s cubic-bezier(0.16,1,0.3,1);
+}
+.page-section:hover .page-section__media img { transform: scale(1.05); }
+
+/* Text side */
+.page-section__body {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  gap: 0.8rem;
-  text-decoration: none;
-  padding: 2.5rem 1rem;
-  transition: background var(--transition), transform var(--transition);
-  cursor: pointer;
+  padding: clamp(2.5rem, 6vw, 5rem);
 }
-
-/* Alternating background colors for teaser cards */
-.teaser__card:nth-child(1) { background: var(--blush); }
-.teaser__card:nth-child(2) { background: var(--gold); }
-.teaser__card:nth-child(3) { background: var(--sage); }
-.teaser__card:nth-child(4) { background: var(--btn-color); }
-
-.teaser__card:hover {
-  filter: brightness(0.92);
-  transform: translateY(-3px);
-}
-
-.teaser__icon {
-  font-size: 1.8rem;
-  color: var(--burgundy);
-}
-.teaser__card:nth-child(3) .teaser__icon,
-.teaser__card:nth-child(4) .teaser__icon {
+.page-section__num {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.3em;
   color: var(--gold);
+  margin-bottom: 0.9rem;
 }
-
-.teaser__label {
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+.page-section__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  line-height: 1.05;
   color: var(--burgundy);
+  margin-bottom: 1rem;
 }
-.teaser__card:nth-child(3) .teaser__label,
-.teaser__card:nth-child(4) .teaser__label {
-  color: rgba(255,255,255,0.85);
+.page-section__desc {
+  font-size: 1rem;
+  line-height: 1.9;
+  color: rgba(105,27,25,0.7);
+  max-width: 460px;
+  margin-bottom: 2rem;
+}
+.page-section__cta { align-self: flex-start; }
+
+/* Alternating layout — image on the right */
+.page-section.reverse .page-section__media { order: 2; }
+.page-section.reverse .page-section__body  { order: 1; }
+
+/* ---- Scroll reveal (added by JS; safe default is visible) ---- */
+.page-section.reveal-ready .page-section__body > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1),
+              transform 0.7s cubic-bezier(0.16,1,0.3,1);
+}
+.page-section.reveal-ready.in-view .page-section__body > * {
+  opacity: 1;
+  transform: none;
+}
+.page-section.reveal-ready .page-section__body > *:nth-child(2) { transition-delay: 0.08s; }
+.page-section.reveal-ready .page-section__body > *:nth-child(3) { transition-delay: 0.16s; }
+.page-section.reveal-ready .page-section__body > *:nth-child(4) { transition-delay: 0.24s; }
+
+.page-section.reveal-ready .page-section__media {
+  opacity: 0;
+  clip-path: inset(0 0 14% 0);
+  transition: opacity 0.85s ease, clip-path 0.85s cubic-bezier(0.16,1,0.3,1);
+}
+.page-section.reveal-ready.in-view .page-section__media {
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
 }
 
 /* ---- Responsive ---- */
+@media (max-width: 760px) {
+  .page-section { grid-template-columns: 1fr; }
+  /* image always on top when stacked */
+  .page-section__media,
+  .page-section.reverse .page-section__media { order: 1; min-height: 240px; }
+  .page-section__body,
+  .page-section.reverse .page-section__body  { order: 2; }
+}
 @media (max-width: 600px) {
-  .home__teasers {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .details__ornament {
-    display: none;
-  }
+  .details__ornament { display: none; }
 }
