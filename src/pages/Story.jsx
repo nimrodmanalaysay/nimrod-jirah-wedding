@@ -2,18 +2,17 @@ import React, { useEffect, useRef, useState } from 'react'
 import './Story.css'
 
 /* ============================================================
-   Our Story — "The Film"
+   Our Story — "The Film" (snap edition)
 
-   A cinematic, scroll-controlled story reel. Each chapter is a
-   full-bleed scene that pins to the screen while you scroll
-   through it. Scroll position scrubs the whole frame:
+   Each chapter is a full-screen scene that SNAPS into place —
+   one scroll advances to the next scene. As a scene lands, its
+   cinematic entrance plays once: the image rises out of black
+   with a slow Ken Burns drift while the title-card text fades
+   up in sequence.
 
-     • the image drifts/zooms (Ken Burns) as you move
-     • title-card text rises in staggered, like film credits
-     • each scene fades through black on the way in and out
-
-   Built with React refs + a rAF scroll loop feeding CSS custom
-   properties; all the motion lives in CSS. No libraries.
+   Mechanism: a snap scroll-container (CSS scroll-snap) + an
+   IntersectionObserver that toggles `in-view` to fire the
+   entrance animation each time a scene arrives.
 
    ✏️ Replace `image` URLs with your real prenup/couple photos.
       Images live in /public/photos/ — reference as /photos/name.jpg
@@ -63,75 +62,48 @@ const scenes = [
   },
 ]
 
-const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
-
 export default function Story() {
-  const reelRefs = useRef([])
+  const scrollRef = useRef(null)
+  const sceneRefs = useRef([])
   const [active, setActive] = useState(0)
 
+  // Fire each scene's entrance when it snaps into view; re-fires on return.
   useEffect(() => {
-    const reels = reelRefs.current.filter(Boolean)
-
-    // The scrub runs for everyone. Under reduced-motion we keep this gentle
-    // scroll-linked OPACITY fade but the CSS strips the zoom/parallax/loops,
-    // so the story still "plays" as you scroll without the heavy motion.
-
-    let raf = 0
-    function update() {
-      raf = 0
-      const vh = window.innerHeight
-      let current = 0
-
-      reels.forEach(reel => {
-        const rect  = reel.getBoundingClientRect()
-        const total = rect.height - vh
-        // p: 0 as the scene pins, 1 as it scrolls away
-        const p = total > 0 ? clamp(-rect.top / total, 0, 1) : (rect.top <= 0 ? 1 : 0)
-
-        // staggered entrances (image → number → title → text)
-        const tier = off => clamp((p - off) / 0.24, 0, 1)
-        const exit = clamp((p - 0.74) / 0.18, 0, 1)
-        // black crossfade at the very start and end of each scene
-        const fade = clamp(Math.max((0.14 - p) / 0.14, (p - 0.86) / 0.14), 0, 1)
-
-        reel.style.setProperty('--p',    p.toFixed(4))
-        reel.style.setProperty('--e0',   tier(0.06).toFixed(4))
-        reel.style.setProperty('--e1',   tier(0.12).toFixed(4))
-        reel.style.setProperty('--e2',   tier(0.18).toFixed(4))
-        reel.style.setProperty('--e3',   tier(0.24).toFixed(4))
-        reel.style.setProperty('--exit', exit.toFixed(4))
-        reel.style.setProperty('--fade', fade.toFixed(4))
-
-        if (rect.top <= vh * 0.5 && rect.bottom >= vh * 0.5) {
-          current = Number(reel.dataset.index)
-        }
-      })
-
-      setActive(current)
-    }
-
-    function onScroll() {
-      if (!raf) raf = requestAnimationFrame(update)
-    }
-
-    update()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-      if (raf) cancelAnimationFrame(raf)
-    }
+    const root = scrollRef.current
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view')
+            const idx = Number(entry.target.dataset.index)
+            if (!Number.isNaN(idx)) setActive(idx)
+          } else {
+            entry.target.classList.remove('in-view')
+          }
+        })
+      },
+      { root, threshold: 0.55 }
+    )
+    sceneRefs.current.forEach(el => el && observer.observe(el))
+    return () => observer.disconnect()
   }, [])
 
-  return (
-    <div className="film">
+  const register = el => {
+    if (el) sceneRefs.current[Number(el.dataset.index)] = el
+  }
 
-      {/* Moving film grain over everything */}
+  // Replay — snap back to the opening title card
+  const replay = () =>
+    scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+
+  return (
+    <div className="film" ref={scrollRef}>
+
+      {/* Moving film grain over the whole reel */}
       <div className="film__grain" aria-hidden="true" />
 
       {/* ── Opening title card ── */}
-      <section className="film__intro">
+      <section className="film__scene film__intro in-view" data-index="0" ref={register}>
         <div className="film__intro-inner">
           <p className="film__credit">A Love Story</p>
           <h1 className="film__maintitle">Our Story</h1>
@@ -147,46 +119,45 @@ export default function Story() {
       {/* ── Scenes ── */}
       {scenes.map((s, i) => (
         <section
-          className="reel"
+          className="film__scene reel"
           key={s.id}
           data-index={i + 1}
-          ref={el => (reelRefs.current[i] = el)}
+          ref={register}
         >
-          <div className="reel__pin">
-            <div className="reel__media">
-              <div
-                className="reel__bg"
-                style={{ backgroundImage: `url(${s.image})` }}
-                role="img"
-                aria-label={s.imageAlt}
-              />
-            </div>
-            <div className="reel__scrim" aria-hidden="true" />
-
-            <div className="reel__content">
-              <span className="reel__num">{String(i + 1).padStart(2, '0')}</span>
-              <h2 className="reel__title">{s.chapter}</h2>
-              <span className="reel__date">{s.date}</span>
-              <p className="reel__text">{s.body}</p>
-            </div>
-
-            {/* black crossfade overlay */}
-            <div className="reel__fade" aria-hidden="true" />
+          <div className="reel__media">
+            <div
+              className="reel__bg"
+              style={{ backgroundImage: `url(${s.image})` }}
+              role="img"
+              aria-label={s.imageAlt}
+            />
           </div>
+          <div className="reel__scrim" aria-hidden="true" />
+
+          <div className="reel__content">
+            <span className="reel__num">{String(i + 1).padStart(2, '0')}</span>
+            <h2 className="reel__title">{s.chapter}</h2>
+            <span className="reel__date">{s.date}</span>
+            <p className="reel__text">{s.body}</p>
+          </div>
+
+          {/* black crossfade — opaque until the scene lands */}
+          <div className="reel__fade" aria-hidden="true" />
         </section>
       ))}
 
       {/* ── Closing frame ── */}
-      <section className="film__intro film__intro--end">
+      <section
+        className="film__scene film__intro film__intro--end"
+        data-index={scenes.length + 1}
+        ref={register}
+      >
         <div className="film__intro-inner">
           <p className="film__credit">The Beginning</p>
           <h1 className="film__maintitle film__maintitle--sm">See you there</h1>
           <span className="film__rule" />
           <p className="film__tagline">November 7, 2026</p>
-          <button
-            className="film__replay"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          >
+          <button className="film__replay" onClick={replay}>
             <span className="film__replay-icon">↺</span>
             Watch from the top
           </button>
@@ -194,8 +165,8 @@ export default function Story() {
       </section>
 
       {/* Scene counter */}
-      <div className={`film__counter ${active > 0 ? 'show' : ''}`} aria-hidden="true">
-        <span className="film__counter-num">{String(active).padStart(2, '0')}</span>
+      <div className={`film__counter ${active > 0 && active <= scenes.length ? 'show' : ''}`} aria-hidden="true">
+        <span className="film__counter-num">{String(Math.min(active, scenes.length)).padStart(2, '0')}</span>
         <span className="film__counter-sep">/</span>
         <span className="film__counter-total">{String(scenes.length).padStart(2, '0')}</span>
       </div>
