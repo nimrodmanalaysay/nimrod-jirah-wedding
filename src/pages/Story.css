@@ -112,8 +112,10 @@
 .film__cue {
   position: absolute;
   bottom: 2.4rem;
-  left: 50%;
-  transform: translateX(-50%);
+  /* full-width + flex centering so the fade-up animation's transform
+     can't clobber a translateX(-50%) and knock it off-center */
+  left: 0;
+  right: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
