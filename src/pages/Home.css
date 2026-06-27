@@ -117,77 +117,116 @@
   margin-bottom: 0.5rem;
 }
 
-/* ---- Wedding Details ---- */
-.home__details {
-  padding: var(--section-pad);
-  background: var(--off-white);
+/* ---- Wedding Details — single full-bleed venue band ---- */
+.home__venue {
+  position: relative;
+  background-color: var(--burgundy);   /* fallback before image loads */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;         /* subtle parallax on desktop */
+  padding: clamp(4.5rem, 10vw, 8rem) 1.5rem;
   text-align: center;
+  overflow: hidden;
 }
 
-.details__grid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-  max-width: 800px;
+/* Darkening overlay for legibility over any photo */
+.home__venue-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, rgba(40,16,15,0.45) 0%, rgba(30,12,10,0.82) 100%),
+    linear-gradient(to bottom, rgba(30,12,10,0.55), rgba(30,12,10,0.7));
+}
+
+.home__venue-content {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
   margin: 0 auto;
+  color: #fff;
+  /* glassy framed panel that fits the elegant theme */
+  padding: clamp(2.5rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 4rem);
+  border: 1px solid rgba(225,202,150,0.35);
+  border-radius: 4px;
+  background: rgba(20,8,7,0.18);
+  backdrop-filter: blur(2px);
 }
 
-.details__card {
-  background: var(--white);
-  border: 1px solid rgba(225,202,150,0.4);
-  padding: 2.5rem 2rem;
-  flex: 1;
-  min-width: 220px;
-  max-width: 300px;
-  border-radius: 2px;
-  box-shadow: 0 4px 24px rgba(105,27,25,0.06);
-  transition: transform var(--transition), box-shadow var(--transition);
-}
-.details__card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 32px rgba(105,27,25,0.12);
-}
-
-.details__icon {
-  color: var(--terracotta);
-  font-size: 1.2rem;
+.home__venue-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
   margin-bottom: 1rem;
 }
 
-.details__card h3 {
+.home__venue-title {
   font-family: var(--font-display);
-  font-size: 1.6rem;
-  color: var(--burgundy);
-  margin-bottom: 0.8rem;
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  color: #fff;
+  line-height: 1.1;
 }
 
-.details__time {
-  font-size: 0.9rem;
-  color: var(--sage);
-  font-weight: 500;
+.home__venue-rule {
+  display: block;
+  width: 60px;
+  height: 1px;
+  margin: 1.4rem auto 1.8rem;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
 }
 
-.details__place {
+.home__venue-place {
   font-family: var(--font-display);
-  font-size: 1.2rem;
-  color: var(--terracotta);
-  margin-top: 0.6rem;
-}
-
-.details__address {
-  font-size: 0.8rem;
-  color: rgba(105,27,25,0.55);
-  margin-top: 0.3rem;
-}
-
-/* Decorative middle ornament between cards */
-.details__ornament {
-  font-size: 2.5rem;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
   color: var(--gold);
-  opacity: 0.5;
-  flex-shrink: 0;
+  margin-bottom: 0.4rem;
+}
+
+.home__venue-address {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.78);
+  margin-bottom: 1rem;
+}
+
+.home__venue-date {
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 2rem;
+}
+
+/* Ceremony / Reception times in one row */
+.home__venue-times {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.5rem, 5vw, 3rem);
+  flex-wrap: wrap;
+}
+.home__venue-time {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.home__venue-time-label {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blush);
+}
+.home__venue-time-value {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+  color: #fff;
+}
+.home__venue-time-sep {
+  font-size: 1.5rem;
+  color: rgba(225,202,150,0.6);
 }
 
 /* ---- Explore the site (centered card containers) ---- */
@@ -294,6 +333,7 @@
 .explore__card:hover .explore__arrow { transform: translateX(4px); }
 
 /* ---- Responsive ---- */
-@media (max-width: 600px) {
-  .details__ornament { display: none; }
+@media (max-width: 768px) {
+  /* fixed backgrounds are janky on mobile — switch to normal scroll */
+  .home__venue { background-attachment: scroll; }
 }

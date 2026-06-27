@@ -19,18 +19,8 @@ const FLAT_LINKS = [
   { label: 'Gifts',     path: '/gifts'     },
 ]
 
-function WeddingLogo({ light }) {
-  const color = light ? 'var(--sage)' : 'var(--white)'
-  return (
-    <svg className="navbar__logo-icon" viewBox="0 0 48 28" fill="none"
-      xmlns="http://www.w3.org/2000/svg" aria-label="Wedding rings logo">
-      <circle cx="16" cy="14" r="11" stroke={color} strokeWidth="2" fill="none" />
-      <circle cx="32" cy="14" r="11" stroke={color} strokeWidth="2" fill="none" />
-      <path d="M24 6.5 C26.5 9 26.5 19 24 21.5 C21.5 19 21.5 9 24 6.5Z"
-        fill="var(--gold)" opacity="0.55" />
-    </svg>
-  )
-}
+/* Brand monogram lives at /public/nj-monogram.svg (gold, transparent bg) */
+const LOGO_SRC = '/nj-monogram.svg'
 
 /* ── Desktop Ceremony dropdown ──
    Uses a plain <li> + <NavLink> identical to all other tabs.
@@ -126,10 +116,7 @@ export default function Navbar() {
 
       {/* Brand */}
       <Link to="/" className="navbar__brand" onClick={closeMenu}>
-        <WeddingLogo light={isLight} />
-        <span className="navbar__brand-text">
-          N <span className="navbar__brand-amp">&amp;</span> J
-        </span>
+        <img className="navbar__logo-img" src={LOGO_SRC} alt="Nimrod & Jirah" />
       </Link>
 
       {/* Desktop links — all items rendered uniformly */}
@@ -180,8 +167,12 @@ export default function Navbar() {
         aria-label="Navigation menu"
       >
         <div className="navbar__drawer-header">
-          <WeddingLogo light={false} />
-          <span className="navbar__drawer-monogram">N &amp; J</span>
+          <img className="navbar__drawer-logo-img" src={LOGO_SRC} alt="Nimrod & Jirah" />
+          <button
+            className="navbar__drawer-close"
+            onClick={closeMenu}
+            aria-label="Close menu"
+          >✕</button>
         </div>
 
         {FLAT_LINKS.slice(0, 3).map(({ label, path }) => (

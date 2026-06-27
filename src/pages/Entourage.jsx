@@ -7,36 +7,51 @@ import './Entourage.css'
    No avatars or profile images — name + role only.
    ============================================================ */
 
-const principalSponsors = [
-  { male: 'Mr. Juan dela Cruz',   female: 'Mrs. Maria dela Cruz' },
-  { male: 'Mr. Pedro Santos',     female: 'Mrs. Ana Santos' },
-  { male: 'Mr. Jose Reyes',       female: 'Mrs. Linda Reyes' },
+// Principal sponsors — Ninong (godfathers) and Ninang (godmothers) listed separately
+const ninongs = [
+  'Mr. Ronald Aguilar',
+  'Mr. Allan Santos',
+  'Mr. Gabino Giron Jr.',
+  'Mr. Ricky Bajarin',
+  'Mr. Felipe Manalaysay',
+  'Mr. Marlon Manalaysay',
+  'Mr. Thomas Avilla Jr.',
+  'Mr. Jun Tiongson',
+]
+const ninangs = [
+  'Atty. Mildred Ople',
+  'Mrs. Jocefina Reyes',
+  'Mrs. Jane Pangan',
+  'Mrs. Cristina Domingo',
+  'Mrs. Mel Dingayan',
+  'Mrs. Josephine Lopez',
+  'Mrs. Rose Calonzo',
+  'Mrs. Lhea Aguilar',
 ]
 
-const bestMan    = { name: 'Name Placeholder',  role: 'Best Man'      }
-const maidHonor  = { name: 'Name Placeholder',  role: 'Maid of Honor' }
+const bestMan    = { name: 'Jaymar Manalaysay',        role: 'Best Man'      }
+const maidHonor  = { name: 'Jemimah Keziah Austin',   role: 'Maid of Honor' }
 
 // ✏️ Exactly 3 groomsmen
 const groomsmen = [
-  { name: 'Groomsman One',   role: 'Groomsman' },
-  { name: 'Groomsman Two',   role: 'Groomsman' },
-  { name: 'Groomsman Three', role: 'Groomsman' },
+  { name: 'Grant Dave Gutierrez', role: 'Groomsman' },
+  { name: 'Titus Sandoval',       role: 'Groomsman' },
+  { name: 'Joshua Capili',        role: 'Groomsman' },
 ]
 
 // ✏️ Exactly 3 bridesmaids
 const bridesmaids = [
-  { name: 'Bridesmaid One',   role: 'Bridesmaid' },
-  { name: 'Bridesmaid Two',   role: 'Bridesmaid' },
-  { name: 'Bridesmaid Three', role: 'Bridesmaid' },
+  { name: 'Elaica Miras',    role: 'Bridesmaid' },
+  { name: 'Michaela Giron',  role: 'Bridesmaid' },
+  { name: 'Camille Sison',   role: 'Bridesmaid' },
 ]
 
 const others = [
-  { name: 'Name Placeholder', role: 'Ring Bearer'  },
-  { name: 'Name Placeholder', role: 'Coin Bearer'  },
-  { name: 'Flower Girl One',  role: 'Flower Girl'  },
-  { name: 'Flower Girl Two',  role: 'Flower Girl'  },
-  { name: 'Name One',         role: 'Veil'         },
-  { name: 'Name Two',         role: 'Cord'         },
+  { name: 'Matthew Robles',        role: 'Ring Bearer'  },
+  { name: 'Beadz Peolo Carangan',  role: 'Coin Bearer'  },
+  { name: 'Alrenz Reyes',          role: 'Bible Bearer' },
+  { name: 'Princess Ferrer',       role: 'Flower Girl'  },
+  { name: 'Janella Lopez',         role: 'Flower Girl'  },
 ]
 
 /* ---- Reusable name card (no avatar) ---- */
@@ -79,14 +94,33 @@ export default function Entourage() {
 
       {/* ── Principal Sponsors ── */}
       <Section icon="✦" label="Principal Sponsors">
-        <div className="ent-pairs">
-          {principalSponsors.map((p, i) => (
-            <div key={i} className="pair-card">
-              <p className="pair-card__name">{p.male}</p>
-              <span className="pair-card__and">&amp;</span>
-              <p className="pair-card__name">{p.female}</p>
-            </div>
-          ))}
+        <div className="ent-party-grid">
+
+          {/* Ninong column */}
+          <div className="ent-party-col">
+            <p className="ent-party-col__label">Ninong</p>
+            {ninongs.map((name, i) => (
+              <div key={i} className="name-card">
+                <p className="name-card__name">{name}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Centre ornament */}
+          <div className="ent-party-center">
+            <span className="ent-party-ornament">❧</span>
+          </div>
+
+          {/* Ninang column */}
+          <div className="ent-party-col">
+            <p className="ent-party-col__label">Ninang</p>
+            {ninangs.map((name, i) => (
+              <div key={i} className="name-card">
+                <p className="name-card__name">{name}</p>
+              </div>
+            ))}
+          </div>
+
         </div>
       </Section>
 

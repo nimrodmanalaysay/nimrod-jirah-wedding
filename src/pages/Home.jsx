@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom'
 import Countdown from '../components/Countdown'
 import './Home.css'
 
+// ✏️ Venue background — replace src/pages/photos/venue.png with your hall photo
+import venueImg from './photos/venue.jpg'
+
 /* ============================================================
    Home Page
    Sections: Hero, Countdown, Wedding Details, Explore cards
@@ -67,35 +70,32 @@ export default function Home() {
         <Countdown />
       </section>
 
-      {/* ---- WEDDING DETAILS ---- */}
-      <section className="home__details">
-        <h2 className="section-title">Wedding Details</h2>
-        <span className="section-divider" />
+      {/* ---- WEDDING DETAILS (single venue — ceremony & reception same place) ---- */}
+      <section
+        className="home__venue"
+        style={{ backgroundImage: `url(${venueImg})` }}
+      >
+        <div className="home__venue-overlay" />
+        <div className="home__venue-content">
+          <p className="home__venue-eyebrow">Ceremony &amp; Reception</p>
+          <h2 className="home__venue-title">Wedding Details</h2>
+          <span className="home__venue-rule" />
 
-        <div className="details__grid">
-          {/* Ceremony card */}
-          <div className="details__card">
-            <div className="details__icon">✦</div>
-            <h3>Ceremony</h3>
-            <p className="details__time">November 7, 2026</p>
-            <p className="details__time">3:00 PM</p>
-            <p className="details__place">Grass Garden</p>
-            {/* ✏️ Replace with actual address */}
-            <p className="details__address">123 Garden Lane, City, Province 0000</p>
-          </div>
+          {/* ✏️ Replace with your real venue + address */}
+          <p className="home__venue-place">Grass Garden</p>
+          <p className="home__venue-address">123 Garden Lane, City, Province 0000</p>
+          <p className="home__venue-date">November 7, 2026</p>
 
-          {/* Divider ornament */}
-          <div className="details__ornament">❧</div>
-
-          {/* Reception card */}
-          <div className="details__card">
-            <div className="details__icon">✦</div>
-            <h3>Reception</h3>
-            <p className="details__time">November 7, 2026</p>
-            <p className="details__time">4:00 PM</p>
-            <p className="details__place">Grass Garden</p>
-            {/* ✏️ Replace with actual address */}
-            <p className="details__address">123 Garden Lane, City, Province 0000</p>
+          <div className="home__venue-times">
+            <div className="home__venue-time">
+              <span className="home__venue-time-label">Ceremony</span>
+              <span className="home__venue-time-value">3:00 PM</span>
+            </div>
+            <span className="home__venue-time-sep">❦</span>
+            <div className="home__venue-time">
+              <span className="home__venue-time-label">Reception</span>
+              <span className="home__venue-time-value">4:00 PM</span>
+            </div>
           </div>
         </div>
       </section>
