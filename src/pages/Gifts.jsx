@@ -11,8 +11,8 @@ const giftOptions = [
   {
     id: 'gcash',
     label: 'GCash',
-    // ✏️ Replace with: '/photos/gcash-qr.png'
-    qr: 'https://placehold.co/260x260/556251/E1CA96?text=GCash+QR',
+    // ✏️ Replace /public/photos/gcash-qr.png with your real GCash QR
+    qr: '/photos/gcash-qr.png',
     accountName: 'Nimrod / Jirah',
     accountNum:  '09XX XXX XXXX',
     icon: '💚',
@@ -20,8 +20,8 @@ const giftOptions = [
   {
     id: 'bdo',
     label: 'BDO Bank',
-    // ✏️ Replace with: '/photos/bdo-qr.png'
-    qr: 'https://placehold.co/260x260/691B19/E1CA96?text=BDO+QR',
+    // ✏️ Replace /public/photos/bdo-qr.png with your real BDO QR
+    qr: '/photos/bdo-qr.png',
     accountName: 'Nimrod Lastname',
     accountNum:  '1234 5678 9012',
     icon: '🏦',
@@ -29,8 +29,8 @@ const giftOptions = [
   {
     id: 'maya',
     label: 'Maya',
-    // ✏️ Replace with: '/photos/maya-qr.png'
-    qr: 'https://placehold.co/260x260/BD6738/FFD9DA?text=Maya+QR',
+    // ✏️ Replace /public/photos/maya-qr.png with your real Maya QR
+    qr: '/photos/maya-qr.png',
     accountName: 'Nimrod / Jirah',
     accountNum:  '09XX XXX XXXX',
     icon: '💙',

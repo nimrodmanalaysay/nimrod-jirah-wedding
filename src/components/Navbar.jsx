@@ -53,7 +53,7 @@ function CeremonyDropdown({ closeMenu }) {
           setOpen(o => !o)
         }}
       >
-        Ceremony
+        Program
         <span className={`navbar__dropdown-chevron ${open ? 'open' : ''}`}>▾</span>
       </NavLink>
 
@@ -191,7 +191,7 @@ export default function Navbar() {
             onClick={() => setCeremonyExpanded(o => !o)}
             aria-expanded={ceremonyExpanded}
           >
-            Ceremony
+            Program
             <span className={`navbar__drawer-chevron ${ceremonyExpanded ? 'open' : ''}`}>›</span>
           </button>
 

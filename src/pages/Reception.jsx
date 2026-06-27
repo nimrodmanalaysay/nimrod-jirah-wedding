@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import './CeremonyPages.css'
+import { MAP_LINK, MAP_EMBED } from '../utils/venue'
 
 /* ============================================================
    Reception Page
@@ -32,7 +33,7 @@ export default function Reception() {
 
       <div className="cp-hero">
         <img
-          src="https://placehold.co/1200x400/556251/E1CA96?text=Reception"
+          src="/photos/reception-hero.jpg"
           alt="Reception"
           className="cp-hero__img"
         />
@@ -59,9 +60,8 @@ export default function Reception() {
             <div className="cp-card">
               <span className="cp-card__icon">📍</span>
               <h4>Address</h4>
-              {/* ✏️ Update address */}
-              <p>123 Garden Lane</p>
-              <p className="cp-card__sub">City, Province 0000</p>
+              <p>Purok 4, P. Reyes Street</p>
+              <p className="cp-card__sub">Barangay Sipat, Plaridel, Bulacan</p>
             </div>
             <div className="cp-card">
               <span className="cp-card__icon">🍽️</span>
@@ -76,9 +76,9 @@ export default function Reception() {
         <section className="cp-section cp-section--blush">
           <h2 className="cp-section__title">The Venue</h2>
           <div className="cp-img-grid">
-            <img src="https://placehold.co/400x280/FFD9DA/691B19?text=Venue+Photo+1" alt="Venue" />
-            <img src="https://placehold.co/400x280/E1CA96/691B19?text=Venue+Photo+2" alt="Venue" />
-            <img src="https://placehold.co/400x280/BD6738/FFD9DA?text=Venue+Photo+3" alt="Venue" />
+            <img src="/photos/reception-venue-1.jpg" alt="Venue" />
+            <img src="/photos/reception-venue-2.jpg" alt="Venue" />
+            <img src="/photos/reception-venue-3.jpg" alt="Venue" />
           </div>
         </section>
 
@@ -108,6 +108,24 @@ export default function Reception() {
             <li>Ride-sharing services (Grab/Angkas) are readily available in the area.</li>
             <li>For guests staying overnight, recommended hotels will be shared closer to the date.</li>
           </ul>
+        </section>
+
+        {/* Find Us — map */}
+        <section className="cp-section">
+          <h2 className="cp-section__title">Find Us</h2>
+          <div className="cp-map">
+            <iframe
+              src={MAP_EMBED}
+              title="Grass Garden location map"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+          <div className="cp-map-actions">
+            <a className="cp-maplink" href={MAP_LINK} target="_blank" rel="noopener noreferrer">
+              <span aria-hidden="true">📍</span> View on Google Maps
+            </a>
+          </div>
         </section>
 
       </div>

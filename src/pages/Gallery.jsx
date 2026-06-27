@@ -12,15 +12,16 @@ import './Gallery.css'
 // ✏️ Replace src and alt values with your real photos
 // `span` controls height in the masonry grid: 1 = short, 2 = tall
 const photos = [
-  { id: 1, src: 'https://placehold.co/400x600/E1CA96/691B19?text=Prenup+1', alt: 'Prenup photo 1', span: 2 },
-  { id: 2, src: 'https://placehold.co/400x400/FFD9DA/691B19?text=Prenup+2', alt: 'Prenup photo 2', span: 1 },
-  { id: 3, src: 'https://placehold.co/400x400/556251/E1CA96?text=Prenup+3', alt: 'Prenup photo 3', span: 1 },
-  { id: 4, src: 'https://placehold.co/400x600/BD6738/FFD9DA?text=Prenup+4', alt: 'Prenup photo 4', span: 2 },
-  { id: 5, src: 'https://placehold.co/400x400/691B19/E1CA96?text=Prenup+5', alt: 'Prenup photo 5', span: 1 },
-  { id: 6, src: 'https://placehold.co/400x400/E1CA96/556251?text=Prenup+6', alt: 'Prenup photo 6', span: 1 },
-  { id: 7, src: 'https://placehold.co/400x600/FFD9DA/691B19?text=Prenup+7', alt: 'Prenup photo 7', span: 2 },
-  { id: 8, src: 'https://placehold.co/400x400/556251/FFD9DA?text=Prenup+8', alt: 'Prenup photo 8', span: 1 },
-  { id: 9, src: 'https://placehold.co/400x400/BD6738/E1CA96?text=Prenup+9', alt: 'Prenup photo 9', span: 1 },
+  // ✏️ Replace files in /public/photos/ (gallery-1.jpg … gallery-9.jpg) to change photos
+  { id: 1, src: '/photos/gallery-1.jpg', alt: 'Prenup photo 1', span: 2 },
+  { id: 2, src: '/photos/gallery-2.jpg', alt: 'Prenup photo 2', span: 1 },
+  { id: 3, src: '/photos/gallery-3.jpg', alt: 'Prenup photo 3', span: 1 },
+  { id: 4, src: '/photos/gallery-4.jpg', alt: 'Prenup photo 4', span: 2 },
+  { id: 5, src: '/photos/gallery-5.jpg', alt: 'Prenup photo 5', span: 1 },
+  { id: 6, src: '/photos/gallery-6.jpg', alt: 'Prenup photo 6', span: 1 },
+  { id: 7, src: '/photos/gallery-7.jpg', alt: 'Prenup photo 7', span: 2 },
+  { id: 8, src: '/photos/gallery-8.jpg', alt: 'Prenup photo 8', span: 1 },
+  { id: 9, src: '/photos/gallery-9.jpg', alt: 'Prenup photo 9', span: 1 },
 ]
 
 export default function Gallery() {

@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 import Countdown from '../components/Countdown'
 import './Home.css'
 
-// ✏️ Venue background — replace src/pages/photos/venue.png with your hall photo
-import venueImg from './photos/venue.jpg'
+import { MAP_LINK, MAP_EMBED } from '../utils/venue'
+
+// ✏️ Venue background — replace /public/photos/venue-hall.jpg to change it
+const VENUE_BG = '/photos/venue-hall.jpg'
 
 /* ============================================================
    Home Page
@@ -73,7 +75,7 @@ export default function Home() {
       {/* ---- WEDDING DETAILS (single venue — ceremony & reception same place) ---- */}
       <section
         className="home__venue"
-        style={{ backgroundImage: `url(${venueImg})` }}
+        style={{ backgroundImage: `url(${VENUE_BG})` }}
       >
         <div className="home__venue-overlay" />
         <div className="home__venue-content">
@@ -81,9 +83,8 @@ export default function Home() {
           <h2 className="home__venue-title">Wedding Details</h2>
           <span className="home__venue-rule" />
 
-          {/* ✏️ Replace with your real venue + address */}
           <p className="home__venue-place">Grass Garden</p>
-          <p className="home__venue-address">123 Garden Lane, City, Province 0000</p>
+          <p className="home__venue-address">Purok 4, P. Reyes Street, Barangay Sipat, Plaridel, Bulacan</p>
           <p className="home__venue-date">November 7, 2026</p>
 
           <div className="home__venue-times">
@@ -97,6 +98,26 @@ export default function Home() {
               <span className="home__venue-time-value">4:00 PM</span>
             </div>
           </div>
+
+          <a
+            className="home__venue-maplink"
+            href={MAP_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span aria-hidden="true">📍</span> View on Google Maps
+          </a>
+        </div>
+
+        {/* Embedded Google Map — actual venue location */}
+        <div className="home__venue-map">
+          <iframe
+            src={MAP_EMBED}
+            title="Grass Garden location on Google Maps"
+            loading="lazy"
+            allowFullScreen
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </div>
       </section>
 

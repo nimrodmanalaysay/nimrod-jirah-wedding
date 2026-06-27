@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import './CeremonyPages.css'
+import { MAP_LINK, MAP_EMBED } from '../utils/venue'
 
 /* ============================================================
    Wedding Ceremony Page — Christian wedding service
@@ -35,7 +36,7 @@ export default function WeddingCeremony() {
       {/* Hero banner */}
       <div className="cp-hero">
         <img
-          src="https://placehold.co/1200x400/691B19/E1CA96?text=Wedding+Ceremony"
+          src="/photos/wedding-hero.jpg"
           alt="Wedding Ceremony"
           className="cp-hero__img"
         />
@@ -79,9 +80,8 @@ export default function WeddingCeremony() {
             <div className="cp-card">
               <span className="cp-card__icon">📍</span>
               <h4>Venue</h4>
-              {/* ✏️ Update venue */}
               <p>Grass Garden</p>
-              <p className="cp-card__sub">123 Garden Lane, City, Province</p>
+              <p className="cp-card__sub">Purok 4, P. Reyes Street, Barangay Sipat, Plaridel, Bulacan</p>
             </div>
           </div>
         </section>
@@ -112,6 +112,24 @@ export default function WeddingCeremony() {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Find Us — map */}
+        <section className="cp-section cp-section--blush">
+          <h2 className="cp-section__title">Find Us</h2>
+          <div className="cp-map">
+            <iframe
+              src={MAP_EMBED}
+              title="Grass Garden location map"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+          <div className="cp-map-actions">
+            <a className="cp-maplink" href={MAP_LINK} target="_blank" rel="noopener noreferrer">
+              <span aria-hidden="true">📍</span> View on Google Maps
+            </a>
           </div>
         </section>
 

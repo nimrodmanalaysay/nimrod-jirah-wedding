@@ -42,7 +42,7 @@ export default function DressCode() {
 
       <div className="cp-hero">
         <img
-          src="https://placehold.co/1200x400/E1CA96/691B19?text=Dress+Code"
+          src="/photos/dresscode-hero.jpg"
           alt="Dress Code"
           className="cp-hero__img"
         />
@@ -106,19 +106,19 @@ export default function DressCode() {
           <h2 className="cp-section__title">Style Inspiration</h2>
           <div className="cp-img-grid cp-img-grid--4">
             <div className="cp-inspo-card">
-              <img src="https://placehold.co/260x340/FFD9DA/691B19?text=Ladies+Gown" alt="Ladies attire inspiration" />
+              <img src="/photos/attire-ladies-1.jpg" alt="Ladies attire inspiration" />
               <p>Ladies — Gown</p>
             </div>
             <div className="cp-inspo-card">
-              <img src="https://placehold.co/260x340/E1CA96/691B19?text=Ladies+Midi" alt="Ladies midi dress" />
+              <img src="/photos/attire-ladies-2.jpg" alt="Ladies midi dress" />
               <p>Ladies — Midi Dress</p>
             </div>
             <div className="cp-inspo-card">
-              <img src="https://placehold.co/260x340/556251/E1CA96?text=Gents+Barong" alt="Gents barong" />
+              <img src="/photos/attire-gents-1.jpg" alt="Gents barong" />
               <p>Gents — Barong</p>
             </div>
             <div className="cp-inspo-card">
-              <img src="https://placehold.co/260x340/BD6738/FFD9DA?text=Gents+Suit" alt="Gents suit" />
+              <img src="/photos/attire-gents-2.jpg" alt="Gents suit" />
               <p>Gents — Suit</p>
             </div>
           </div>

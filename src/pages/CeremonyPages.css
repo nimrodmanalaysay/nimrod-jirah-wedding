@@ -117,6 +117,45 @@
   color: var(--btn-color);
 }
 
+/* ── Find Us map ── */
+.cp-map {
+  max-width: 760px;
+  margin: 0 auto;
+  border: 1px solid rgba(225,202,150,0.5);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(105,27,25,0.1);
+}
+.cp-map iframe {
+  display: block;
+  width: 100%;
+  height: 340px;
+  border: 0;
+}
+.cp-map-actions {
+  text-align: center;
+  margin-top: 1.6rem;
+}
+.cp-maplink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.6rem;
+  border: 1.5px solid var(--btn-color);
+  border-radius: 2px;
+  color: var(--btn-color);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background var(--transition), color var(--transition);
+}
+.cp-maplink:hover {
+  background: var(--btn-color);
+  color: var(--white);
+}
+
 .cp-section {
   padding: 4rem 3rem;
   border-bottom: 1px solid rgba(225,202,150,0.2);
