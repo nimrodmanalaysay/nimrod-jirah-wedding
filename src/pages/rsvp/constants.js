@@ -1,5 +1,5 @@
 export const INVITEE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4krEOAYvMChZ5m9Eak9bg5u7oInMJ15QuZTOlekmAtv6CEpk324tTwjY8tWPZRBgb/exec'
-export const RSVP_SCRIPT_URL    = 'https://script.google.com/macros/s/AKfycbw-1Kf_iyqBxf7atpNtPn5hL9qLK91UTB_g7lPAMCpvxVSDiXK3Csks_VYAM77pVvKw/exec'
+export const RSVP_SCRIPT_URL    = 'https://script.google.com/macros/s/AKfycbz5Vh5IOdbm8mSSzvvJM354V5cKFoOFwhkmU2heXUyfrczrFPvl8l86UYC6XYuAddRI/exec'
 
 export const INITIAL_FORM = {
   attendance: '',

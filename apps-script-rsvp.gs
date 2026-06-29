@@ -255,7 +255,7 @@ function googleCalLink_() {
 
 /* ── Themed HTML email body ─────────────────────────────────── */
 function buildEmailHTML_(o) {
-  var statusLabel = o.isAttending ? 'Joyfully Attending 🥂' : 'Unable to Attend 💌';
+  var statusLabel = o.isAttending ? 'Joyfully Attending' : 'Unable to Attend';
   var statusColor = o.isAttending ? '#556251' : '#BD6738';
 
   var intro = o.invitedBy
@@ -264,7 +264,7 @@ function buildEmailHTML_(o) {
     : (o.isAttending
         ? 'We are <strong style="color:#691B19;">so excited</strong> to celebrate with you! ' +
           'Please arrive by <strong>2:15 PM</strong> to be seated before the ceremony at ' + WEDDING.ceremonyTime + '.'
-        : 'We completely understand and will miss you dearly. Your kind thoughts mean the world to us. 💛');
+        : 'We completely understand and will miss you dearly. Your kind thoughts mean the world to us.');
 
   var plusOneRow = o.plusOneName
     ? '<tr><td style="padding:6px 0;color:#888;font-size:13px;">Plus One</td>' +

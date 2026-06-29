@@ -198,7 +198,7 @@ function sendConfirmationEmail(data) {
 
 // ── buildEmailHTML ─────────────────────────────────────────────
 function buildEmailHTML(opts) {
-  var statusLabel = opts.isAttending ? 'Joyfully Attending 🥂' : 'Unable to Attend 💌';
+  var statusLabel = opts.isAttending ? 'Joyfully Attending' : 'Unable to Attend';
   var statusColor = opts.isAttending ? '#556251' : '#BD6738';
 
   var plusOneRow = opts.plusOneName
@@ -214,7 +214,7 @@ function buildEmailHTML(opts) {
       + CONFIG.ceremonyTime + '.</p>'
     : '<p style="font-size:15px;line-height:1.8;color:#555;margin:0 0 20px;">'
       + 'We completely understand and will miss you dearly. '
-      + 'Your kind thoughts and well wishes mean the world to us. 💛</p>';
+      + 'Your kind thoughts and well wishes mean the world to us.</p>';
 
   var calLink = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
     + '&text=' + encodeURIComponent(CONFIG.coupleName + ' Wedding')
