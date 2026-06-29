@@ -17,7 +17,6 @@ const orderOfService = [
   { time: '3:00 PM', event: 'The Message',                        note: 'A word of exhortation for the couple and all present.' },
   { time: '3:15 PM', event: 'Exchange of Vows',                   note: 'Our sacred covenant before God and witnesses.' },
   { time: '3:20 PM', event: 'Exchange of Rings',                  note: 'A symbol of our unending promise.' },
-  { time: '3:25 PM', event: 'Cord of Three Strands',             note: 'Christ at the center of our marriage.' },
   { time: '3:30 PM', event: 'Prayer & Blessing',                  note: 'The couple is covered in prayer.' },
   { time: '3:35 PM', event: 'Pronouncement & First Kiss',         note: 'Presented before God as husband and wife!' },
   { time: '3:40 PM', event: 'Recessional',                        note: 'The newlyweds exit, followed by the wedding party.' },

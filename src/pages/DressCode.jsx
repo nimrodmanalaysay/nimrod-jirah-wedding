@@ -13,7 +13,6 @@ const palette = [
   { color: '#FFD9DA', label: 'Soft Blush',       note: 'Gowns, dress shirts' },
   { color: '#556251', label: 'Sage Green',        note: 'Suits, midi dresses' },
   { color: '#BD6738', label: 'Terracotta',        note: 'Accents, wraps' },
-  { color: '#E8DDD0', label: 'Ivory',             note: 'Alternative to white' },
 ]
 
 const dos = [
@@ -101,26 +100,12 @@ export default function DressCode() {
           </div>
         </section>
 
-        {/* Attire inspiration images */}
+        {/* Attire guide reference image */}
         <section className="cp-section cp-section--blush">
-          <h2 className="cp-section__title">Style Inspiration</h2>
-          <div className="cp-img-grid cp-img-grid--4">
-            <div className="cp-inspo-card">
-              <img src="/photos/attire-ladies-1.jpg" alt="Ladies attire inspiration" />
-              <p>Ladies — Gown</p>
-            </div>
-            <div className="cp-inspo-card">
-              <img src="/photos/attire-ladies-2.jpg" alt="Ladies midi dress" />
-              <p>Ladies — Midi Dress</p>
-            </div>
-            <div className="cp-inspo-card">
-              <img src="/photos/attire-gents-1.jpg" alt="Gents barong" />
-              <p>Gents — Barong</p>
-            </div>
-            <div className="cp-inspo-card">
-              <img src="/photos/attire-gents-2.jpg" alt="Gents suit" />
-              <p>Gents — Suit</p>
-            </div>
+          <h2 className="cp-section__title">Wedding Attire Guide</h2>
+          {/* ✏️ Replace /public/photos/weddingoutfit.jpg to change this image */}
+          <div className="cp-attire-guide">
+            <img src="/photos/weddingoutfit.jpg" alt="Wedding attire guide reference" />
           </div>
         </section>
 

@@ -320,6 +320,22 @@
 }
 
 /* ── Image grid ── */
+/* Large single attire-guide reference image */
+.cp-attire-guide {
+  max-width: 720px;
+  margin: 0 auto;
+  border: 1px solid rgba(225,202,150,0.5);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 14px 44px rgba(105,27,25,0.14);
+  background: var(--white);
+}
+.cp-attire-guide img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .cp-img-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

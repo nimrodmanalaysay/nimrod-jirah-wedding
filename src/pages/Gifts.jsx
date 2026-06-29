@@ -9,32 +9,17 @@ import './Gifts.css'
 
 const giftOptions = [
   {
-    id: 'gcash',
+    id: 'GCASH',
     label: 'GCash',
     // ✏️ Replace /public/photos/gcash-qr.png with your real GCash QR
-    qr: '/photos/gcash-qr.png',
-    accountName: 'Nimrod / Jirah',
-    accountNum:  '09XX XXX XXXX',
-    icon: '💚',
+    qr: 'src/pages/photos/gcash.jpg',
   },
   {
-    id: 'bdo',
-    label: 'BDO Bank',
+    id: 'BPI',
+    label: 'BPI Bank',
     // ✏️ Replace /public/photos/bdo-qr.png with your real BDO QR
-    qr: '/photos/bdo-qr.png',
-    accountName: 'Nimrod Lastname',
-    accountNum:  '1234 5678 9012',
-    icon: '🏦',
-  },
-  {
-    id: 'maya',
-    label: 'Maya',
-    // ✏️ Replace /public/photos/maya-qr.png with your real Maya QR
-    qr: '/photos/maya-qr.png',
-    accountName: 'Nimrod / Jirah',
-    accountNum:  '09XX XXX XXXX',
-    icon: '💙',
-  },
+    qr: 'src/pages/photos/bpi.jpg',
+  }
 ]
 
 export default function Gifts() {

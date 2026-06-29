@@ -41,14 +41,14 @@ export default function Ceremony() {
   return (
     <div className="ceremony-hub">
       <div className="ceremony-hub__header">
-        <h1 className="section-title">Ceremony</h1>
+        <h1 className="section-title">Program Overview</h1>
         <span className="section-divider" />
         <p className="ceremony-hub__sub">Join us as we celebrate God's gift of marriage</p>
       </div>
 
       {/* Breadcrumb nav */}
       <div className="ceremony-hub__breadcrumb">
-        <span>Ceremony</span>
+        <span>Program</span>
         <span className="crumb-sep">›</span>
         <span className="crumb-current">Overview</span>
       </div>
