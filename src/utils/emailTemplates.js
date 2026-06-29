@@ -12,9 +12,9 @@ export const WEDDING = {
   coupleName:   'Nimrod & Jirah',
   date:         'November 7, 2026',
   dateISO:      '20261107',
-  timeStart:    'T070000Z',   // 3:00 PM PHT = 07:00 UTC
+  timeStart:    'T063000Z',   // 2:30 PM PHT = 06:30 UTC
   timeEnd:      'T140000Z',   // 10:00 PM PHT = 14:00 UTC
-  ceremonyTime: '3:00 PM',
+  ceremonyTime: '2:30 PM',
   receptionTime:'4:00 PM',
   venue:        'Grass Garden',
   address:      '123 Garden Lane, City, Province 0000',
@@ -58,13 +58,13 @@ export const WEDDING = {
 var CONFIG = {
   coupleName:    'Nimrod & Jirah',
   weddingDate:   'November 7, 2026',
-  ceremonyTime:  '3:00 PM',
+  ceremonyTime:  '2:30 PM',
   receptionTime: '4:00 PM',
   venue:         'Grass Garden',
   address:       '123 Garden Lane, City, Province 0000',
   coupleEmail:   'nimrodandjirah@email.com',
   emailSender:   'Nimrod & Jirah Wedding',
-  calStartUTC:   '20261107T070000Z',
+  calStartUTC:   '20261107T063000Z',
   calEndUTC:     '20261107T140000Z',
 };
 
@@ -210,7 +210,7 @@ function buildEmailHTML(opts) {
   var attendingMsg = opts.isAttending
     ? '<p style="font-size:15px;line-height:1.8;color:#555;margin:0 0 20px;">'
       + 'We are <strong style="color:#691B19;">so excited</strong> to celebrate with you! '
-      + 'Please arrive by <strong>2:45 PM</strong> so you can be seated before the ceremony begins at '
+      + 'Please arrive by <strong>2:15 PM</strong> so you can be seated before the ceremony begins at '
       + CONFIG.ceremonyTime + '.</p>'
     : '<p style="font-size:15px;line-height:1.8;color:#555;margin:0 0 20px;">'
       + 'We completely understand and will miss you dearly. '
