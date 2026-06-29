@@ -173,7 +173,7 @@ function sendConfirmationEmail(data) {
   var isAttending  = data.attendance  === 'attending';
   var plusOneName  = data.plusOneName || '';
 
-  var subject = 'RSVP Confirmed — ' + CONFIG.coupleName + ' Wedding 💌';
+  var subject = 'RSVP Confirmed - ' + CONFIG.coupleName + ' Wedding';
 
   // Build HTML body
   var htmlBody = buildEmailHTML({

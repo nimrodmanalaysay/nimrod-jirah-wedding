@@ -128,7 +128,7 @@ function doPost(e) {
  */
 function testEmail() {
   var to = 'YOUR_EMAIL@example.com';   // ✏️ change to a REAL address (ideally a non-Gmail one to rule out self-filtering)
-  sendMail_(to, 'RSVP email test ✅',
+  sendMail_(to, 'RSVP email test',
     'If you are reading this, the wedding site can send RSVP emails.');
   var masked = GmailApp.getAliases().indexOf(FROM_ADDRESS) !== -1;
   Logger.log('Test email sent to ' + to +
@@ -170,8 +170,8 @@ function json_(obj) {
 function sendGuestEmail_(data) {
   var attending = String(data.attendance).toLowerCase() === 'attending';
   var subject = attending
-    ? "We can't wait to celebrate with you! 🥂"
-    : "Thank you for letting us know 💛";
+    ? "We can't wait to celebrate with you!"
+    : "Thank you for letting us know";
 
   var html = buildEmailHTML_({
     heading:     'RSVP Confirmation',
@@ -197,7 +197,7 @@ function sendGuestEmail_(data) {
 
 // Invitation to the plus one — HTML email + .ics calendar
 function sendPlusOneEmail_(data) {
-  var subject = "You're invited — Nimrod & Jirah's Wedding 💌";
+  var subject = "We can't wait to celebrate with you!";
 
   var html = buildEmailHTML_({
     heading:     'You\'re Invited',
