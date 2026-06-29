@@ -12,13 +12,13 @@ const giftOptions = [
     id: 'GCASH',
     label: 'GCash',
     // ✏️ Replace /public/photos/gcash-qr.png with your real GCash QR
-    qr: 'src/pages/photos/gcash.jpg',
+    qr: 'photos/gcash.jpg',
   },
   {
     id: 'BPI',
     label: 'BPI Bank',
     // ✏️ Replace /public/photos/bdo-qr.png with your real BDO QR
-    qr: 'src/pages/photos/bpi.jpg',
+    qr: 'photos/bpi.jpg',
   }
 ]
 
