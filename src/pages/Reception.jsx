@@ -26,7 +26,7 @@ export default function Reception() {
   return (
     <div className="cp-page">
       <div className="cp-breadcrumb">
-        <Link to="/ceremony">Ceremony</Link>
+        <Link to="/ceremony">Program</Link>
         <span>›</span>
         <span>Reception</span>
       </div>

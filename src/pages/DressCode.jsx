@@ -34,7 +34,7 @@ export default function DressCode() {
   return (
     <div className="cp-page">
       <div className="cp-breadcrumb">
-        <Link to="/ceremony">Ceremony</Link>
+        <Link to="/ceremony">Program</Link>
         <span>›</span>
         <span>Dress Code</span>
       </div>

@@ -322,7 +322,7 @@
 /* ── Image grid ── */
 /* Large single attire-guide reference image */
 .cp-attire-guide {
-  max-width: 720px;
+  max-width: 1200px;
   margin: 0 auto;
   border: 1px solid rgba(225,202,150,0.5);
   border-radius: 4px;

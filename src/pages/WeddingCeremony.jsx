@@ -27,7 +27,7 @@ export default function WeddingCeremony() {
     <div className="cp-page">
       {/* Breadcrumb */}
       <div className="cp-breadcrumb">
-        <Link to="/ceremony">Ceremony</Link>
+        <Link to="/ceremony">Program</Link>
         <span>›</span>
         <span>Wedding Service</span>
       </div>
