@@ -200,9 +200,42 @@ export function StepGate({ onVerified, onDuplicate }) {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   Cancel / redo control — shared by the two "already submitted"
+   screens. Two-stage confirm so it can't be triggered by accident.
+   ═══════════════════════════════════════════════════════════ */
+function CancelRedo({ onCancel, canceling }) {
+  const [confirming, setConfirming] = useState(false)
+
+  if (!confirming) {
+    return (
+      <button className="btn btn-primary rsvp-done__redo" onClick={() => setConfirming(true)}>
+        Cancel or Edit My RSVP
+      </button>
+    )
+  }
+
+  return (
+    <div className="rsvp-cancel">
+      <p className="rsvp-cancel__warn">
+        This removes your current RSVP so you can fill it out again — handy if
+        your plans changed or you made a mistake. Continue?
+      </p>
+      <div className="rsvp-cancel__actions">
+        <button className="btn btn-outline" onClick={() => setConfirming(false)} disabled={canceling}>
+          Keep it
+        </button>
+        <button className="btn btn-primary" onClick={onCancel} disabled={canceling}>
+          {canceling ? 'Cancelling…' : 'Yes, cancel & redo'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════
    STEP 'existing'
    ═══════════════════════════════════════════════════════════ */
-export function StepExisting({ inviteeName, record, onReset }) {
+export function StepExisting({ inviteeName, record, onReset, onCancel, canceling }) {
   const attending = String(record['Attendance'] || '').toLowerCase() === 'attending'
   const submittedDate = record['Timestamp']
     ? new Date(record['Timestamp']).toLocaleDateString('en-PH', {
@@ -217,7 +250,6 @@ export function StepExisting({ inviteeName, record, onReset }) {
       <p className="rsvp-done__msg">
         We already have your RSVP on file,{' '}
         <strong className="rsvp-done__name">{inviteeName}</strong>.
-        <br />No further action needed.
       </p>
       <div className="rsvp-done__summary">
         <SummaryRow label="Attendance" value={attending ? 'Joyfully Attending ✓' : 'Unable to Attend'} />
@@ -228,7 +260,8 @@ export function StepExisting({ inviteeName, record, onReset }) {
         {record['Email'] && <SummaryRow label="Email" value={record['Email']} />}
         {submittedDate && <SummaryRow label="Submitted" value={submittedDate} />}
       </div>
-      <p className="rsvp-done__note">Need to make a change? Please contact us directly.</p>
+      <p className="rsvp-done__note">Plans changed or made a mistake? You can cancel and redo it.</p>
+      <CancelRedo onCancel={onCancel} canceling={canceling} />
       <button className="btn btn-outline rsvp-done__reset" onClick={onReset}>
         Submit a different RSVP
       </button>
@@ -239,7 +272,7 @@ export function StepExisting({ inviteeName, record, onReset }) {
 /* ═══════════════════════════════════════════════════════════
    STEP 'done'
    ═══════════════════════════════════════════════════════════ */
-export function StepDone({ inviteeName, formData, plusOneData, onReset }) {
+export function StepDone({ inviteeName, formData, plusOneData, onReset, onCancel, canceling }) {
   const attending    = formData?.attendance === 'attending'
   const plusOneCame  = plusOneData?.bringing === 'yes' && plusOneData?.fullName
 
@@ -258,7 +291,8 @@ export function StepDone({ inviteeName, formData, plusOneData, onReset }) {
           <SummaryRow label="Plus One" value={plusOneData.fullName} />
         )}
       </div>
-      <p className="rsvp-done__note">Need to change something? Contact us directly.</p>
+      <p className="rsvp-done__note">Made a mistake or can't make it anymore? You can cancel and redo it.</p>
+      <CancelRedo onCancel={onCancel} canceling={canceling} />
       <button className="btn btn-outline rsvp-done__reset" onClick={onReset}>
         Submit a different RSVP
       </button>

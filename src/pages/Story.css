@@ -316,8 +316,18 @@
 /* ════════════════════════════════════════════════════════════
    RESPONSIVE
    ════════════════════════════════════════════════════════════ */
+/* Tablet & mobile — vertically center the chapter text (desktop keeps
+   the lower-third position, which looks good on wide screens) */
+@media (max-width: 1000px) {
+  .reel__content {
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+  }
+}
+
 @media (max-width: 600px) {
-  .reel__content { bottom: 12vh; padding: 0 1.4rem; }
+  .reel__content { padding: 0 1.4rem; }
   .film__counter { left: 1.1rem; bottom: 1.1rem; }
   .film__progress { right: 1rem; }
 }

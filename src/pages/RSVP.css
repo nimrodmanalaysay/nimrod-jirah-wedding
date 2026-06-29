@@ -435,6 +435,36 @@
   margin-bottom: 1.5rem;
 }
 
+.rsvp-done__redo {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto 0.8rem;
+}
+
+/* Cancel & redo confirm */
+.rsvp-cancel {
+  max-width: 360px;
+  margin: 0 auto 0.8rem;
+  padding: 1.1rem 1.2rem;
+  background: rgba(255,217,218,0.25);
+  border: 1px solid rgba(202,102,65,0.25);
+  border-radius: 4px;
+}
+.rsvp-cancel__warn {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: rgba(105,27,25,0.75);
+  margin-bottom: 1rem;
+}
+.rsvp-cancel__actions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.rsvp-cancel__actions .btn { font-size: 0.75rem; padding: 0.55rem 1.1rem; }
+
 .rsvp-done__reset {
   font-size: 0.75rem;
   padding: 0.55rem 1.2rem;

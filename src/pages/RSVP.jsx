@@ -72,6 +72,7 @@ export default function RSVP() {
   const [existingRec,   setExistingRec]   = useState(init.existingRec)
   const [submitting,    setSubmitting]    = useState(false)
   const [submitError,   setSubmitError]   = useState('')
+  const [canceling,     setCanceling]     = useState(false)
 
   useEffect(() => { cacheStep(step) }, [step])
   useEffect(() => {
@@ -115,6 +116,28 @@ export default function RSVP() {
     setSubmitError('')
   }
 
+  // Cancel the guest's existing RSVP on the sheet, then drop them back into
+  // the flow (keeping their verified name + plus-one eligibility) to redo it.
+  // The Apps Script removes the matching row(s) for `action: 'cancel'`.
+  async function handleCancelRedo() {
+    if (canceling) return
+    setCanceling(true)
+    try {
+      await postRsvpRow({ action: 'cancel', inviteeName: toTitleCase(inviteeName) })
+    } catch {
+      // no-cors gives no readable response; resubmitting upserts anyway
+    }
+    clearRsvpCache()
+    cacheInvitee(inviteeName)
+    cachePlusOneEligible(plusOneElig)
+    setExistingRec(null)
+    setFormData(INITIAL_FORM)
+    setPlusOneData(INITIAL_PLUS_ONE)
+    setSubmitError('')
+    setCanceling(false)
+    setStep(1)
+  }
+
   function handleAfterPersonal() {
     if (submitting) return
     const isAttending = formData.attendance === 'attending'
@@ -146,6 +169,10 @@ export default function RSVP() {
         ? toTitleCase(plusOneData.fullName)
         : ''
 
+      const plusOneEmail = plusOneBringing && plusOneData.email
+        ? plusOneData.email.trim().toLowerCase()
+        : ''
+
       await postRsvpRow({
         inviteeName: toTitleCase(inviteeName),
         attendance:  formData.attendance,
@@ -155,6 +182,7 @@ export default function RSVP() {
         notes:       toTitleCase(formData.notes),
         advice:      toTitleCase(formData.advice),
         plusOneName: plusOneFullName,
+        plusOneEmail,   // so the Apps Script can email the plus one an invite
       })
 
       if (plusOneFullName) {
@@ -207,6 +235,8 @@ export default function RSVP() {
             inviteeName={inviteeName}
             record={existingRec || getCachedExistingRsvp() || {}}
             onReset={handleReset}
+            onCancel={handleCancelRedo}
+            canceling={canceling}
           />
         )}
         {step === 'done' && (
@@ -215,6 +245,8 @@ export default function RSVP() {
             formData={formData}
             plusOneData={plusOneData}
             onReset={handleReset}
+            onCancel={handleCancelRedo}
+            canceling={canceling}
           />
         )}
         {step === 1 && (
