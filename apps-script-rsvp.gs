@@ -3,25 +3,45 @@
  * RSVP SHEET — Google Apps Script  (Script B / RSVP_SCRIPT_URL)
  * ============================================================
  *
- * Paste this into the Apps Script bound to your RSVP RESPONSES sheet
- * (the one whose /exec URL is RSVP_SCRIPT_URL in src/pages/rsvp/constants.js),
- * then: Deploy ▸ Manage deployments ▸ Edit ▸ New version ▸ Deploy.
- *  - Execute as: Me
- *  - Who has access: Anyone
+ * Keep this script bound to your RSVP responses sheet, in YOUR account.
+ * Outgoing email is MASKED to look like it comes from the wedding name/inbox
+ * instead of your personal address:
  *
- * Sheet headers (row 1), in this exact order:
+ *     From:  Nimrod & Jirah Wedding <nimrodandjirahwedding@gmail.com>
+ *
+ * The script auto-picks the strongest mask available:
+ *  • FULL mask (recommended): in YOUR Gmail → Settings ▸ Accounts and Import
+ *    ▸ "Send mail as" ▸ add nimrodandjirahwedding@gmail.com and verify it
+ *    (a confirmation code is emailed to that inbox). Then guests see ONLY the
+ *    wedding address — your personal address is hidden.
+ *  • NAME mask (no setup): if that alias isn't added, emails still show the
+ *    name "Nimrod & Jirah Wedding", but the address stays your personal Gmail.
+ *
+ * Deploy: Deploy ▸ Manage deployments ▸ Edit ▸ New version ▸ Deploy
+ *   Execute as: Me   ·   Who has access: Anyone
+ *
+ * Sheet headers (row 1):
  *   ID | Timestamp | Invitee Name | Attendance | First Name | Last Name |
  *   Email | Notes | Advice | Plus One Name | Plus One Attendance
- *
- * What it does:
- *  • doGet()                          → { records: [...] }  (duplicate check)
- *  • doPost(submission)               → UPSERT the row (replaces any existing
- *                                       row with the same Invitee Name),
- *                                       emails the guest, and emails the plus
- *                                       one an invitation when plusOneEmail is set
- *  • doPost({ action:'cancel', ... }) → deletes the guest's row + their
- *                                       "Plus One of <name>" row
  * ============================================================ */
+
+// ── Config ──────────────────────────────────────────────────
+var FROM_NAME    = 'Nimrod & Jirah Wedding';
+var FROM_ADDRESS = 'nimrodandjirahwedding@gmail.com'; // used only when added as a "Send mail as" alias
+var REPLY_TO     = 'nimrodandjirahwedding@gmail.com'; // replies go here, not your personal inbox
+
+// Footer appended to guest/plus-one emails
+var NO_REPLY_NOTE = '\n\n———\nThis is an automated message — please do not reply to this email.';
+
+// Sends an email masked as the wedding inbox. Uses the verified "Send mail as"
+// alias when present (full mask); otherwise sends with the wedding display name.
+function sendMail_(to, subject, body) {
+  var opts = { name: FROM_NAME, replyTo: REPLY_TO };
+  try {
+    if (GmailApp.getAliases().indexOf(FROM_ADDRESS) !== -1) opts.from = FROM_ADDRESS;
+  } catch (e) { /* getAliases needs the Gmail scope; ignore and use name mask */ }
+  GmailApp.sendEmail(to, subject, body, opts);
+}
 
 function doGet() {
   var sheet  = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
@@ -93,11 +113,14 @@ function doPost(e) {
  * ✏️ Put your own address below, run it, then check your inbox/spam.
  */
 function testEmail() {
-  var to = 'YOUR_EMAIL@example.com';   // ✏️ change to your email
-  MailApp.sendEmail(to, 'RSVP email test ✅',
+  var to = 'YOUR_EMAIL@example.com';   // ✏️ change to a REAL address (ideally a non-Gmail one to rule out self-filtering)
+  sendMail_(to, 'RSVP email test ✅',
     'If you are reading this, the wedding site can send RSVP emails.');
-  Logger.log('Test email sent to ' + to + '. Remaining quota today: ' +
-             MailApp.getRemainingDailyQuota());
+  var masked = GmailApp.getAliases().indexOf(FROM_ADDRESS) !== -1;
+  Logger.log('Test email sent to ' + to +
+    (masked ? ' — FULL mask active (from ' + FROM_ADDRESS + ').'
+            : ' — NAME mask only (alias not added yet).') +
+    ' Remaining quota today: ' + MailApp.getRemainingDailyQuota());
 }
 
 /* ── helpers ─────────────────────────────────────────────── */
@@ -141,8 +164,8 @@ function sendGuestEmail_(data) {
         "November 7, 2026 at Grass Garden, Plaridel, Bulacan."
       : "Thank you for your RSVP. We're sad you can't make it, but we truly " +
         "appreciate you letting us know.") +
-    '\n\nWith love,\nNimrod & Jirah';
-  MailApp.sendEmail(data.email, subject, body);
+    '\n\nWith love,\nNimrod & Jirah' + NO_REPLY_NOTE;
+  sendMail_(data.email, subject, body);
 }
 
 function sendPlusOneEmail_(data) {
@@ -152,6 +175,6 @@ function sendPlusOneEmail_(data) {
     'You have been invited as the guest of ' + data.inviteeName +
     ' to the wedding of Nimrod & Jirah on November 7, 2026 at Grass Garden, ' +
     'Purok 4, P. Reyes Street, Barangay Sipat, Plaridel, Bulacan.\n\n' +
-    'We look forward to celebrating with you!\n\nWith love,\nNimrod & Jirah';
-  MailApp.sendEmail(data.plusOneEmail, subject, body);
+    'We look forward to celebrating with you!\n\nWith love,\nNimrod & Jirah' + NO_REPLY_NOTE;
+  sendMail_(data.plusOneEmail, subject, body);
 }
