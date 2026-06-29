@@ -69,15 +69,35 @@ function doPost(e) {
       data.plusOneAttendance || ''
     ]);
 
-    // ── Emails ──
+    // ── Emails ── (wrapped so a mail failure never blocks the RSVP save) ──
     var isPlusOneRow = /^plus one of /i.test(String(data.inviteeName || ''));
-    if (!isPlusOneRow && data.email) sendGuestEmail_(data);   // confirm primary
-    if (data.plusOneEmail)           sendPlusOneEmail_(data); // invite plus one
+    try {
+      if (!isPlusOneRow && data.email) sendGuestEmail_(data);   // confirm primary
+      if (data.plusOneEmail)           sendPlusOneEmail_(data); // invite plus one
+    } catch (mailErr) {
+      // Most common cause: the script hasn't been authorized to send mail yet.
+      // Run the testEmail() function once in the editor to grant permission.
+      console.error('Email failed: ' + mailErr);
+    }
 
     return json_({ result: 'success' });
   } finally {
     lock.releaseLock();
   }
+}
+
+/**
+ * Run this ONCE from the Apps Script editor (select testEmail ▸ Run) to:
+ *   1. trigger the authorization prompt for sending email, and
+ *   2. confirm delivery works.
+ * ✏️ Put your own address below, run it, then check your inbox/spam.
+ */
+function testEmail() {
+  var to = 'YOUR_EMAIL@example.com';   // ✏️ change to your email
+  MailApp.sendEmail(to, 'RSVP email test ✅',
+    'If you are reading this, the wedding site can send RSVP emails.');
+  Logger.log('Test email sent to ' + to + '. Remaining quota today: ' +
+             MailApp.getRemainingDailyQuota());
 }
 
 /* ── helpers ─────────────────────────────────────────────── */
