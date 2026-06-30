@@ -32,11 +32,6 @@ export default function Reception() {
       </div>
 
       <div className="cp-hero">
-        <img
-          src="/photos/reception-hero.jpg"
-          alt="Reception"
-          className="cp-hero__img"
-        />
         <div className="cp-hero__overlay">
           <p className="cp-hero__pre">Join Us For</p>
           <h1 className="cp-hero__title">The Reception</h1>

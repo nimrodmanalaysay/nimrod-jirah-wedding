@@ -1,4 +1,5 @@
 import React from 'react'
+import PageHero from '../components/PageHero'
 import './Gifts.css'
 
 /* ============================================================
@@ -11,27 +12,27 @@ const giftOptions = [
   {
     id: 'GCASH',
     label: 'GCash',
-    // ✏️ Replace /public/photos/gcash-qr.png with your real GCash QR
-    qr: 'photos/gcash.jpg',
+    // ✏️ Replace /public/photos/gcash.jpg with your real GCash QR
+    qr: '/photos/gcash.jpg',
   },
   {
     id: 'BPI',
     label: 'BPI Bank',
-    // ✏️ Replace /public/photos/bdo-qr.png with your real BDO QR
-    qr: 'photos/bpi.jpg',
-  }
+    // ✏️ Replace /public/photos/bpi.jpg with your real BPI QR
+    qr: '/photos/bpi.jpg',
+  },
 ]
 
 export default function Gifts() {
   return (
     <div className="gifts-page">
 
-      {/* Header */}
-      <div className="gifts-page__header">
-        <h1 className="section-title">Gifts</h1>
-        <span className="section-divider" />
-        <p className="gifts-page__sub">With gratitude and love</p>
-      </div>
+      {/* Hero */}
+      <PageHero
+        eyebrow="Nimrod & Jirah"
+        title="Gifts"
+        subtitle="With gratitude and love"
+      />
 
       {/* Thank you message */}
       <div className="gifts-message fade-up">
@@ -65,10 +66,6 @@ export default function Gifts() {
               />
             </div>
 
-            <div className="gifts-qr-card__details">
-              <p className="gifts-qr-card__name">{opt.accountName}</p>
-              <p className="gifts-qr-card__num">{opt.accountNum}</p>
-            </div>
           </div>
         ))}
       </div>

@@ -1,0 +1,43 @@
+/* ============================================================
+   PageHero — burgundy banner (mirrors the Wedding Service hero)
+   Sits below the fixed-navbar clearance the page wrapper provides.
+   ============================================================ */
+.page-hero {
+  width: 100%;
+  min-height: clamp(150px, 22vw, 240px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  box-sizing: border-box;
+  background: var(--burgundy);
+  border-bottom: 3px solid var(--gold);
+}
+
+.page-hero__eyebrow {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.page-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 300;
+  color: var(--white);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+
+.page-hero__subtitle {
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+  margin-top: 0.6rem;
+}

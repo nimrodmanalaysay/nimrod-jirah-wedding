@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import PageHero from '../components/PageHero'
 import './RSVP.css'
 import { RSVP_SCRIPT_URL, INITIAL_FORM, INITIAL_PLUS_ONE } from './rsvp/constants'
 import { ProgressBar } from './rsvp/RsvpShared'
@@ -216,11 +217,11 @@ export default function RSVP() {
 
   return (
     <div className="rsvp-page">
-      <div className="rsvp-page__header">
-        <h1 className="section-title">RSVP</h1>
-        <span className="section-divider" />
-        <p className="rsvp-page__sub">Kindly reply by October 1, 2026</p>
-      </div>
+      <PageHero
+        eyebrow="Nimrod & Jirah"
+        title="RSVP"
+        subtitle="Kindly reply by October 1, 2026"
+      />
 
       <div className="rsvp-card">
         {(typeof step === 'number' && step >= 1 && step <= 3 || step === 'plusone') && (

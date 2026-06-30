@@ -9,14 +9,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Hero background: deep sage with subtle gradient texture
+  /* Hero background: dark brown gradient
      ✏️ Replace with your own background image:
      background: url('/your-photo.jpg') center/cover no-repeat; */
   background: linear-gradient(
     160deg,
-    var(--burgundy) 0%,
-    #3a1a19 40%,
-    #2d3b29 100%
+    #4e342e 0%,
+    #3e2723 50%,
+    #2a1a15 100%
   );
   overflow: hidden;
   padding: 0 1.5rem;
@@ -105,7 +105,7 @@
 
 /* ---- Countdown section ---- */
 .home__countdown {
-  background: var(--sage);
+  background: var(--terracotta);
   padding: 3rem 1.5rem;
   text-align: center;
 }

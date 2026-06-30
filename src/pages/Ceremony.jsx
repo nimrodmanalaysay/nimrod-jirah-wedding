@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import PageHero from '../components/PageHero'
 import './Ceremony.css'
 
 /* ============================================================
@@ -40,11 +41,11 @@ const subPages = [
 export default function Ceremony() {
   return (
     <div className="ceremony-hub">
-      <div className="ceremony-hub__header">
-        <h1 className="section-title">Program Overview</h1>
-        <span className="section-divider" />
-        <p className="ceremony-hub__sub">Join us as we celebrate God's gift of marriage</p>
-      </div>
+      <PageHero
+        eyebrow="Nimrod & Jirah"
+        title="Program"
+        subtitle="Join us as we celebrate God's gift of marriage"
+      />
 
       {/* Breadcrumb nav */}
       <div className="ceremony-hub__breadcrumb">

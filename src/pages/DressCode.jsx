@@ -40,15 +40,10 @@ export default function DressCode() {
       </div>
 
       <div className="cp-hero">
-        <img
-          src="/photos/dresscode-hero.jpg"
-          alt="Dress Code"
-          className="cp-hero__img"
-        />
-        <div className="cp-hero__overlay cp-hero__overlay--light">
-          <p className="cp-hero__pre" style={{ color: 'rgba(105,27,25,0.7)' }}>Attire Guide</p>
-          <h1 className="cp-hero__title" style={{ color: 'var(--burgundy)' }}>Dress Code</h1>
-          <p className="cp-hero__date" style={{ color: 'var(--btn-color)' }}>Formal / Semi-Formal</p>
+        <div className="cp-hero__overlay">
+          <p className="cp-hero__pre">Attire Guide</p>
+          <h1 className="cp-hero__title">Dress Code</h1>
+          <p className="cp-hero__date">Formal / Semi-Formal</p>
         </div>
       </div>
 

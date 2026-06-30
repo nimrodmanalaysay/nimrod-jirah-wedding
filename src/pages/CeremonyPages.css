@@ -31,12 +31,13 @@
 .cp-breadcrumb span:last-child { color: var(--burgundy); }
 .cp-breadcrumb span:not(:last-child):not(a) { color: rgba(105,27,25,0.35); }
 
-/* ── Hero banner ── */
+/* ── Hero banner (solid color, no photo) ── */
 .cp-hero {
   position: relative;
   width: 100%;
-  height: clamp(200px, 35vw, 400px);
+  height: clamp(150px, 22vw, 240px);
   overflow: hidden;
+  border-bottom: 3px solid var(--gold);
 }
 .cp-hero__img {
   width: 100%; height: 100%;
@@ -46,7 +47,7 @@
 .cp-hero__overlay {
   position: absolute;
   inset: 0;
-  background: rgba(105,27,25,0.5);
+  background: var(--burgundy);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -55,7 +56,7 @@
   padding: 1rem;
 }
 .cp-hero__overlay--light {
-  background: rgba(255,255,255,0.55);
+  background: var(--blush);
 }
 .cp-hero__pre {
   font-size: 0.7rem;
@@ -327,11 +328,6 @@
   border: 1px solid rgba(225,202,150,0.5);
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 14px 44px rgba(105,27,25,0.14);
-  background: var(--white);
-}
-.cp-attire-guide img {
-  display: block;
   width: 100%;
   height: auto;
 }

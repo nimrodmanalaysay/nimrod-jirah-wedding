@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PageHero from '../components/PageHero'
 import './FAQs.css'
 
 /* ============================================================
@@ -85,11 +86,11 @@ export default function FAQs() {
 
   return (
     <div className="faqs-page">
-      <div className="faqs-page__header">
-        <h1 className="section-title">FAQs</h1>
-        <span className="section-divider" />
-        <p className="faqs-page__sub">Everything you'd like to know</p>
-      </div>
+      <PageHero
+        eyebrow="Nimrod & Jirah"
+        title="FAQs"
+        subtitle="Everything you'd like to know"
+      />
 
       {/* Search */}
       <div className="faqs-search">

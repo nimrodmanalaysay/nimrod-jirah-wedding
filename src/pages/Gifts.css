@@ -70,7 +70,7 @@
   border-radius: 3px;
   padding: 2rem 1.8rem;
   text-align: center;
-  width: 260px;
+  width: 360px;
   flex-shrink: 0;
   transition: transform var(--transition), box-shadow var(--transition);
   box-shadow: 0 2px 16px rgba(105,27,25,0.06);
@@ -97,15 +97,15 @@
   font-weight: 400;
 }
 
-/* QR image wrapper — fixed square with border */
+/* QR image wrapper — large square, scales with the card */
 .gifts-qr-card__img-wrap {
-  width: 200px;
-  height: 200px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   margin: 0 auto 1.4rem;
   border: 2px solid rgba(225,202,150,0.5);
   border-radius: 2px;
   overflow: hidden;
-  background: var(--off-white);
+  background: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -114,7 +114,7 @@
 .gifts-qr-card__img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;   /* show the whole QR — never crop it */
   display: block;
 }
 
@@ -131,10 +131,19 @@
 }
 
 .gifts-qr-card__num {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   color: var(--btn-color);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.06em;
+}
+.gifts-qr-card__num-label {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(105,27,25,0.45);
+  margin-bottom: 0.15rem;
 }
 
 /* Physical gifts note */

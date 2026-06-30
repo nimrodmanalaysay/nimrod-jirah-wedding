@@ -34,11 +34,6 @@ export default function WeddingCeremony() {
 
       {/* Hero banner */}
       <div className="cp-hero">
-        <img
-          src="/photos/wedding-hero.jpg"
-          alt="Wedding Ceremony"
-          className="cp-hero__img"
-        />
         <div className="cp-hero__overlay">
           <p className="cp-hero__pre">A Christ-Centered Wedding Service</p>
           <h1 className="cp-hero__title">Nimrod &amp; Jirah</h1>

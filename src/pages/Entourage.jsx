@@ -1,4 +1,5 @@
 import React from 'react'
+import PageHero from '../components/PageHero'
 import './Entourage.css'
 
 /* ============================================================
@@ -85,12 +86,12 @@ export default function Entourage() {
   return (
     <div className="entourage">
 
-      {/* Page header */}
-      <div className="entourage__header">
-        <h1 className="section-title">Entourage</h1>
-        <span className="section-divider" />
-        <p className="entourage__sub">The wonderful people walking with us</p>
-      </div>
+      {/* Page hero */}
+      <PageHero
+        eyebrow="Nimrod & Jirah"
+        title="Entourage"
+        subtitle="The wonderful people walking with us"
+      />
 
       {/* ── Principal Sponsors ── */}
       <Section icon="✦" label="Principal Sponsors">

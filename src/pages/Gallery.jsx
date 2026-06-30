@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PageHero from '../components/PageHero'
 import './Gallery.css'
 
 /* ============================================================
@@ -44,11 +45,11 @@ export default function Gallery() {
 
   return (
     <div className="gallery">
-      <div className="gallery__header">
-        <h1 className="section-title">Gallery</h1>
-        <span className="section-divider" />
-        <p className="gallery__sub">A glimpse of our prenuptial story</p>
-      </div>
+      <PageHero
+        eyebrow="Nimrod & Jirah"
+        title="Gallery"
+        subtitle="A glimpse of our prenuptial story"
+      />
 
       {/* Masonry grid */}
       <div className="gallery__grid">
