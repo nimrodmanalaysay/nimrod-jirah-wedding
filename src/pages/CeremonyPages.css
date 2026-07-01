@@ -559,6 +559,16 @@
   .cp-img-grid--4   { grid-template-columns: repeat(2, 1fr); }
   .cp-dos-donts     { grid-template-columns: 1fr; gap: 1.5rem; }
   .cp-timeline__item { grid-template-columns: 70px 20px 1fr; }
+
+  /* Equal-width grid so swatches line up regardless of label length
+     (flex-wrap let longer labels like "Champagne Gold" grow wider than
+     the others, throwing the circles out of column alignment). */
+  .cp-palette {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+  }
+  .cp-swatch { min-width: 0; width: 100%; }
 }
 @media (max-width: 480px) {
   .cp-img-grid      { grid-template-columns: 1fr; }
