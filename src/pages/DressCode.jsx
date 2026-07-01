@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import './CeremonyPages.css'
+
+// ✏️ Replace /public/photos/weddingoutfit.jpg to change the attire guide image
+const ATTIRE_IMG = '/photos/weddingoutfit.jpg'
 
 /* ============================================================
    Dress Code Page
@@ -31,6 +34,10 @@ const donts = [
 ]
 
 export default function DressCode() {
+  const [zoomed, setZoomed]       = useState(false)  // lightbox open
+  const [magnified, setMagnified] = useState(false)  // extra zoom inside lightbox
+  const closeLightbox = () => { setZoomed(false); setMagnified(false) }
+
   return (
     <div className="cp-page">
       <div className="cp-breadcrumb">
@@ -98,13 +105,42 @@ export default function DressCode() {
         {/* Attire guide reference image */}
         <section className="cp-section cp-section--blush">
           <h2 className="cp-section__title">Wedding Attire Guide</h2>
-          {/* ✏️ Replace /public/photos/weddingoutfit.jpg to change this image */}
-          <div className="cp-attire-guide">
-            <img src="/photos/weddingoutfit.jpg" alt="Wedding attire guide reference" />
-          </div>
+          <button
+            type="button"
+            className="cp-attire-guide"
+            onClick={() => setZoomed(true)}
+            aria-label="Zoom in on the wedding attire guide"
+          >
+            <img src={ATTIRE_IMG} alt="Wedding attire guide reference" />
+            <span className="cp-attire-guide__hint">Click to zoom</span>
+          </button>
         </section>
 
       </div>
+
+      {/* Zoom lightbox — backdrop/✕ to close; click image to zoom in further */}
+      {zoomed && (
+        <div
+          className={`cp-lightbox ${magnified ? 'cp-lightbox--zoom' : ''}`}
+          onClick={(e) => { if (e.target === e.currentTarget) closeLightbox() }}
+        >
+          <button
+            className="cp-lightbox__close"
+            onClick={closeLightbox}
+            aria-label="Close"
+          >✕</button>
+          <div className="cp-lightbox__img-wrap">
+            <img
+              src={ATTIRE_IMG}
+              alt="Wedding attire guide"
+              onClick={(e) => { e.stopPropagation(); setMagnified(m => !m) }}
+            />
+          </div>
+          <p className="cp-lightbox__hint">
+            {magnified ? 'Click image to zoom out' : 'Click image to zoom in'}
+          </p>
+        </div>
+      )}
     </div>
   )
 }

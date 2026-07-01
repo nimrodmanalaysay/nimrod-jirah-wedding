@@ -321,15 +321,100 @@
 }
 
 /* ── Image grid ── */
-/* Large single attire-guide reference image */
+/* Attire-guide reference image — clickable, opens a zoom lightbox.
+   Display size kept the same (up to 1200px wide). */
 .cp-attire-guide {
+  display: block;
+  position: relative;
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0;
   border: 1px solid rgba(225,202,150,0.5);
   border-radius: 4px;
   overflow: hidden;
+  background: var(--white);
+  cursor: zoom-in;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.cp-attire-guide:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 52px rgba(105,27,25,0.18);
+}
+.cp-attire-guide img {
+  display: block;
   width: 100%;
   height: auto;
+}
+.cp-attire-guide__hint {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 1.6rem 0 0.85rem;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(to top, rgba(40,16,15,0.78), transparent);
+  opacity: 0;
+  transition: opacity var(--transition);
+  pointer-events: none;
+}
+.cp-attire-guide:hover .cp-attire-guide__hint { opacity: 1; }
+
+/* Zoom lightbox (mirrors the Gallery lightbox, + click-image-to-magnify) */
+.cp-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(15,5,5,0.92);
+  display: flex;
+  overflow: auto;            /* scroll to pan when magnified */
+  padding: 2rem;
+}
+.cp-lightbox__img-wrap {
+  margin: auto;              /* centered; scrollable to all edges when zoomed */
+  display: flex;
+}
+.cp-lightbox__img-wrap img {
+  max-width: min(94vw, 1100px);
+  max-height: 92vh;
+  object-fit: contain;
+  border-radius: 2px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  cursor: zoom-in;
+}
+/* Magnified: larger than fit → overflow + pan by scrolling */
+.cp-lightbox--zoom .cp-lightbox__img-wrap img {
+  max-width: none;
+  max-height: none;
+  width: min(200vw, 2200px);
+  height: auto;
+  cursor: zoom-out;
+}
+.cp-lightbox__close {
+  position: fixed;
+  top: 1.2rem;
+  right: 1.5rem;
+  z-index: 1;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color var(--transition), transform var(--transition);
+}
+.cp-lightbox__close:hover { color: var(--gold); transform: scale(1.2); }
+.cp-lightbox__hint {
+  position: fixed;
+  bottom: 1.2rem;
+  left: 0; right: 0;
+  text-align: center;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  pointer-events: none;
 }
 
 .cp-img-grid {
