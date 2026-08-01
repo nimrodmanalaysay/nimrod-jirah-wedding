@@ -613,12 +613,14 @@
 }
 
 /* ================================================================
-   SENDING OVERLAY
-   Covers the card while the RSVP is in flight. Needed because the
-   submit can fire from two different places — the Plus One step and
-   the "Continue" button on the Personal step — and the Apps Script
-   round trip is slow enough (two sequential POSTs when a plus one is
-   named) that guests would otherwise think nothing had happened.
+   BUSY OVERLAY  (class kept as .rsvp-sending)
+   Covers the card during any wait on the Apps Script:
+     • the guest-list lookup on the name gate (two sequential GETs)
+     • the RSVP submit (two sequential POSTs when a plus one is named)
+   Needed because those round trips are slow enough that guests would
+   otherwise think nothing had happened — and because submit can fire
+   from two different places, the Plus One step and the "Continue"
+   button on the Personal step.
    The success screen it hands over to is unchanged.
    ================================================================ */
 .rsvp-sending {

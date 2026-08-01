@@ -119,11 +119,15 @@ export default function RSVP() {
   const [submitting,    setSubmitting]    = useState(false)
   const [submitError,   setSubmitError]   = useState('')
   const [canceling,     setCanceling]     = useState(false)
+  // Raised by StepGate while it queries the guest list, so the shared overlay
+  // covers that wait too. `busy` is either wait.
+  const [checking,      setChecking]      = useState(false)
+  const busy = submitting || checking
 
   const cardRef = useRef(null)
   const bodyRef = useRef(null)
   // Re-measure on any change that alters the card's content height
-  useAnimatedHeight(cardRef, bodyRef, [step, submitting, submitError, plusOneData.bringing])
+  useAnimatedHeight(cardRef, bodyRef, [step, busy, submitError, plusOneData.bringing])
 
   useEffect(() => { cacheStep(step) }, [step])
   useEffect(() => {
@@ -301,16 +305,19 @@ export default function RSVP() {
       />
 
       <div className="rsvp-card" ref={cardRef}>
-        {/* Covers the card while the POST is in flight, so the guest can see
-            something is happening. Both submit paths set `submitting`.
-            Sits outside __body so it fills the card, not the measured content. */}
-        {submitting && (
+        {/* One overlay for every wait: the guest-list lookup on the name gate
+            and the RSVP POST. Sits outside __body so it fills the card rather
+            than the measured content. */}
+        {busy && (
           <div className="rsvp-sending" role="status" aria-live="polite">
             <span className="rsvp-sending__spinner" aria-hidden="true" />
             <p className="rsvp-sending__text">
-              Sending your RSVP<span className="dots" />
+              {checking ? 'Checking your invitation' : 'Sending your RSVP'}
+              <span className="dots" />
             </p>
-            <p className="rsvp-sending__sub">Please keep this page open</p>
+            <p className="rsvp-sending__sub">
+              {checking ? 'Looking for your name on our guest list' : 'Please keep this page open'}
+            </p>
           </div>
         )}
 
@@ -322,7 +329,11 @@ export default function RSVP() {
         )}
 
         {step === 0 && (
-          <StepGate onVerified={handleVerified} onDuplicate={handleDuplicate} />
+          <StepGate
+            onVerified={handleVerified}
+            onDuplicate={handleDuplicate}
+            onChecking={setChecking}
+          />
         )}
         {step === 'existing' && (
           <StepExisting

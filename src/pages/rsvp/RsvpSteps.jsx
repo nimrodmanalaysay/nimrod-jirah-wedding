@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   preValidate,
   findMatches,
@@ -15,7 +15,7 @@ import { SummaryRow } from './RsvpShared'
 /* ═══════════════════════════════════════════════════════════
    STEP 0 — NAME GATE
    ═══════════════════════════════════════════════════════════ */
-export function StepGate({ onVerified, onDuplicate }) {
+export function StepGate({ onVerified, onDuplicate, onChecking }) {
   const [nameInput,  setNameInput]  = useState('')
   const [lastInput,  setLastInput]  = useState('')
   const [phase,      setPhase]      = useState('name')
@@ -24,6 +24,17 @@ export function StepGate({ onVerified, onDuplicate }) {
 
   const clearError = () => setErrorMsg('')
   const isChecking = phase === 'checking'
+
+  // Let the page put its shared overlay up while we hit the guest list. The
+  // lookup is two sequential Apps Script GETs — the invitee list, then the
+  // duplicate check — so it is often slower than submitting the RSVP itself.
+  // The cleanup matters: a successful lookup calls onVerified, which advances
+  // the step and unmounts this component while isChecking is still true. Without
+  // resetting on unmount the overlay would stay up over the next step forever.
+  useEffect(() => {
+    onChecking?.(isChecking)
+    return () => onChecking?.(false)
+  }, [isChecking]) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleNameSubmit() {
     const localErr = preValidate(nameInput)
