@@ -616,7 +616,11 @@
   text-align: center;
   padding: 2rem;
   border-radius: 4px;
-  background: rgba(253,248,245,0.94);
+  /* Fully opaque, and the same colour as the card, so the overlay reads as the
+     card itself rather than a veil. At 94% the form stayed faintly visible and
+     its reflow showed through — the submit button changes label mid-flight and
+     so changes width, which was visible as the UI shifting under the spinner. */
+  background: var(--white);
   animation: rsvpFadeIn 0.2s ease both;
 }
 
