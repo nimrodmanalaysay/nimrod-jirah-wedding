@@ -8,18 +8,26 @@ import { MAP_LINK, MAP_EMBED } from '../utils/venue'
    ✏️ Replace placeholder content with real reception details.
    ============================================================ */
 
+/* ✏️ Filipino-style reception program.
+   Cocktails start at 4:00 PM; the formal program is tightened into
+   5:00–8:00 PM so guests are home at a reasonable hour.
+   Adjust times/entries to match your emcee's final script. */
 const program = [
-  { time: '4:00 PM', event: 'Cocktail Hour',       note: 'Welcome drinks and canapés in the garden.' },
-  { time: '5:00 PM', event: 'Guests Seated',        note: 'Move to the main reception hall.' },
-  { time: '5:15 PM', event: 'Grand Entrance',        note: 'Introduction of the newly married couple.' },
-  { time: '5:30 PM', event: 'Opening Prayer & Toast', note: 'Blessing of the meal led by a principal sponsor.' },
-  { time: '5:45 PM', event: 'Dinner Service Begins', note: 'Seven-course plated dinner.' },
-  { time: '6:30 PM', event: 'First Dance',           note: "Couple's first dance as husband and wife." },
-  { time: '6:45 PM', event: 'Parent Dances',         note: 'Father–Daughter and Mother–Son dances.' },
-  { time: '7:00 PM', event: 'Speeches & Toasts',     note: 'Best Man, Maid of Honor, and sponsors.' },
-  { time: '7:30 PM', event: 'Cake Cutting',          note: 'Followed by dessert service.' },
-  { time: '8:00 PM', event: 'Open Dancing',          note: 'Dance floor opens for all guests.' },
-  { time: '10:00 PM', event: 'Send-off',             note: 'Sparkler farewell for the couple.' },
+  { time: '4:00 PM', event: 'Cocktails & Photo Ops',  note: 'Welcome drinks in the garden while we finish our photos.' },
+  { time: '5:00 PM', event: 'Guests Seated',           note: 'Kindly find your table before the grand entrance.' },
+  { time: '5:05 PM', event: 'Grand Entrance',          note: 'Presentation of the entourage, then the newlyweds.' },
+  { time: '5:15 PM', event: 'Invocation',              note: 'Opening prayer and grace before meals.' },
+  { time: '5:20 PM', event: 'Welcome Remarks',         note: 'A short greeting from our emcee and both families.' },
+  { time: '5:30 PM', event: 'Dinner Is Served',        note: 'Please enjoy the feast — our emcee will call each table.' },
+  { time: '6:10 PM', event: 'Prenup AVP',              note: 'A look back at how the two of us got here.' },
+  { time: '6:20 PM', event: 'Cake Cutting & Wine Toast', note: 'Followed by a toast led by our best man.' },
+  { time: '6:35 PM', event: 'First Dance',             note: 'Our first dance as husband and wife, then with our parents.' },
+  { time: '6:45 PM', event: 'Money Dance',             note: 'The prosperity dance — pin your blessings on the couple.' },
+  { time: '7:00 PM', event: 'Ninong & Ninang Messages', note: 'Words of wisdom from our principal sponsors.' },
+  { time: '7:20 PM', event: 'Garter & Bouquet Toss',   note: 'Games for our single guests — consider yourselves warned!' },
+  { time: '7:35 PM', event: 'Thank You Message',       note: 'A few words of gratitude from the two of us.' },
+  { time: '7:45 PM', event: 'Photo Ops per Table',     note: "We'll come around for a photo with every table." },
+  { time: '8:00 PM', event: 'Last Song & Send-off',    note: 'One last dance together before we say goodnight.' },
 ]
 
 export default function Reception() {
