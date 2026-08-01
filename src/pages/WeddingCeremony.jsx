@@ -117,7 +117,8 @@ export default function WeddingCeremony() {
               src={MAP_EMBED}
               title="Grass Garden location map"
               loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+              referrerPolicy="strict-origin-when-cross-origin"
             />
           </div>
           <div className="cp-map-actions">

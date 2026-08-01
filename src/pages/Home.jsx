@@ -116,7 +116,7 @@ export default function Home() {
             title="Grass Garden location on Google Maps"
             loading="lazy"
             allowFullScreen
-            referrerPolicy="no-referrer-when-downgrade"
+            referrerPolicy="strict-origin-when-cross-origin"
           />
         </div>
       </section>

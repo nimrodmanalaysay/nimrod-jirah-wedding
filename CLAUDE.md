@@ -39,7 +39,7 @@ If deploying to **GitHub Pages**, `base` must be `/nimrod-jirah-wedding/` (not `
 |---|---|
 | Couple names, hero date, venue block, Explore cards | `src/pages/Home.jsx` |
 | Countdown target date | `WEDDING_DATE` in `src/components/Countdown.jsx` |
-| Venue name / address / map link / embed | `src/utils/venue.js` (single source; map embed is OpenStreetMap — Google's keyless iframe blocks framing) |
+| Venue name / address / map link / embed | `src/utils/venue.js` (single source; map embed is the official Google Maps Embed URL `/maps/embed?pb=…`, which **is** frameable — the keyless `?q=…&output=embed` shortcut is not). Sizing lives in CSS, so don't paste Google's `width`/`height`/`style` attributes |
 | Story chapters | `scenes` array in `src/pages/Story.jsx` |
 | Entourage names/roles | arrays in `src/pages/Entourage.jsx` |
 | FAQ items | `faqs` array in `src/pages/FAQs.jsx` |
