@@ -27,6 +27,11 @@ import {
 } from '../utils/rsvpCache'
 import { toTitleCase } from '../utils/rsvpValidation'
 
+// Upper bound on a single RSVP POST. Generous, because the Apps Script also
+// sends a themed email with an .ics attachment before it responds — but finite,
+// so the sending overlay always resolves one way or the other.
+const POST_TIMEOUT_MS = 30000
+
 // Compute the starting state synchronously from any cached session, so the
 // page renders its real first step on the very first paint (no spinner flash).
 function initFromSession() {
@@ -53,10 +58,23 @@ function initFromSession() {
     step = session.step
   }
 
+  const formData = session.formData
+    ? { ...INITIAL_FORM, ...session.formData }
+    : INITIAL_FORM
+
+  // A cached step can point past the Attendance question while `attendance` is
+  // still empty — e.g. the tab was restored, or the cache was written before
+  // the choice was made. Resuming there let the guest reach "Continue" on the
+  // Personal step, which submits straight away, so they never got asked
+  // attending-or-not and the sheet took a row with a blank Attendance.
+  // Clamp back to the Attendance step whenever the answer is missing.
+  if (typeof step === 'number' && step > 1 && !formData.attendance) step = 1
+  if (step === 'plusone' && !formData.attendance)                   step = 1
+
   return {
     step,
     inviteeName: session.inviteeName,
-    formData:    session.formData    ? { ...INITIAL_FORM,     ...session.formData }    : INITIAL_FORM,
+    formData,
     plusOneData: session.plusOneForm ? { ...INITIAL_PLUS_ONE, ...session.plusOneForm } : INITIAL_PLUS_ONE,
     plusOneElig: session.plusOneEligible ?? false,
     existingRec,
@@ -85,6 +103,8 @@ export default function RSVP() {
 
   function handleField(key, value) {
     setFormData(prev => ({ ...prev, [key]: value }))
+    // Answering attendance clears the "please tell us" prompt straight away
+    if (key === 'attendance' && value) setSubmitError('')
   }
   function handlePlusOneField(key, value) {
     setPlusOneData(prev => ({ ...prev, [key]: value }))
@@ -141,6 +161,14 @@ export default function RSVP() {
 
   function handleAfterPersonal() {
     if (submitting) return
+    // Never submit without an attendance answer. Reaching here with it empty
+    // means the guest resumed past the Attendance step, so send them back to
+    // answer rather than posting a blank Attendance to the sheet.
+    if (!formData.attendance) {
+      setSubmitError('Please let us know whether you can attend.')
+      setStep(1)
+      return
+    }
     const isAttending = formData.attendance === 'attending'
     if (plusOneElig && isAttending) {
       setStep('plusone')
@@ -149,19 +177,36 @@ export default function RSVP() {
     }
   }
 
+  // Bounded so a stalled request can't leave the sending overlay up forever.
+  // Aborting is safe: the Apps Script upserts on Invitee Name, so the retry
+  // this surfaces replaces the row rather than duplicating it.
   async function postRsvpRow(payload) {
-    await fetch(RSVP_SCRIPT_URL, {
-      method:  'POST',
-      mode:    'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), POST_TIMEOUT_MS)
+    try {
+      await fetch(RSVP_SCRIPT_URL, {
+        method:  'POST',
+        mode:    'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload),
+        signal:  controller.signal,
+      })
+    } finally {
+      clearTimeout(timer)
+    }
   }
 
   // Primary invitee + optional plus one submitted as separate sheet rows.
   // Confirmation email is sent server-side via GmailApp in the Apps Script.
   async function handleSubmit() {
     if (submitting) return
+    // Defence in depth — handleAfterPersonal already checks, but StepPlusOne
+    // submits directly too, and a blank Attendance must never reach the sheet.
+    if (!formData.attendance) {
+      setSubmitError('Please let us know whether you can attend.')
+      setStep(1)
+      return
+    }
     setSubmitting(true)
     setSubmitError('')
     try {
@@ -263,12 +308,18 @@ export default function RSVP() {
           />
         )}
         {step === 1 && (
-          <StepAttendance
-            inviteeName={inviteeName}
-            data={formData}
-            onChange={handleField}
-            onNext={() => setStep(2)}
-          />
+          <>
+            <StepAttendance
+              inviteeName={inviteeName}
+              data={formData}
+              onChange={handleField}
+              onNext={() => setStep(2)}
+            />
+            {/* Shown when a resumed session was clamped back here for an answer */}
+            {submitError && (
+              <p className="rsvp-error" role="alert">{submitError}</p>
+            )}
+          </>
         )}
         {step === 2 && (
           <StepContact
