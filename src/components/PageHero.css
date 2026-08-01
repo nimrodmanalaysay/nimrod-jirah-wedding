@@ -1,19 +1,23 @@
 /* ============================================================
-   PageHero — burgundy banner (mirrors the Wedding Service hero)
+   PageHero — compact page title, no background band.
    Sits below the fixed-navbar clearance the page wrapper provides.
+
+   The burgundy fill and gold bottom rule were removed, so the text
+   colours had to change with them: gold/white were chosen to read
+   against burgundy and would be invisible on --off-white. These now
+   match .cp-pagetitle in CeremonyPages.css, which keeps all four
+   Program pages consistent (Overview uses this component, its three
+   siblings use .cp-pagetitle).
    ============================================================ */
 .page-hero {
   width: 100%;
-  min-height: clamp(150px, 22vw, 240px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 2.5rem 1.5rem;
+  padding: 2.8rem 1.5rem 0;
   box-sizing: border-box;
-  background: var(--burgundy);
-  border-bottom: 3px solid var(--gold);
 }
 
 .page-hero__eyebrow {
@@ -21,23 +25,37 @@
   font-weight: 500;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 0.5rem;
+  color: var(--btn-color);
+  margin-bottom: 0.6rem;
 }
 
 .page-hero__title {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 6vw, 4rem);
+  font-size: clamp(1.9rem, 4.5vw, 3rem);
   font-weight: 300;
-  color: var(--white);
+  color: var(--burgundy);
   letter-spacing: 0.04em;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
 .page-hero__subtitle {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.75);
-  margin-top: 0.6rem;
+  color: var(--sage);
+  margin-top: 0.7rem;
+}
+
+/* Gold rule, matching .section-divider and .cp-pagetitle__rule */
+.page-hero::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 2px;
+  background: var(--btn-color);
+  margin: 1.5rem auto 0;
+}
+
+@media (max-width: 600px) {
+  .page-hero { padding-top: 2rem; }
 }

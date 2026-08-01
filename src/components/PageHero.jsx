@@ -2,9 +2,9 @@ import React from 'react'
 import './PageHero.css'
 
 /* ============================================================
-   PageHero — shared burgundy hero banner, matching the
-   Wedding Service page hero. Used on every page except Home
-   and Our Story.
+   PageHero — shared compact page title (no background band).
+   Used on every page except Home and Our Story, which have their
+   own bespoke heroes.
    ============================================================ */
 export default function PageHero({ eyebrow, title, subtitle }) {
   return (
