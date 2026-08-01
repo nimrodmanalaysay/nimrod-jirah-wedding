@@ -224,6 +224,18 @@ export default function RSVP() {
       />
 
       <div className="rsvp-card">
+        {/* Covers the card while the POST is in flight, so the guest can see
+            something is happening. Both submit paths set `submitting`. */}
+        {submitting && (
+          <div className="rsvp-sending" role="status" aria-live="polite">
+            <span className="rsvp-sending__spinner" aria-hidden="true" />
+            <p className="rsvp-sending__text">
+              Sending your RSVP<span className="dots" />
+            </p>
+            <p className="rsvp-sending__sub">Please keep this page open</p>
+          </div>
+        )}
+
         {(typeof step === 'number' && step >= 1 && step <= 3 || step === 'plusone') && (
           <ProgressBar step={stepIndex} total={TOTAL_STEPS} />
         )}
@@ -273,6 +285,7 @@ export default function RSVP() {
               onChange={handleField}
               onNext={handleAfterPersonal}
               onBack={() => setStep(2)}
+              submitting={submitting}
             />
             {submitError && (
               <p className="rsvp-error" role="alert">{submitError}</p>

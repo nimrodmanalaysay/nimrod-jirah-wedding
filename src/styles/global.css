@@ -90,6 +90,20 @@ h1, h2, h3, h4 {
   transition: background var(--transition), color var(--transition), transform var(--transition);
 }
 
+/* Disabled state — applies to every .btn variant.
+   Without this a disabled button looked identical to an active one, so
+   "Sending…" and incomplete-form buttons still invited clicks. */
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn:disabled:hover,
+.btn[disabled]:hover {
+  transform: none;
+}
+
 /* Primary button */
 .btn-primary {
   background: var(--btn-color);
@@ -98,6 +112,10 @@ h1, h2, h3, h4 {
 .btn-primary:hover {
   background: var(--burgundy);
   transform: translateY(-2px);
+}
+/* Keep the disabled fill from switching to the hover colour */
+.btn-primary:disabled:hover {
+  background: var(--btn-color);
 }
 
 /* Outlined button */

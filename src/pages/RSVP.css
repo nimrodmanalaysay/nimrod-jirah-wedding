@@ -31,6 +31,8 @@
   border: 1px solid rgba(225,202,150,0.4);
   border-radius: 4px;
   box-shadow: 0 8px 40px rgba(105,27,25,0.08);
+  /* anchors the .rsvp-sending overlay */
+  position: relative;
 }
 
 /* ---- Progress dots ---- */
@@ -592,4 +594,66 @@
   color: var(--burgundy);
   font-weight: 600;
   word-break: break-all;
+}
+
+/* ================================================================
+   SENDING OVERLAY
+   Covers the card while the RSVP is in flight. Needed because the
+   submit can fire from two different places — the Plus One step and
+   the "Continue" button on the Personal step — and the Apps Script
+   round trip is slow enough (two sequential POSTs when a plus one is
+   named) that guests would otherwise think nothing had happened.
+   The success screen it hands over to is unchanged.
+   ================================================================ */
+.rsvp-sending {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  border-radius: 4px;
+  background: rgba(253,248,245,0.94);
+  animation: rsvpFadeIn 0.2s ease both;
+}
+
+.rsvp-sending__spinner {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 1.1rem;
+  border: 2px solid rgba(105,27,25,0.14);
+  border-top-color: var(--btn-color);
+  border-radius: 50%;
+  animation: rsvpSpin 0.8s linear infinite;
+}
+
+.rsvp-sending__text {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--burgundy);
+  margin-bottom: 0.5rem;
+}
+
+.rsvp-sending__sub {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+@keyframes rsvpSpin  { to { transform: rotate(360deg); } }
+@keyframes rsvpFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Reduced motion: soften, don't remove. The spinner is the only signal that
+   work is still in progress, so stopping it entirely would leave a frozen
+   ring that reads as a broken page. Slow it right down instead, and drop the
+   purely decorative fade and the redundant animated ellipsis. */
+@media (prefers-reduced-motion: reduce) {
+  .rsvp-sending__spinner { animation-duration: 2.4s; }
+  .rsvp-sending          { animation: none; }
+  .dots::after           { animation: none; content: '…'; }
 }

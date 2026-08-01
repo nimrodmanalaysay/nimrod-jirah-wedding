@@ -377,10 +377,11 @@ export function StepContact({ data, onChange, onNext, onBack }) {
    Enter key on either textarea advances to the next step.
    Shift+Enter still inserts a newline for multi-line input.
    ═══════════════════════════════════════════════════════════ */
-export function StepPersonal({ data, onChange, onNext, onBack }) {
+export function StepPersonal({ data, onChange, onNext, onBack, submitting }) {
   function handleTextareaKey(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
+      if (submitting) return        // Enter must not re-fire an in-flight submit
       onNext()
     }
   }
@@ -408,9 +409,17 @@ export function StepPersonal({ data, onChange, onNext, onBack }) {
         </div>
       </div>
       <div className="rsvp-step__actions">
-        <button className="btn btn-outline rsvp-step__back" onClick={onBack}>← Back</button>
-        <button className="btn btn-primary rsvp-step__next" onClick={onNext}>
-          Continue →
+        <button className="btn btn-outline rsvp-step__back" onClick={onBack} disabled={submitting}>
+          ← Back
+        </button>
+        {/* For guests with no Plus One step this button IS the submit, so it
+            has to show the sending state rather than a plain "Continue". */}
+        <button
+          className="btn btn-primary rsvp-step__next"
+          onClick={onNext}
+          disabled={submitting}
+        >
+          {submitting ? <span>Sending<span className="dots" /></span> : 'Continue →'}
         </button>
       </div>
     </div>
@@ -500,7 +509,9 @@ export function StepPlusOne({ inviteeName, data, onChange, onSubmit, onBack, sub
       )}
 
       <div className="rsvp-step__actions">
-        <button className="btn btn-outline rsvp-step__back" onClick={onBack}>← Back</button>
+        <button className="btn btn-outline rsvp-step__back" onClick={onBack} disabled={submitting}>
+          ← Back
+        </button>
         <button
           className="btn btn-primary rsvp-step__next"
           onClick={onSubmit}
