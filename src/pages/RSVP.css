@@ -33,6 +33,22 @@
   box-shadow: 0 8px 40px rgba(105,27,25,0.08);
   /* anchors the .rsvp-sending overlay */
   position: relative;
+  /* useAnimatedHeight sets an explicit height, so stepping between screens
+     eases instead of snapping. Clipped because during a shrink the outgoing
+     content is briefly taller than the box. */
+  overflow: hidden;
+  transition: height 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Wrapper the height is measured from — must not add box metrics of its own */
+.rsvp-card__body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Height animation is motion for its own sake; drop it when asked to */
+@media (prefers-reduced-motion: reduce) {
+  .rsvp-card { transition: none; }
 }
 
 /* ---- Progress dots ---- */

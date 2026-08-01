@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PageHero from '../components/PageHero'
 import './RSVP.css'
 import { RSVP_SCRIPT_URL, INITIAL_FORM, INITIAL_PLUS_ONE } from './rsvp/constants'
@@ -26,6 +26,33 @@ import {
   cachePlusOneEligible,
 } from '../utils/rsvpCache'
 import { toTitleCase } from '../utils/rsvpValidation'
+
+// Keeps .rsvp-card's height pinned to whatever its content currently needs, so
+// stepping between screens animates instead of snapping. Each step holds a
+// different amount of content (the Personal step is ~120px taller than the
+// success screen), and CSS cannot transition to or from `height: auto` in every
+// browser — `interpolate-size` is still Chromium-only — so the height has to be
+// measured. A ResizeObserver on the inner wrapper covers content that changes
+// without a step change too, e.g. a validation message appearing.
+// If anything here fails the card simply keeps its natural auto height.
+function useAnimatedHeight(cardRef, bodyRef, deps) {
+  useEffect(() => {
+    const card = cardRef.current
+    const body = bodyRef.current
+    if (!card || !body || typeof ResizeObserver === 'undefined') return
+
+    const apply = () => {
+      const cs  = getComputedStyle(card)
+      const pad = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
+      card.style.height = `${body.offsetHeight + pad}px`
+    }
+
+    apply()
+    const ro = new ResizeObserver(apply)
+    ro.observe(body)
+    return () => ro.disconnect()
+  }, deps) // eslint-disable-line react-hooks/exhaustive-deps
+}
 
 // Upper bound on a single RSVP POST. Generous, because the Apps Script also
 // sends a themed email with an .ics attachment before it responds — but finite,
@@ -92,6 +119,11 @@ export default function RSVP() {
   const [submitting,    setSubmitting]    = useState(false)
   const [submitError,   setSubmitError]   = useState('')
   const [canceling,     setCanceling]     = useState(false)
+
+  const cardRef = useRef(null)
+  const bodyRef = useRef(null)
+  // Re-measure on any change that alters the card's content height
+  useAnimatedHeight(cardRef, bodyRef, [step, submitting, submitError, plusOneData.bringing])
 
   useEffect(() => { cacheStep(step) }, [step])
   useEffect(() => {
@@ -268,9 +300,10 @@ export default function RSVP() {
         subtitle="Kindly reply by October 1, 2026"
       />
 
-      <div className="rsvp-card">
+      <div className="rsvp-card" ref={cardRef}>
         {/* Covers the card while the POST is in flight, so the guest can see
-            something is happening. Both submit paths set `submitting`. */}
+            something is happening. Both submit paths set `submitting`.
+            Sits outside __body so it fills the card, not the measured content. */}
         {submitting && (
           <div className="rsvp-sending" role="status" aria-live="polite">
             <span className="rsvp-sending__spinner" aria-hidden="true" />
@@ -280,6 +313,9 @@ export default function RSVP() {
             <p className="rsvp-sending__sub">Please keep this page open</p>
           </div>
         )}
+
+        {/* Measured by useAnimatedHeight so the card can animate between steps */}
+        <div className="rsvp-card__body" ref={bodyRef}>
 
         {(typeof step === 'number' && step >= 1 && step <= 3 || step === 'plusone') && (
           <ProgressBar step={stepIndex} total={TOTAL_STEPS} />
@@ -366,6 +402,8 @@ export default function RSVP() {
             email={formData.email}
           />
         )}
+
+        </div>{/* .rsvp-card__body */}
       </div>
     </div>
   )
