@@ -90,11 +90,13 @@
 .navbar--light .navbar__link:hover,
 .navbar--light .navbar__link--active { color: var(--btn-color); }
 
-/* ── Ceremony dropdown wrapper ── */
+/* ── Ceremony dropdown wrapper ──
+   Deliberately left as the default `list-item` so this tab has the exact
+   same box height as every other <li> in .navbar__links. Making it a flex
+   container collapsed it to the link's height, which sat the label (and its
+   underline) ~1.6px higher than the other tabs. */
 .navbar__dropdown-wrap {
   position: relative;
-  display: flex;
-  align-items: center;
 }
 
 /* Tiny chevron beside "Ceremony" text */

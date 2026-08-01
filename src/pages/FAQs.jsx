@@ -10,7 +10,7 @@ import './FAQs.css'
 const faqs = [
   {
     q: 'What time should I arrive?',
-    a: 'We recommend arriving by 2:15 PM for the ceremony, which begins at 2:30 PM sharp. Doors open at 2:00 PM. For the reception, please be seated by 5:00 PM.',
+    a: 'We recommend arriving by 2:15 PM for the ceremony, which begins at 2:30 PM sharp. Doors open at 2:00 PM. The reception follows straight after at the same venue — please be seated by 4:15 PM for the grand entrance.',
   },
   {
     q: 'Can I bring a plus one?',

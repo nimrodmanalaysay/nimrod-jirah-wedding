@@ -32,15 +32,6 @@ export default function WeddingCeremony() {
         <span>Wedding Service</span>
       </div>
 
-      {/* Hero banner */}
-      <div className="cp-hero">
-        <div className="cp-hero__overlay">
-          <p className="cp-hero__pre">A Christ-Centered Wedding Service</p>
-          <h1 className="cp-hero__title">Nimrod &amp; Jirah</h1>
-          <p className="cp-hero__date">November 7, 2026</p>
-        </div>
-      </div>
-
       {/* Scripture verse */}
       <section className="cp-verse">
         <span className="cp-verse__mark">✝</span>

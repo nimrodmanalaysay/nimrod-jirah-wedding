@@ -46,14 +46,6 @@ export default function DressCode() {
         <span>Dress Code</span>
       </div>
 
-      <div className="cp-hero">
-        <div className="cp-hero__overlay">
-          <p className="cp-hero__pre">Attire Guide</p>
-          <h1 className="cp-hero__title">Dress Code</h1>
-          <p className="cp-hero__date">Formal / Semi-Formal</p>
-        </div>
-      </div>
-
       <div className="cp-content">
 
         {/* Theme */}
