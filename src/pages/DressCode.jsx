@@ -46,6 +46,14 @@ export default function DressCode() {
         <span>Dress Code</span>
       </div>
 
+      {/* ✏️ Page title — edit the eyebrow / title / subtitle here */}
+      <div className="cp-pagetitle">
+        <p className="cp-pagetitle__pre">Attire Guide</p>
+        <h1 className="cp-pagetitle__title">Dress Code</h1>
+        <p className="cp-pagetitle__date">Formal / Semi-Formal</p>
+        <span className="cp-pagetitle__rule" />
+      </div>
+
       <div className="cp-content">
 
         {/* Theme */}

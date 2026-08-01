@@ -31,55 +31,48 @@
 .cp-breadcrumb span:last-child { color: var(--burgundy); }
 .cp-breadcrumb span:not(:last-child):not(a) { color: rgba(105,27,25,0.35); }
 
-/* ── Hero banner (solid color, no photo) ── */
-.cp-hero {
-  position: relative;
-  width: 100%;
-  height: clamp(150px, 22vw, 240px);
-  overflow: hidden;
-  border-bottom: 3px solid var(--gold);
-}
-.cp-hero__img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.cp-hero__overlay {
-  position: absolute;
-  inset: 0;
-  background: var(--burgundy);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+/* ── Compact page title ──
+   Replaces the old full-width burgundy .cp-hero band on the Program
+   sub-pages. Sits directly on the page background, so it keeps each
+   page's <h1> and its date/subtitle without reintroducing a banner.
+   The Overview page uses the separate <PageHero> component instead. */
+.cp-pagetitle {
   text-align: center;
-  padding: 1rem;
+  padding: 2.8rem 1.5rem 0;
 }
-.cp-hero__overlay--light {
-  background: var(--blush);
-}
-.cp-hero__pre {
+.cp-pagetitle__pre {
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 0.5rem;
+  color: var(--btn-color);
+  margin-bottom: 0.6rem;
 }
-.cp-hero__title {
+.cp-pagetitle__title {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 6vw, 4rem);
+  font-size: clamp(1.9rem, 4.5vw, 3rem);
   font-weight: 300;
-  color: var(--white);
+  color: var(--burgundy);
   letter-spacing: 0.04em;
-  line-height: 1.1;
+  line-height: 1.15;
 }
-.cp-hero__date {
-  font-size: 0.8rem;
+.cp-pagetitle__date {
+  font-size: 0.78rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.75);
-  margin-top: 0.6rem;
+  color: var(--sage);
+  margin-top: 0.7rem;
+}
+/* Gold rule, matching .section-divider elsewhere on the site */
+.cp-pagetitle__rule {
+  display: block;
+  width: 60px;
+  height: 2px;
+  background: var(--btn-color);
+  margin: 1.5rem auto 0;
+}
+@media (max-width: 600px) {
+  .cp-pagetitle { padding-top: 2rem; }
 }
 
 /* ── Content wrapper ── */

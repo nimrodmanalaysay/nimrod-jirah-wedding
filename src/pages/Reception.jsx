@@ -40,6 +40,14 @@ export default function Reception() {
         <span>Reception</span>
       </div>
 
+      {/* ✏️ Page title — edit the eyebrow / title / date here */}
+      <div className="cp-pagetitle">
+        <p className="cp-pagetitle__pre">Join Us For</p>
+        <h1 className="cp-pagetitle__title">The Reception</h1>
+        <p className="cp-pagetitle__date">November 7, 2026 · 4:00 PM onwards</p>
+        <span className="cp-pagetitle__rule" />
+      </div>
+
       <div className="cp-content">
 
         {/* Venue details */}

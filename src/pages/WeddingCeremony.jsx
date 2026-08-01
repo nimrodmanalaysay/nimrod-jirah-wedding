@@ -32,6 +32,14 @@ export default function WeddingCeremony() {
         <span>Wedding Service</span>
       </div>
 
+      {/* ✏️ Page title — edit the eyebrow / title / date here */}
+      <div className="cp-pagetitle">
+        <p className="cp-pagetitle__pre">A Christ-Centered Wedding Service</p>
+        <h1 className="cp-pagetitle__title">Nimrod &amp; Jirah</h1>
+        <p className="cp-pagetitle__date">November 7, 2026</p>
+        <span className="cp-pagetitle__rule" />
+      </div>
+
       {/* Scripture verse */}
       <section className="cp-verse">
         <span className="cp-verse__mark">✝</span>
