@@ -33,20 +33,12 @@ const faqs = [
     a: 'We have a professional photographer and videographer capturing every moment. During the ceremony, we kindly ask that guests remain seated and refrain from stepping into the aisle to take photos. After the ceremony, photo opportunities will be available.',
   },
   {
-    q: 'Are children welcome?',
-    a: 'We love children and welcome them warmly! Please indicate the number of children in your RSVP so we can prepare accordingly. Note that the ceremony is an intimate setting — please ensure little ones are supervised at all times.',
-  },
-  {
     q: 'Is there a gift registry?',
     a: 'Your presence is the greatest gift! For those who wish to give, we have a Gifts page with GCash and bank transfer details. Physical gifts may be left at the gift table at the venue.',
   },
   {
     q: 'What should I do if I cannot attend?',
     a: 'We completely understand. Please let us know via the RSVP page as soon as possible so we can finalize our headcount. Your kind thoughts and well wishes mean the world to us.',
-  },
-  {
-    q: 'Will there be a shuttle service?',
-    a: 'Shuttle service details will be shared closer to the event date via email. In the meantime, the venue is accessible by private car or ridesharing services such as Grab.',
   },
 ]
 
