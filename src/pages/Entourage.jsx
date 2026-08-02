@@ -8,7 +8,11 @@ import './Entourage.css'
    No avatars or profile images — name + role only.
    ============================================================ */
 
-// Principal sponsors — Ninong (godfathers) and Ninang (godmothers) listed separately
+// Principal sponsors — Ninong (godfathers) and Ninang (godmothers).
+// ✏️ Order matches the printed invitation, and the two lists are rendered as
+//    side-by-side columns, so row N on the left pairs with row N on the right.
+//    Keep them the same length and in step — reordering one alone breaks the
+//    pairing (e.g. the Aguilars and the Santoses sit together by design).
 const ninongs = [
   'Mr. Ronald Aguilar',
   'Mr. Allan Santos',
@@ -20,14 +24,14 @@ const ninongs = [
   'Mr. Jun Tiongson',
 ]
 const ninangs = [
+  'Mrs. Marilyn Aguilar',
+  'Mrs. Mary Jane Pangan-Santos',
+  'Mrs. Josephine Lopez',
   'Atty. Mildred Ople',
   'Mrs. Jocefina Reyes',
-  'Mrs. Jane Pangan',
   'Mrs. Cristina Domingo',
   'Mrs. Mel Dingayan',
-  'Mrs. Josephine Lopez',
   'Mrs. Rose Calonzo',
-  'Mrs. Lhea Aguilar',
 ]
 
 const bestMan    = { name: 'Jaymar Manalaysay',        role: 'Best Man'      }
