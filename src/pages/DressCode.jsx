@@ -22,7 +22,7 @@ const dos = [
   'Wear formal or semi-formal attire in the suggested color palette.',
   'Ladies: floor-length gowns, midi dresses, or elegant pantsuits.',
   'Gentlemen: barong tagalog, suit, or dress shirt with slacks.',
-  'Comfortable footwear is encouraged — the ceremony is outdoors.',
+  'Comfortable attire and footwear are encouraged so you can enjoy the celebration.',
   'Accessories and statement pieces in earth or neutral tones.',
 ]
 

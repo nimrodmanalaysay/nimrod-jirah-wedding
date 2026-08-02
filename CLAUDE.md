@@ -4,7 +4,7 @@ Guidance for Claude Code (and humans) working in this repo.
 
 ## What this is
 
-A single-page **React 18 + Vite 5** website for the wedding of **Nimrod & Jirah**, held **November 7, 2026** at **Grass Garden**, Purok 4, P. Reyes Street, Barangay Sipat, Plaridel, Bulacan (ceremony 2:30 PM, reception 4:00 PM — one venue for both).
+A single-page **React 18 + Vite 5** website for the wedding of **Nimrod & Jirah**, held **November 7, 2026** at **Grass Garden**, Purok 4, P. Reyes Street, Barangay Sipat, Plaridel, Bulacan (ceremony 3:00 PM, reception 4:30 PM — one venue for both, both indoors).
 
 - Routing: `react-router-dom` v6
 - Analytics: `@vercel/analytics`

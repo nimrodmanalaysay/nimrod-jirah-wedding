@@ -8,11 +8,11 @@ import './Countdown.css'
    ============================================================ */
 
 // ✏️ Edit this date to match the wedding day.
-//    Keep the +08:00 offset — it pins the target to 2:30 PM Manila time
+//    Keep the +08:00 offset — it pins the target to 3:00 PM Manila time
 //    (matching the ceremony). Without an offset, JS parses the string as the
 //    VIEWER's local time, so a guest abroad would count down to the wrong
-//    moment. Equivalent to 2026-11-07T06:30:00Z, the .ics calStartUTC.
-const WEDDING_DATE = new Date('2026-11-07T14:30:00+08:00')
+//    moment. Equivalent to 2026-11-07T07:00:00Z, the .ics calStartUTC.
+const WEDDING_DATE = new Date('2026-11-07T15:00:00+08:00')
 
 function pad(n) {
   return String(n).padStart(2, '0')

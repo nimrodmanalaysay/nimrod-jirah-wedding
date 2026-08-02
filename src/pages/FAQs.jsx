@@ -10,15 +10,15 @@ import './FAQs.css'
 const faqs = [
   {
     q: 'What time should I arrive?',
-    a: 'We recommend arriving by 2:15 PM for the ceremony, which begins at 2:30 PM sharp. Doors open at 2:00 PM. The reception follows straight after at the same venue — please be seated by 4:15 PM for the grand entrance.',
+    a: 'We recommend arriving by 2:30 PM for the ceremony, which begins at 3:00 PM sharp. Doors open at 2:00 PM. The reception follows straight after at the same venue.',
   },
   {
     q: 'Can I bring a plus one?',
-    a: 'Due to venue capacity, we can only accommodate the guests listed on the invitation. If your invitation says "and Guest," you are welcome to bring one. Please indicate this in your RSVP so we can prepare accordingly.',
+    a: 'Due to venue capacity, we can only accommodate the guests listed on the invitation. Please also refer to the number of seats reserved for you, as we are unable to accommodate additional guests unless indicated. We kindly ask that you reflect the correct number of attendees in your RSVP so we can prepare accordingly. Thank you for your understanding!',
   },
   {
     q: 'Is parking available?',
-    a: 'Yes! Free on-site parking is available for all guests. Parking attendants will be present to guide you. We recommend carpooling when possible to ease traffic flow.',
+    a: 'Yes! Free on-site parking is available for all guests. We recommend carpooling when possible to ease traffic flow.',
   },
   {
     q: 'What is the dress code?',
@@ -26,7 +26,7 @@ const faqs = [
   },
   {
     q: 'Will the ceremony be indoors or outdoors?',
-    a: 'The ceremony will be held outdoors in the garden. The reception will move to the indoor hall afterward. We suggest bringing a small fan and wearing comfortable footwear suitable for outdoor settings.',
+    a: "Our ceremony and reception will both be held indoors. We recommend wearing comfortable attire so you can fully enjoy the celebration. We can't wait to celebrate with you!",
   },
   {
     q: 'Can I take photos during the ceremony?',

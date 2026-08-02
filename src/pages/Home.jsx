@@ -90,12 +90,12 @@ export default function Home() {
           <div className="home__venue-times">
             <div className="home__venue-time">
               <span className="home__venue-time-label">Ceremony</span>
-              <span className="home__venue-time-value">2:30 PM</span>
+              <span className="home__venue-time-value">3:00 PM</span>
             </div>
             <span className="home__venue-time-sep">❦</span>
             <div className="home__venue-time">
               <span className="home__venue-time-label">Reception</span>
-              <span className="home__venue-time-value">4:00 PM</span>
+              <span className="home__venue-time-value">4:30 PM</span>
             </div>
           </div>
 

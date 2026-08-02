@@ -37,13 +37,13 @@ var NO_REPLY_NOTE = '\n\n———\nThis is an automated message — please do n
 var WEDDING = {
   couple:        'Nimrod & Jirah',
   date:          'November 7, 2026',
-  ceremonyTime:  '2:30 PM',
-  receptionTime: '4:00 PM',
+  ceremonyTime:  '3:00 PM',
+  receptionTime: '4:30 PM',
   venue:         'Grass Garden',
   address:       'Purok 4, P. Reyes Street, Barangay Sipat, Plaridel, Bulacan',
   mapLink:       'https://maps.app.goo.gl/XGPYFFmqYp1hdFQq6',
-  calStartUTC:   '20261107T063000Z',   // 2:30 PM PHT (ceremony)
-  calEndUTC:     '20261107T110000Z'    // 7:00 PM PHT (end of reception program)
+  calStartUTC:   '20261107T070000Z',   // 3:00 PM PHT (ceremony)
+  calEndUTC:     '20261107T113000Z'    // 7:30 PM PHT (end of reception program)
 };
 
 // Sends an email masked as the wedding inbox. Uses the verified "Send mail as"
@@ -263,7 +263,7 @@ function buildEmailHTML_(o) {
       '</strong> to celebrate the wedding of ' + WEDDING.couple + '.'
     : (o.isAttending
         ? 'We are <strong style="color:#691B19;">so excited</strong> to celebrate with you! ' +
-          'Please arrive by <strong>2:15 PM</strong> to be seated before the ceremony at ' + WEDDING.ceremonyTime + '.'
+          'Please arrive by <strong>2:30 PM</strong> to be seated before the ceremony at ' + WEDDING.ceremonyTime + '.'
         : 'We completely understand and will miss you dearly. Your kind thoughts mean the world to us.');
 
   var plusOneRow = o.plusOneName
