@@ -86,3 +86,59 @@
 @media (max-width: 480px) {
   .footer__columns { gap: 2rem 2.5rem; }
 }
+
+/* ============================================================
+   DESKTOP ONLY (min-width: 1001px)
+   1000px is where the navbar swaps to the hamburger, so this is the
+   same boundary the rest of the site treats as "web". Tablet and
+   mobile keep the stacked three-column layout untouched.
+
+   Flatter: the three stacked columns collapse into one wrapping row.
+   `display: contents` on each column promotes its heading and links
+   to be direct flex items of .footer__columns, so a block that was
+   four rows tall becomes one — while the gold group headings stay
+   visible inline, which a plain link row would have lost. The second
+   divider goes too; it only added height.
+   ============================================================ */
+@media (min-width: 1001px) {
+  .footer {
+    padding: 2.2rem 3rem 1.5rem;
+  }
+
+  .footer__names { font-size: 2.1rem; margin-bottom: 0.15rem; }
+  .footer__date  { font-size: 0.85rem; }
+
+  .footer__rule { margin: 1.2rem auto; }
+  /* The last <div> in the footer is the lower divider — drop it */
+  .footer__rule:last-of-type { display: none; }
+
+  .footer__columns {
+    /* The full row needs ~1282px. Cap above that so wide screens get a single
+       line; anything narrower wraps to two, which is still far flatter than
+       the stacked columns it replaces. */
+    max-width: 1300px;
+    align-items: baseline;
+    gap: 0.5rem 1.6rem;
+    margin-bottom: 1.3rem;
+  }
+
+  /* Promote heading + links into the single row */
+  .footer__col { display: contents; }
+
+  .footer__col-heading {
+    font-size: 0.72rem;
+    margin-bottom: 0;
+    margin-left: 0.9rem;
+  }
+
+  /* Bigger, with real padding so the click target is comfortable */
+  .footer__link {
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.72);
+    padding: 0.3rem 0;
+  }
+  .footer__link::after { bottom: 0; }
+
+  .footer__copy { font-size: 0.8rem; opacity: 0.4; }
+}
