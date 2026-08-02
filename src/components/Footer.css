@@ -21,7 +21,9 @@
   font-size: 0.8rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.5);
+  /* .5 alpha here measured 4.02:1 on the burgundy — under the 4.5:1 WCAG AA
+     minimum for text this size. Raised until it clears. */
+  color: rgba(255,255,255,0.72);
 }
 
 .footer__rule {
@@ -63,7 +65,9 @@
   font-weight: 400;
   letter-spacing: 0.1em;
   text-decoration: none;
-  color: rgba(255,255,255,0.5);
+  /* Was .5 alpha = 4.02:1, which failed WCAG AA (4.5:1). .78 gives 7.74:1,
+     clearing AAA. Set on the base rule so mobile and tablet get it too. */
+  color: rgba(255,255,255,0.78);
   position: relative;
   transition: color 0.25s ease;
 }
@@ -80,7 +84,10 @@
 
 .footer__copy {
   font-size: 0.72rem;
-  opacity: 0.3;
+  /* opacity: 0.3 compounded with the footer's own .7 text colour and measured
+     1.78:1 — effectively unreadable. Use an explicit colour instead, so the
+     value is the actual rendered contrast rather than two multiplied alphas. */
+  color: rgba(255,255,255,0.66);
 }
 
 @media (max-width: 480px) {
@@ -146,11 +153,11 @@
     margin-bottom: 0.5rem;
   }
 
-  /* Bigger and brighter, with padding so each row is a comfortable target */
+  /* Bigger, with padding so each row is a comfortable target.
+     Colour now lives on the base rule — every breakpoint gets it. */
   .footer__link {
     font-size: 0.95rem;
     letter-spacing: 0.05em;
-    color: rgba(255,255,255,0.78);
     padding: 0.32rem 0;
     white-space: nowrap;
   }
@@ -163,7 +170,6 @@
     padding-top: 1.1rem;
     border-top: 1px solid rgba(225,202,150,0.22);
     font-size: 0.8rem;
-    opacity: 0.45;
     text-align: center;
   }
 }
