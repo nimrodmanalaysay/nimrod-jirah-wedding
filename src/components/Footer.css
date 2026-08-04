@@ -105,8 +105,9 @@
     gap: 2rem 5.5rem;
   }
 
+  /* Alignment stays centred, inheriting the base rules — the footer reads as
+     one centred block rather than three left-aligned ones. */
   .footer__col {
-    align-items: flex-start;   /* left-aligned reads faster than centred */
     gap: 0;
     min-width: 0;
   }
@@ -117,7 +118,6 @@
   }
 
   .footer__col-links {
-    justify-items: start;      /* ragged-right reads faster than centred */
     column-gap: 2.4rem;
   }
 
