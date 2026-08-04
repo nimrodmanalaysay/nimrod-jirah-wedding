@@ -39,27 +39,25 @@ const columns = [
 export default function Footer() {
   return (
     <footer className="footer">
-      {/* Couple names */}
-      <p className="footer__names">Nimrod &amp; Jirah</p>
-      <p className="footer__date">November 7, 2026</p>
-
-      <div className="footer__rule" />
-
-      {/* Multi-column nav */}
+      {/* Grouped nav. Each group's links sit in two sub-columns, so a group is
+          two rows tall instead of four. Both dividers went with the couple
+          names and date — the upper one had nothing left to divide, and the
+          lower one is replaced by the copyright's own top border. */}
       <div className="footer__columns">
         {columns.map(col => (
           <div key={col.heading} className="footer__col">
             <p className="footer__col-heading">{col.heading}</p>
-            {col.links.map(({ label, path }) => (
-              <Link key={path} to={path} className="footer__link">
-                {label}
-              </Link>
-            ))}
+            <div className="footer__col-links">
+              {col.links.map(({ label, path }) => (
+                <Link key={path} to={path} className="footer__link">
+                  {label}
+                </Link>
+              ))}
+            </div>
           </div>
         ))}
       </div>
 
-      <div className="footer__rule" />
       <p className="footer__copy">Made with love ♥</p>
     </footer>
   )
