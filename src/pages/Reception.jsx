@@ -8,27 +8,28 @@ import { MAP_LINK, MAP_EMBED } from '../utils/venue'
    ✏️ Replace placeholder content with real reception details.
    ============================================================ */
 
-/* ✏️ Filipino-style reception program.
+/* ✏️ Reception programme, in the couple's running order.
    Picks up after the ceremony recessional (4:10 PM — see orderOfService in
    WeddingCeremony.jsx), leaving 20 minutes for post-ceremony photos, and runs
-   4:30–7:30 PM so the whole day still wraps by early evening.
-   Adjust times/entries to match your emcee's final script. */
+   4:30–7:00 PM.
+   Only three times were fixed: the 4:30 start, dinner at 6:00 PM and the 7:00 PM
+   finish. The rest are evenly spaced to fill those — nine items across the 90
+   minutes before dinner, then three after — so adjust to your emcee's final
+   script. */
 const program = [
-  { time: '4:30 PM', event: 'Cocktails & Photo Ops',  note: 'Welcome drinks right after the ceremony, while we finish our photos.' },
-  { time: '4:50 PM', event: 'Guests Seated',           note: 'Kindly find your table before the grand entrance.' },
-  { time: '4:55 PM', event: 'Grand Entrance',          note: 'Presentation of the entourage, then the newlyweds.' },
-  { time: '5:05 PM', event: 'Invocation',              note: 'Opening prayer and grace before meals.' },
-  { time: '5:10 PM', event: 'Welcome Remarks',         note: 'A short greeting from our emcee and both families.' },
-  { time: '5:15 PM', event: 'Dinner Is Served',        note: 'Please enjoy the feast — our emcee will call each table.' },
-  { time: '5:50 PM', event: 'Prenup AVP',              note: 'A look back at how the two of us got here.' },
-  { time: '6:00 PM', event: 'Cake Cutting & Wine Toast', note: 'Followed by a toast led by our best man.' },
-  { time: '6:15 PM', event: 'First Dance',             note: 'Our first dance as husband and wife, then with our parents.' },
-  { time: '6:25 PM', event: 'Money Dance',             note: 'The prosperity dance — pin your blessings on the couple.' },
-  { time: '6:40 PM', event: 'Ninong & Ninang Messages', note: 'Words of wisdom from our principal sponsors.' },
-  { time: '7:00 PM', event: 'Garter & Bouquet Toss',   note: 'Games for our single guests — consider yourselves warned!' },
-  { time: '7:10 PM', event: 'Thank You Message',       note: 'A few words of gratitude from the two of us.' },
-  { time: '7:20 PM', event: 'Photo Ops per Table',     note: "We'll come around for a photo with every table." },
-  { time: '7:30 PM', event: 'Last Song & Send-off',    note: 'One last dance together before we say goodnight.' },
+  { time: '4:30 PM', event: 'Guest Seating',            note: 'Kindly find your table as you arrive.' },
+  { time: '4:40 PM', event: 'Playing AVP',              note: 'A look back at how the two of us got here.' },
+  { time: '4:50 PM', event: 'Grand Entrance',           note: 'Presentation of the entourage, then the newlyweds.' },
+  { time: '5:00 PM', event: 'Welcome Remarks & Prayer', note: 'A short greeting from both families, and grace before meals.' },
+  { time: '5:10 PM', event: 'First Dance',              note: 'Our first dance as husband and wife.' },
+  { time: '5:20 PM', event: 'Cake Cutting & Wine Toast', note: 'Followed by a toast led by our best man.' },
+  { time: '5:30 PM', event: 'Parent Dances',            note: 'A dance with the parents who raised us.' },
+  { time: '5:40 PM', event: 'Games',                    note: 'A little fun with our guests — consider yourselves warned!' },
+  { time: '5:50 PM', event: 'Photo Ops per Table',      note: "We'll come around for a photo with every table." },
+  { time: '6:00 PM', event: 'Dinner',                   note: 'Please enjoy the feast — our emcee will call each table.' },
+  { time: '6:30 PM', event: 'Prosperity Dance',         note: 'The money dance — pin your blessings on the couple.' },
+  { time: '6:45 PM', event: 'Same Day Edit (SDE)',      note: 'A short film of today, cut and screened before the night ends.' },
+  { time: '7:00 PM', event: 'Last Song & Send-off',     note: 'One last dance together before we say goodnight.' },
 ]
 
 export default function Reception() {

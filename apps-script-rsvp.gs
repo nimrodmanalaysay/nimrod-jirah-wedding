@@ -43,7 +43,7 @@ var WEDDING = {
   address:       'Purok 4, P. Reyes Street, Barangay Sipat, Plaridel, Bulacan',
   mapLink:       'https://maps.app.goo.gl/XGPYFFmqYp1hdFQq6',
   calStartUTC:   '20261107T070000Z',   // 3:00 PM PHT (ceremony)
-  calEndUTC:     '20261107T113000Z'    // 7:30 PM PHT (end of reception program)
+  calEndUTC:     '20261107T110000Z'    // 7:00 PM PHT (end of reception program)
 };
 
 // Sends an email masked as the wedding inbox. Uses the verified "Send mail as"
