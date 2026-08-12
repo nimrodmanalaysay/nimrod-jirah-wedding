@@ -8,6 +8,19 @@ import './Entourage.css'
    No avatars or profile images — name + role only.
    ============================================================ */
 
+// ✏️ Parents of the couple — rendered as the first section on the page.
+//    ⚠️ Florencio was given to us as "Mother"; taken as Father, matching the
+//    bride's Mother/Father pairing. Correct here if that is wrong.
+//    Roles stay short because the column label already says whose parents.
+const brideParents = [
+  { name: 'Elizabeth Austin', role: 'Mother' },
+  { name: 'Jonathan Austin',  role: 'Father' },
+]
+const groomParents = [
+  { name: 'Rosemarie Manalaysay', role: 'Mother' },
+  { name: 'Florencio Manalaysay', role: 'Father' },
+]
+
 // Principal sponsors — Ninong (godfathers) and Ninang (godmothers).
 // ✏️ Order matches the printed invitation, and the two lists are rendered as
 //    side-by-side columns, so row N on the left pairs with row N on the right.
@@ -96,6 +109,34 @@ export default function Entourage() {
         title="Entourage"
         subtitle="The wonderful people walking with us"
       />
+
+      {/* ── Our Parents ── first section on the page */}
+      <Section icon="♡" label="Our Parents">
+        <div className="ent-party-grid">
+
+          {/* Bride's parents */}
+          <div className="ent-party-col">
+            <p className="ent-party-col__label">Parents of the Bride</p>
+            {brideParents.map((p, i) => (
+              <NameCard key={i} name={p.name} role={p.role} />
+            ))}
+          </div>
+
+          {/* Centre ornament */}
+          <div className="ent-party-center">
+            <span className="ent-party-ornament">❧</span>
+          </div>
+
+          {/* Groom's parents */}
+          <div className="ent-party-col">
+            <p className="ent-party-col__label">Parents of the Groom</p>
+            {groomParents.map((p, i) => (
+              <NameCard key={i} name={p.name} role={p.role} />
+            ))}
+          </div>
+
+        </div>
+      </Section>
 
       {/* ── Principal Sponsors ── */}
       <Section icon="✦" label="Principal Sponsors">
