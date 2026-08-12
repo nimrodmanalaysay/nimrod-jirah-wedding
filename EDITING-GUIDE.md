@@ -74,7 +74,7 @@ Open **`src/pages/FAQs.jsx`**. Each item is:
 ```
 Edit the question (`q`) and answer (`a`). Copy a whole `{ ... },` block to add a new question.
 
-> The contact email at the bottom of the FAQ page is currently a placeholder (`nimrodandjirah@email.com`). Update it to a real address.
+> The contact email at the bottom of the FAQ page is `nimrodjirahwedding@gmail.com`. If you change it, change the matching `FROM_ADDRESS` and `REPLY_TO` in `apps-script-rsvp.gs` too, so guests reply to the same inbox the confirmation emails come from.
 
 ### Gifts / payment QR codes
 Open **`src/pages/Gifts.jsx`**. Replace the QR images by saving your real QR pictures into `public/photos/` (as `gcash.jpg` and `bpi.jpg`), keeping the same file names — no code change needed.

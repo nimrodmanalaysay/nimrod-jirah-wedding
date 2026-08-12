@@ -7,11 +7,11 @@
  * Outgoing email is MASKED to look like it comes from the wedding name/inbox
  * instead of your personal address:
  *
- *     From:  Nimrod & Jirah Wedding <nimrodandjirahwedding@gmail.com>
+ *     From:  Nimrod & Jirah Wedding <nimrodjirahwedding@gmail.com>
  *
  * The script auto-picks the strongest mask available:
  *  • FULL mask (recommended): in YOUR Gmail → Settings ▸ Accounts and Import
- *    ▸ "Send mail as" ▸ add nimrodandjirahwedding@gmail.com and verify it
+ *    ▸ "Send mail as" ▸ add nimrodjirahwedding@gmail.com and verify it
  *    (a confirmation code is emailed to that inbox). Then guests see ONLY the
  *    wedding address — your personal address is hidden.
  *  • NAME mask (no setup): if that alias isn't added, emails still show the
@@ -27,8 +27,8 @@
 
 // ── Config ──────────────────────────────────────────────────
 var FROM_NAME    = 'Nimrod & Jirah Wedding';
-var FROM_ADDRESS = 'nimrodandjirahwedding@gmail.com'; // used only when added as a "Send mail as" alias
-var REPLY_TO     = 'nimrodandjirahwedding@gmail.com'; // replies go here, not your personal inbox
+var FROM_ADDRESS = 'nimrodjirahwedding@gmail.com'; // used only when added as a "Send mail as" alias
+var REPLY_TO     = 'nimrodjirahwedding@gmail.com'; // replies go here, not your personal inbox
 
 // Footer appended to guest/plus-one emails (plain-text fallback)
 var NO_REPLY_NOTE = '\n\n———\nThis is an automated message — please do not reply to this email.';

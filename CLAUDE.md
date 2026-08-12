@@ -76,7 +76,7 @@ Flow (`src/pages/rsvp/RsvpSteps.jsx`): name gate (with last-name disambiguation 
 - Primary guest and plus-one are written as **separate sheet rows**; the plus-one row is named `Plus One of <name>`.
 - POSTs are `mode: 'no-cors'` (fire-and-forget; resubmits upsert).
 - Progress is cached in the browser (`src/utils/rsvpCache.js`) so a refresh resumes the same step.
-- The Apps Script sends themed HTML confirmation emails (with an `.ics` calendar attachment when attending) via `GmailApp`, masked as "Nimrod & Jirah Wedding <nimrodandjirahwedding@gmail.com>".
+- The Apps Script sends themed HTML confirmation emails (with an `.ics` calendar attachment when attending) via `GmailApp`, masked as "Nimrod & Jirah Wedding <nimrodjirahwedding@gmail.com>" — the same address shown to guests at the bottom of the FAQ page.
 - Sheet headers: `ID | Timestamp | Invitee Name | Attendance | First Name | Last Name | Email | Notes | Advice | Plus One Name | Plus One Attendance`.
 - RSVP deadline shown to guests: **October 1, 2026**.
 
