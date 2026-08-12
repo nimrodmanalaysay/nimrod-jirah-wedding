@@ -115,8 +115,8 @@ export default function FAQs() {
         <p>Still have questions?</p>
         <p className="faqs-footer__contact">
           Reach out to us at{' '}
-          {/* ✏️ Replace with your real email */}
-          <a href="mailto:nimrodandjirah@email.com">nimrodandjirah@email.com</a>
+          {/* ✏️ Contact address shown to guests */}
+          <a href="mailto:nimrodjirahwedding@gmail.com">nimrodjirahwedding@gmail.com</a>
         </p>
       </div>
     </div>

@@ -2,21 +2,28 @@ import React, { useState, useEffect, useRef } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import './Navbar.css'
 
+/* Dress Code is deliberately NOT here — it is a top-level tab of its own in
+   NAV_ITEMS below. Its URL stays under /ceremony so existing links keep
+   working. */
 const CEREMONY_CHILDREN = [
   { label: 'Overview',         path: '/ceremony'            },
   { label: 'Wedding Service',  path: '/ceremony/wedding'    },
   { label: 'Reception',        path: '/ceremony/reception'  },
-  { label: 'Dress Code',       path: '/ceremony/dresscode'  },
 ]
 
-const FLAT_LINKS = [
-  { label: 'Home',      path: '/'          },
-  { label: 'Our Story', path: '/story'     },
-  { label: 'Entourage', path: '/entourage' },
-  { label: 'FAQs',      path: '/faqs'      },
-  { label: 'RSVP',      path: '/rsvp'      },
-  { label: 'Gallery',   path: '/gallery'   },
-  { label: 'Gifts',     path: '/gifts'     },
+/* ✏️ Single ordered list — the tabs render in exactly this order, on desktop
+   and in the mobile drawer. The entry marked `dropdown` is the Program group;
+   everything else is a plain link. */
+const NAV_ITEMS = [
+  { label: 'Home',       path: '/'                   },
+  { label: 'Our Story',  path: '/story'              },
+  { label: 'Program',    dropdown: true              },
+  { label: 'Entourage',  path: '/entourage'          },
+  { label: 'Dress Code', path: '/ceremony/dresscode' },
+  { label: 'Gallery',    path: '/gallery'            },
+  { label: 'Gifts',      path: '/gifts'              },
+  { label: 'RSVP',       path: '/rsvp'               },
+  { label: 'FAQs',       path: '/faqs'               },
 ]
 
 /* Brand monogram lives at /public/nj-monogram.svg (gold, transparent bg) */
@@ -29,7 +36,11 @@ function CeremonyDropdown({ closeMenu }) {
   const [open, setOpen]  = useState(false)
   const ref              = useRef(null)
   const { pathname }     = useLocation()
-  const isActive         = pathname.startsWith('/ceremony')
+  // Match only the three children. Dress Code still lives at
+  // /ceremony/dresscode but is its own top-level tab, so a
+  // startsWith('/ceremony') test — or NavLink's own non-`end` matching — would
+  // light this tab up while the guest is on Dress Code.
+  const isActive = CEREMONY_CHILDREN.some(c => c.path === pathname)
 
   useEffect(() => {
     function handler(e) {
@@ -44,7 +55,10 @@ function CeremonyDropdown({ closeMenu }) {
       {/* Rendered exactly like every other tab — same tag, same class */}
       <NavLink
         to="/ceremony"
-        className={({ isActive }) =>
+        /* Plain string, not the render prop — NavLink's own isActive would
+           shadow the precise check above and re-introduce the Dress Code
+           false positive. */
+        className={
           'navbar__link navbar__link--has-dropdown' +
           (isActive || open ? ' navbar__link--active' : '')
         }
@@ -87,6 +101,9 @@ export default function Navbar() {
 
   const isHome  = pathname === '/'
   const isLight = !scrolled && !isHome
+  // Same precise match as the desktop dropdown — excludes /ceremony/dresscode,
+  // which is now its own tab
+  const ceremonyActive = CEREMONY_CHILDREN.some(c => c.path === pathname)
 
   // Reset ceremony submenu whenever route changes
   useEffect(() => {
@@ -121,27 +138,18 @@ export default function Navbar() {
 
       {/* Desktop links — all items rendered uniformly */}
       <ul className="navbar__links">
-        {FLAT_LINKS.slice(0, 3).map(({ label, path }) => (
-          <li key={path}>
-            <NavLink to={path} end
-              className={({ isActive }) =>
-                'navbar__link' + (isActive ? ' navbar__link--active' : '')
-              }
-            >{label}</NavLink>
-          </li>
-        ))}
-
-        {/* Ceremony — same visual as other tabs, with dropdown */}
-        <CeremonyDropdown closeMenu={closeMenu} />
-
-        {FLAT_LINKS.slice(3).map(({ label, path }) => (
-          <li key={path}>
-            <NavLink to={path} end
-              className={({ isActive }) =>
-                'navbar__link' + (isActive ? ' navbar__link--active' : '')
-              }
-            >{label}</NavLink>
-          </li>
+        {NAV_ITEMS.map(({ label, path, dropdown }) => (
+          dropdown
+            ? <CeremonyDropdown key={label} closeMenu={closeMenu} />
+            : (
+              <li key={path}>
+                <NavLink to={path} end
+                  className={({ isActive }) =>
+                    'navbar__link' + (isActive ? ' navbar__link--active' : '')
+                  }
+                >{label}</NavLink>
+              </li>
+            )
         ))}
       </ul>
 
@@ -175,50 +183,46 @@ export default function Navbar() {
           >✕</button>
         </div>
 
-        {FLAT_LINKS.slice(0, 3).map(({ label, path }) => (
-          <NavLink key={path} to={path} end
-            className={({ isActive }) =>
-              'navbar__drawer-link' + (isActive ? ' active' : '')
-            }
-            onClick={closeMenu}
-          >{label}</NavLink>
-        ))}
+        {/* Same NAV_ITEMS order as desktop, with the Program group rendered
+            as an accordion in place */}
+        {NAV_ITEMS.map(({ label, path, dropdown }) => (
+          dropdown
+            ? (
+              <div className="navbar__drawer-group" key={label}>
+                <button
+                  className={`navbar__drawer-group-toggle ${ceremonyActive ? 'active' : ''}`}
+                  onClick={() => setCeremonyExpanded(o => !o)}
+                  aria-expanded={ceremonyExpanded}
+                >
+                  {label}
+                  <span className={`navbar__drawer-chevron ${ceremonyExpanded ? 'open' : ''}`}>›</span>
+                </button>
 
-        {/* Ceremony accordion in mobile drawer */}
-        <div className="navbar__drawer-group">
-          <button
-            className={`navbar__drawer-group-toggle ${pathname.startsWith('/ceremony') ? 'active' : ''}`}
-            onClick={() => setCeremonyExpanded(o => !o)}
-            aria-expanded={ceremonyExpanded}
-          >
-            Program
-            <span className={`navbar__drawer-chevron ${ceremonyExpanded ? 'open' : ''}`}>›</span>
-          </button>
-
-          {/* Submenu — outer div handles grid animation,
-              inner div provides the overflow:hidden boundary */}
-          <div className={`navbar__drawer-sub ${ceremonyExpanded ? 'navbar__drawer-sub--open' : ''}`}>
-            <div className="navbar__drawer-sub-inner">
-              {CEREMONY_CHILDREN.map(({ label, path }) => (
-                <NavLink key={path} to={path}
-                  end={path === '/ceremony'}
-                  className={({ isActive }) =>
-                    'navbar__drawer-sublink' + (isActive ? ' active' : '')
-                  }
-                  onClick={closeMenu}
-                >{label}</NavLink>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {FLAT_LINKS.slice(3).map(({ label, path }) => (
-          <NavLink key={path} to={path} end
-            className={({ isActive }) =>
-              'navbar__drawer-link' + (isActive ? ' active' : '')
-            }
-            onClick={closeMenu}
-          >{label}</NavLink>
+                {/* Submenu — outer div handles grid animation,
+                    inner div provides the overflow:hidden boundary */}
+                <div className={`navbar__drawer-sub ${ceremonyExpanded ? 'navbar__drawer-sub--open' : ''}`}>
+                  <div className="navbar__drawer-sub-inner">
+                    {CEREMONY_CHILDREN.map(({ label: subLabel, path: subPath }) => (
+                      <NavLink key={subPath} to={subPath}
+                        end={subPath === '/ceremony'}
+                        className={({ isActive }) =>
+                          'navbar__drawer-sublink' + (isActive ? ' active' : '')
+                        }
+                        onClick={closeMenu}
+                      >{subLabel}</NavLink>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )
+            : (
+              <NavLink key={path} to={path} end
+                className={({ isActive }) =>
+                  'navbar__drawer-link' + (isActive ? ' active' : '')
+                }
+                onClick={closeMenu}
+              >{label}</NavLink>
+            )
         ))}
       </div>
     </nav>

@@ -13,21 +13,24 @@ const VENUE_BG = '/photos/venue-hall.jpg'
    Sections: Hero, Countdown, Wedding Details, Explore cards
    ============================================================ */
 
+// ✏️ Cards render in exactly this order
 const explorePages = [
-  { label: 'Our Story', path: '/story', icon: '♡',
-    desc: 'From our first hello to forever — the journey that brought us here.' },
+  { label: 'Dress Code', path: '/ceremony/dresscode', icon: '❁',
+    desc: 'What to wear — the colour palette, and a few dos and don’ts.' },
+  { label: 'Program', path: '/ceremony', icon: '✝',
+    desc: 'The order of service and the reception flow — all the details.' },
   { label: 'Entourage', path: '/entourage', icon: '✦',
     desc: 'Meet the family and friends standing beside us on our big day.' },
-  { label: 'Ceremony', path: '/ceremony', icon: '✝',
-    desc: 'The order of service, reception flow, and dress code — all the details.' },
+  { label: 'Our Story', path: '/story', icon: '♡',
+    desc: 'From our first hello to forever — the journey that brought us here.' },
   { label: 'Gallery', path: '/gallery', icon: '◈',
     desc: 'A glimpse of our favorite moments together, captured in photos.' },
+  { label: 'Gifts', path: '/gifts', icon: '❧',
+    desc: 'Your presence is the greatest gift — but details are here if you wish.' },
   { label: 'RSVP', path: '/rsvp', icon: '✉',
     desc: 'Let us know you can make it — kindly reply by October 1, 2026.' },
   { label: 'FAQs', path: '/faqs', icon: '❖',
     desc: 'Quick answers about timing, parking, attire, and what to expect.' },
-  { label: 'Gifts', path: '/gifts', icon: '❧',
-    desc: 'Your presence is the greatest gift — but details are here if you wish.' },
 ]
 
 export default function Home() {
