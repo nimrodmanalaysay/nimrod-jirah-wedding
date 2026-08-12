@@ -6,6 +6,7 @@ import {
   findByFullName,
   findExistingRsvp,
   isPlusOneEligible,
+  isValidEmail,
   toTitleCase,
 } from '../../utils/rsvpValidation'
 import { INVITEE_SCRIPT_URL, RSVP_SCRIPT_URL } from './constants'
@@ -345,7 +346,11 @@ export function StepAttendance({ inviteeName, data, onChange, onNext }) {
    STEP 2 — Contact info
    ═══════════════════════════════════════════════════════════ */
 export function StepContact({ data, onChange, onNext, onBack }) {
-  const valid = data.firstName.trim() && data.lastName.trim() && data.email.trim()
+  const emailOk = isValidEmail(data.email)
+  const valid   = data.firstName.trim() && data.lastName.trim() && emailOk
+  // Only complain once there is enough typed to be a real attempt, so the error
+  // doesn't flash on the first keystroke
+  const showEmailError = data.email.trim().length > 3 && !emailOk
   useEnterKey(() => { if (valid) onNext() }, [valid])
   return (
     <div className="rsvp-step fade-up">
@@ -370,7 +375,14 @@ export function StepContact({ data, onChange, onNext, onBack }) {
           <label htmlFor="rsvp-em">Email Address *</label>
           <input id="rsvp-em" type="email" placeholder="you@example.com"
             value={data.email} onChange={e => onChange('email', e.target.value)}
-            autoComplete="email" />
+            autoComplete="email"
+            aria-invalid={showEmailError || undefined}
+            aria-describedby={showEmailError ? 'rsvp-em-error' : undefined} />
+          {showEmailError && (
+            <p className="rsvp-field__error" id="rsvp-em-error" role="alert">
+              Please check your email address — we’ll send your confirmation there.
+            </p>
+          )}
         </div>
       </div>
       <div className="rsvp-step__actions">
@@ -441,9 +453,13 @@ export function StepPersonal({ data, onChange, onNext, onBack, submitting }) {
    STEP 'plusone'
    ═══════════════════════════════════════════════════════════ */
 export function StepPlusOne({ inviteeName, data, onChange, onSubmit, onBack, submitting }) {
-  const bringingYes   = data.bringing === 'yes'
-  const canSubmit     = data.bringing === 'no' ||
-    (bringingYes && data.fullName.trim() && data.attendance)
+  const bringingYes = data.bringing === 'yes'
+  // Optional field, so blank is fine — but if it is filled in it has to be
+  // deliverable, otherwise the guest's invite silently goes nowhere
+  const poEmailOk        = !data.email.trim() || isValidEmail(data.email)
+  const showPoEmailError = data.email.trim().length > 3 && !poEmailOk
+  const canSubmit   = data.bringing === 'no' ||
+    (bringingYes && data.fullName.trim() && data.attendance && poEmailOk)
 
   return (
     <div className="rsvp-step fade-up">
@@ -497,7 +513,14 @@ export function StepPlusOne({ inviteeName, data, onChange, onSubmit, onBack, sub
                 value={data.email}
                 onChange={e => onChange('email', e.target.value)}
                 autoComplete="off"
+                aria-invalid={showPoEmailError || undefined}
+                aria-describedby={showPoEmailError ? 'po-email-error' : undefined}
               />
+              {showPoEmailError && (
+                <p className="rsvp-field__error" id="po-email-error" role="alert">
+                  Please check this email address, or leave it blank.
+                </p>
+              )}
             </div>
 
             <div className="rsvp-field">

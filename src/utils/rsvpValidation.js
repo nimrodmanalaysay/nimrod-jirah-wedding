@@ -136,6 +136,25 @@ export function isPlusOneEligible(value) {
   return v === 'true' || v === 'yes' || v === '1' || v === 'y'
 }
 
+// ── Email format ───────────────────────────────────────────────
+// The RSVP form only ever checked that the email field was non-empty, and the
+// input's type="email" never validates because nothing submits a real <form>.
+// So "asd" was accepted, the guest saw "a confirmation email has been sent to
+// asd", and the Apps Script's send failure was swallowed by its try/catch —
+// a silent dead end.
+//
+// Deliberately permissive about the local part (plus addressing, dots and
+// hyphens are all legitimate) while insisting on the parts whose absence means
+// mail can never be delivered: exactly one @, something either side of it, and
+// a dot-separated TLD of at least two letters.
+//   "asd"              → false      "a@b"              → false
+//   "a@b.c"            → false      "guest+tag@mail.co" → true
+export function isValidEmail(value) {
+  const v = String(value || '').trim()
+  if (!v || v.length > 254) return false
+  return /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[A-Za-z]{2,}$/.test(v)
+}
+
 // ── Title Case ─────────────────────────────────────────────────
 // Capitalizes the first letter of every word.
 // Used before sending any text data to the spreadsheet so all

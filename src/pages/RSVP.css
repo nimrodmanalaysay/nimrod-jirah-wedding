@@ -258,6 +258,14 @@
   color: var(--sage);
 }
 
+/* Inline field-level message. Quieter than .rsvp-error, which is a boxed
+   whole-step alert — this sits directly under the input it refers to. */
+.rsvp-field__error {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--btn-color);
+}
+
 .rsvp-field input,
 .rsvp-field textarea {
   background: var(--off-white);
@@ -280,6 +288,13 @@
 .rsvp-field input::placeholder,
 .rsvp-field textarea::placeholder {
   color: rgba(105,27,25,0.35);
+}
+
+/* Red-flag the offending input, not just the text below it. Placed after the
+   base rule above, which sets the `border` shorthand — specificity already
+   wins, but an override reads better after the thing it overrides. */
+.rsvp-field input[aria-invalid="true"] {
+  border-color: var(--btn-color);
 }
 
 .rsvp-error {
