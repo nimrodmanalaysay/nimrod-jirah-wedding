@@ -14,36 +14,46 @@ import './Gallery.css'
    every lazy-loaded photo would pop in at zero height and shove the
    rest of the grid around as you scroll. Get them from the file
    properties, or any value with the correct ratio will do.
+
+   The order is not the filename order. Several shots come from the
+   same sequence and looked like repeats sitting next to each other —
+   3 and 4 especially. This sequence was chosen so no two neighbours
+   resemble one another: comparing 16x16 greyscale versions, the most
+   alike adjacent pair now differs by 69.9 (mean abs difference per
+   pixel) against 27.9 for 3-next-to-4 in filename order, and 64.9
+   being the median across all 378 pairs. `id` stays tied to the
+   filename, so a row still tells you which file it is. Adding photos
+   is fine — just avoid dropping a near-twin beside its partner.
    ============================================================ */
 const photos = [
-  { id:  1, src: '/photos/PrenupPictures/1.jpg', w: 1067, h: 1600 },
-  { id:  2, src: '/photos/PrenupPictures/2.jpg', w: 1067, h: 1600 },
-  { id:  3, src: '/photos/PrenupPictures/3.jpg', w: 1600, h: 1067 },
-  { id:  4, src: '/photos/PrenupPictures/4.jpg', w: 1600, h: 1067 },
-  { id:  5, src: '/photos/PrenupPictures/5.jpg', w: 789, h: 1184 },
-  { id:  6, src: '/photos/PrenupPictures/6.jpg', w: 789, h: 1184 },
-  { id:  7, src: '/photos/PrenupPictures/7.jpg', w: 1444, h: 963 },
-  { id:  8, src: '/photos/PrenupPictures/8.jpg', w: 1600, h: 1067 },
-  { id:  9, src: '/photos/PrenupPictures/9.jpg', w: 1600, h: 1067 },
-  { id: 10, src: '/photos/PrenupPictures/10.jpg', w: 665, h: 997 },
-  { id: 11, src: '/photos/PrenupPictures/11.jpg', w: 1600, h: 1067 },
-  { id: 12, src: '/photos/PrenupPictures/12.jpg', w: 1600, h: 1067 },
-  { id: 13, src: '/photos/PrenupPictures/13.jpg', w: 1600, h: 1067 },
-  { id: 14, src: '/photos/PrenupPictures/14.jpg', w: 1600, h: 1066 },
   { id: 15, src: '/photos/PrenupPictures/15.jpg', w: 1600, h: 1067 },
-  { id: 16, src: '/photos/PrenupPictures/16.jpg', w: 1600, h: 900 },
-  { id: 17, src: '/photos/PrenupPictures/17.jpg', w: 1600, h: 900 },
-  { id: 18, src: '/photos/PrenupPictures/18.jpg', w: 1600, h: 900 },
-  { id: 19, src: '/photos/PrenupPictures/19.jpg', w: 1600, h: 900 },
-  { id: 20, src: '/photos/PrenupPictures/20.jpg', w: 900, h: 1600 },
-  { id: 21, src: '/photos/PrenupPictures/21.jpg', w: 900, h: 1600 },
-  { id: 22, src: '/photos/PrenupPictures/22.jpg', w: 1152, h: 780 },
+  { id:  5, src: '/photos/PrenupPictures/5.jpg', w: 789, h: 1184 },
   { id: 23, src: '/photos/PrenupPictures/23.jpg', w: 1600, h: 900 },
+  { id: 13, src: '/photos/PrenupPictures/13.jpg', w: 1600, h: 1067 },
   { id: 24, src: '/photos/PrenupPictures/24.jpg', w: 1600, h: 900 },
-  { id: 25, src: '/photos/PrenupPictures/25.jpg', w: 900, h: 1600 },
-  { id: 26, src: '/photos/PrenupPictures/26.jpg', w: 1600, h: 900 },
-  { id: 27, src: '/photos/PrenupPictures/27.jpg', w: 1600, h: 900 },
+  { id: 10, src: '/photos/PrenupPictures/10.jpg', w: 665, h: 997 },
+  { id: 16, src: '/photos/PrenupPictures/16.jpg', w: 1600, h: 900 },
+  { id: 20, src: '/photos/PrenupPictures/20.jpg', w: 900, h: 1600 },
   { id: 28, src: '/photos/PrenupPictures/28.jpg', w: 900, h: 1600 },
+  { id:  1, src: '/photos/PrenupPictures/1.jpg', w: 1067, h: 1600 },
+  { id:  4, src: '/photos/PrenupPictures/4.jpg', w: 1600, h: 1067 },
+  { id:  6, src: '/photos/PrenupPictures/6.jpg', w: 789, h: 1184 },
+  { id: 21, src: '/photos/PrenupPictures/21.jpg', w: 900, h: 1600 },
+  { id: 17, src: '/photos/PrenupPictures/17.jpg', w: 1600, h: 900 },
+  { id:  9, src: '/photos/PrenupPictures/9.jpg', w: 1600, h: 1067 },
+  { id:  7, src: '/photos/PrenupPictures/7.jpg', w: 1444, h: 963 },
+  { id:  2, src: '/photos/PrenupPictures/2.jpg', w: 1067, h: 1600 },
+  { id: 14, src: '/photos/PrenupPictures/14.jpg', w: 1600, h: 1066 },
+  { id: 12, src: '/photos/PrenupPictures/12.jpg', w: 1600, h: 1067 },
+  { id: 22, src: '/photos/PrenupPictures/22.jpg', w: 1152, h: 780 },
+  { id:  3, src: '/photos/PrenupPictures/3.jpg', w: 1600, h: 1067 },
+  { id: 11, src: '/photos/PrenupPictures/11.jpg', w: 1600, h: 1067 },
+  { id:  8, src: '/photos/PrenupPictures/8.jpg', w: 1600, h: 1067 },
+  { id: 25, src: '/photos/PrenupPictures/25.jpg', w: 900, h: 1600 },
+  { id: 18, src: '/photos/PrenupPictures/18.jpg', w: 1600, h: 900 },
+  { id: 27, src: '/photos/PrenupPictures/27.jpg', w: 1600, h: 900 },
+  { id: 19, src: '/photos/PrenupPictures/19.jpg', w: 1600, h: 900 },
+  { id: 26, src: '/photos/PrenupPictures/26.jpg', w: 1600, h: 900 },
 ]
 
 const altFor = i => `Nimrod and Jirah prenuptial photo ${i + 1} of ${photos.length}`
