@@ -9,35 +9,43 @@
   padding-bottom: 5rem;
 }
 
-/* ── Masonry ──
-   CSS multi-column rather than grid. The set is a mix of 19 landscape and
-   9 portrait photos, and columns pack uneven heights flush with no row-span
-   arithmetic and no JS measuring. Items flow down each column in turn, which
-   for a photo wall reads fine — and the lightbox opens whatever was clicked,
-   so visual order never misleads. */
+/* ── Square grid ──
+   Every tile the same size and every row aligned, which a masonry of 19
+   landscape and 9 portrait photos cannot do. auto-fill picks the column count
+   from the available width, so there are no per-breakpoint column rules to
+   keep in sync — just a minimum tile size.
+   Thumbnails are centre-cropped to fit; the lightbox shows each photo whole. */
 .gallery__grid {
-  columns: 3;
-  column-gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
   max-width: 1500px;
   margin: 3rem auto 0;
   padding: 0 1.5rem;
 }
 
-@media (max-width: 1200px) { .gallery__grid { columns: 2; } }
-@media (max-width: 640px)  {
-  .gallery__grid { columns: 1; column-gap: 0; padding: 0 1rem; margin-top: 2rem; }
+/* Tablets: the 240px minimum only fits 2 columns here, which leaves 350px
+   squares over 14 rows. Force 3 for a tile size closer to the desktop one. */
+@media (min-width: 641px) and (max-width: 1000px) {
+  .gallery__grid { grid-template-columns: repeat(3, 1fr); }
 }
-@media (min-width: 1700px) { .gallery__grid { columns: 4; } }
+
+/* Phones: two columns beats one 340px square per screen for scanning 28 photos */
+@media (max-width: 640px) {
+  .gallery__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+    padding: 0 1rem;
+    margin-top: 2rem;
+  }
+}
 
 .gallery__item {
-  /* break-inside is what stops a photo being sliced across two columns */
-  break-inside: avoid;
-  -webkit-column-break-inside: avoid;
-  page-break-inside: avoid;
   position: relative;
   display: block;
   width: 100%;
-  margin: 0 0 1rem;
+  aspect-ratio: 1;          /* the square */
+  margin: 0;
   padding: 0;
   border: none;
   border-radius: 3px;
