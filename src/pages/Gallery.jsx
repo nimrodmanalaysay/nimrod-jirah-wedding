@@ -8,11 +8,12 @@ import './Gallery.css'
    ✏️ To change the photos: drop files into
       /public/photos/PrenupPictures/ and edit the array below.
 
-   `w` and `h` are each file's real pixel dimensions. The grid is
-   square so they no longer drive the layout, but they stay as the
-   img's intrinsic-size hint and as a record of what is actually
-   served — `npm run optimize:photos` prints this array with the
-   correct values after it resizes anything.
+   `w` and `h` are the image's real pixel dimensions. They are not
+   decorative — they set each tile's aspect-ratio so the masonry
+   reserves the right space *before* the image loads. Without them
+   every lazy-loaded photo would pop in at zero height and shove the
+   rest of the grid around as you scroll. Get them from the file
+   properties, or any value with the correct ratio will do.
    ============================================================ */
 const photos = [
   { id:  1, src: '/photos/PrenupPictures/1.jpg', w: 1067, h: 1600 },
@@ -111,16 +112,16 @@ export default function Gallery() {
         subtitle="A glimpse of our prenuptial story"
       />
 
-      {/* Uniform square grid. Every tile is the same size and every row lines
-          up, which a masonry of 19 landscape and 9 portrait photos can't do.
-          The cost is that thumbnails are centre-cropped — the lightbox shows
-          each photo whole and uncropped, so nothing is actually lost. */}
+      {/* Masonry. CSS columns rather than a grid: the photos are a mix of
+          19 landscape and 9 portrait, and columns pack mixed heights with no
+          gaps and no row-span arithmetic. */}
       <div className="gallery__grid">
         {photos.map((photo, index) => (
           <button
             key={photo.id}
             type="button"
             className="gallery__item"
+            style={{ aspectRatio: `${photo.w} / ${photo.h}` }}
             onClick={() => setLightbox(index)}
             aria-label={`Open ${altFor(index)}`}
           >
