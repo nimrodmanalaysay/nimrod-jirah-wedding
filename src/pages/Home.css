@@ -19,7 +19,12 @@
     #2a1a15 100%
   );
   overflow: hidden;
-  padding: 0 1.5rem;
+  /* Top padding clears the fixed navbar. Without it the hero centres its
+     content in the whole viewport, including the ~78px the navbar covers, so
+     "The Wedding of" sat only ~52px below the nav on an 800px-tall laptop.
+     Only the top is padded, deliberately — adding matching bottom padding
+     would re-centre the block and cancel the shift out. */
+  padding: 4.5rem 1.5rem 0;
 }
 
 /* Subtle decorative overlay pattern */
@@ -57,6 +62,14 @@
   line-height: 0.95;
   color: var(--white);
   letter-spacing: -0.01em;
+}
+
+/* Short viewports (most laptops) — at the full scale the three name lines are
+   596px tall, which with the navbar cleared leaves the CTA buttons overlapping
+   the scroll arrow. Easing the type back buys the breathing room; taller
+   screens keep the full 9rem. */
+@media (max-height: 860px) {
+  .hero__names { font-size: clamp(3.4rem, 9vw, 6.5rem); }
 }
 
 .hero__amp {
