@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { Analytics } from '@vercel/analytics/react'
 
 // Layout
@@ -12,7 +12,6 @@ import Story          from './pages/Story'
 import Entourage      from './pages/Entourage'
 import RSVP           from './pages/RSVP'
 import Gallery        from './pages/Gallery'
-import Ceremony       from './pages/Ceremony'
 import WeddingCeremony from './pages/WeddingCeremony'
 import Reception      from './pages/Reception'
 import DressCode      from './pages/DressCode'
@@ -37,8 +36,10 @@ export default function App() {
           <Route path="/entourage"           element={<Entourage />} />
           <Route path="/rsvp"                element={<RSVP />} />
           <Route path="/gallery"             element={<Gallery />} />
-          {/* Ceremony hub + sub-pages */}
-          <Route path="/ceremony"            element={<Ceremony />} />
+          {/* Program sub-pages. The hub that used to live at /ceremony is gone;
+              the path redirects to the first sub-page so links already shared
+              with guests, and any bookmarks, still land somewhere. */}
+          <Route path="/ceremony"            element={<Navigate to="/ceremony/wedding" replace />} />
           <Route path="/ceremony/wedding"    element={<WeddingCeremony />} />
           <Route path="/ceremony/reception"  element={<Reception />} />
           <Route path="/ceremony/dresscode"  element={<DressCode />} />

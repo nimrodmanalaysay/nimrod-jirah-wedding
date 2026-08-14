@@ -6,9 +6,8 @@ import './Navbar.css'
    NAV_ITEMS below. Its URL stays under /ceremony so existing links keep
    working. */
 const CEREMONY_CHILDREN = [
-  { label: 'Overview',         path: '/ceremony'            },
-  { label: 'Wedding Service',  path: '/ceremony/wedding'    },
-  { label: 'Reception',        path: '/ceremony/reception'  },
+  { label: 'Ceremony',   path: '/ceremony/wedding'   },
+  { label: 'Reception',  path: '/ceremony/reception' },
 ]
 
 /* ✏️ Single ordered list — the tabs render in exactly this order, on desktop
@@ -54,7 +53,10 @@ function CeremonyDropdown({ closeMenu }) {
     <li className="navbar__dropdown-wrap" ref={ref}>
       {/* Rendered exactly like every other tab — same tag, same class */}
       <NavLink
-        to="/ceremony"
+        /* Points at the first sub-page now that the /ceremony hub is gone.
+           The click is prevented anyway, but this keeps the href real for
+           middle-click, "open in new tab" and screen readers. */
+        to={CEREMONY_CHILDREN[0].path}
         /* Plain string, not the render prop — NavLink's own isActive would
            shadow the precise check above and re-introduce the Dress Code
            false positive. */
@@ -77,7 +79,7 @@ function CeremonyDropdown({ closeMenu }) {
             <li key={path}>
               <NavLink
                 to={path}
-                end={path === '/ceremony'}
+                end
                 className={({ isActive }) =>
                   'navbar__dropdown-item' + (isActive ? ' active' : '')
                 }
@@ -204,7 +206,7 @@ export default function Navbar() {
                   <div className="navbar__drawer-sub-inner">
                     {CEREMONY_CHILDREN.map(({ label: subLabel, path: subPath }) => (
                       <NavLink key={subPath} to={subPath}
-                        end={subPath === '/ceremony'}
+                        end
                         className={({ isActive }) =>
                           'navbar__drawer-sublink' + (isActive ? ' active' : '')
                         }

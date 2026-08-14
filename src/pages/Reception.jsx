@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import './CeremonyPages.css'
 import { MAP_LINK, MAP_EMBED } from '../utils/venue'
 
@@ -36,7 +35,8 @@ export default function Reception() {
   return (
     <div className="cp-page">
       <div className="cp-breadcrumb">
-        <Link to="/ceremony">Program</Link>
+        {/* Plain text — the /ceremony hub page no longer exists */}
+        <span>Program</span>
         <span>›</span>
         <span>Reception</span>
       </div>

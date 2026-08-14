@@ -31,7 +31,9 @@ If deploying to **GitHub Pages**, `base` must be `/nimrod-jirah-wedding/` (not `
 
 ## Routes (`src/App.jsx`)
 
-`/` Home · `/story` · `/entourage` · `/rsvp` · `/gallery` · `/ceremony` (+ `/ceremony/wedding`, `/ceremony/reception`, `/ceremony/dresscode`) · `/faqs` · `/gifts`. The navbar labels the `/ceremony` group **"Program"**.
+`/` Home · `/story` · `/entourage` · `/rsvp` · `/gallery` · `/ceremony/wedding` · `/ceremony/reception` · `/ceremony/dresscode` · `/faqs` · `/gifts`.
+
+The navbar has a **"Program"** dropdown holding *Ceremony* (`/ceremony/wedding`) and *Reception*; **Dress Code** is a separate top-level tab despite living under `/ceremony/`. There is no page at `/ceremony` — it redirects to `/ceremony/wedding`, so links shared before the hub was removed still work.
 
 ## Where content lives (edit points)
 

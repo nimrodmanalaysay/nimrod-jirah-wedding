@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import './CeremonyPages.css'
 
 // ✏️ Replace /public/photos/weddingoutfit.jpg to change the attire guide image
@@ -41,7 +40,8 @@ export default function DressCode() {
   return (
     <div className="cp-page">
       <div className="cp-breadcrumb">
-        <Link to="/ceremony">Program</Link>
+        {/* Plain text — the /ceremony hub page no longer exists */}
+        <span>Program</span>
         <span>›</span>
         <span>Dress Code</span>
       </div>

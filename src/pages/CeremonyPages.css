@@ -35,7 +35,8 @@
    Replaces the old full-width burgundy .cp-hero band on the Program
    sub-pages. Sits directly on the page background, so it keeps each
    page's <h1> and its date/subtitle without reintroducing a banner.
-   The Overview page uses the separate <PageHero> component instead. */
+   Pages outside this group use the <PageHero> component, which is
+   styled to match. */
 .cp-pagetitle {
   text-align: center;
   padding: 2.8rem 1.5rem 0;

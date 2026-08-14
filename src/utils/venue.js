@@ -1,6 +1,6 @@
 /* ============================================================
    Shared venue + map details — edit here to update everywhere
-   (Home, Wedding Service, Reception).
+   (Home, Ceremony, Reception).
 
    Grass Garden Resort, Plaridel, Bulacan — 14.8965561, 120.8337575
    ============================================================ */

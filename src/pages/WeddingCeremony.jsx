@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import './CeremonyPages.css'
 import { MAP_LINK, MAP_EMBED } from '../utils/venue'
 
@@ -27,10 +26,12 @@ export default function WeddingCeremony() {
   return (
     <div className="cp-page">
       {/* Breadcrumb */}
+      {/* "Program" is plain text, not a link — it is the navbar group, and the
+          hub page it used to point at no longer exists. */}
       <div className="cp-breadcrumb">
-        <Link to="/ceremony">Program</Link>
+        <span>Program</span>
         <span>›</span>
-        <span>Wedding Service</span>
+        <span>Ceremony</span>
       </div>
 
       {/* ✏️ Page title — edit the eyebrow / title / date here */}

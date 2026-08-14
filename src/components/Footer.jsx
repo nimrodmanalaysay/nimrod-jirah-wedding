@@ -18,12 +18,14 @@ const columns = [
     ],
   },
   {
-    heading: 'Ceremony',
+    /* Heading is "Program" to match the navbar group — with Overview gone the
+       first link is "Ceremony", and a "Ceremony" heading above it read as a
+       stutter. */
+    heading: 'Program',
     links: [
-      { label: 'Overview',          path: '/ceremony' },
-      { label: 'Wedding Ceremony',  path: '/ceremony/wedding' },
-      { label: 'Reception',         path: '/ceremony/reception' },
-      { label: 'Dress Code',        path: '/ceremony/dresscode' },
+      { label: 'Ceremony',   path: '/ceremony/wedding' },
+      { label: 'Reception',  path: '/ceremony/reception' },
+      { label: 'Dress Code', path: '/ceremony/dresscode' },
     ],
   },
   {

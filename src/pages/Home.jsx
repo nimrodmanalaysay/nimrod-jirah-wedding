@@ -17,7 +17,7 @@ const VENUE_BG = '/photos/venue-hall.jpg'
 const explorePages = [
   { label: 'Dress Code', path: '/ceremony/dresscode', icon: '❁',
     desc: 'What to wear — the colour palette, and a few dos and don’ts.' },
-  { label: 'Program', path: '/ceremony', icon: '✝',
+  { label: 'Program', path: '/ceremony/wedding', icon: '✝',
     desc: 'The order of service and the reception flow — all the details.' },
   { label: 'Entourage', path: '/entourage', icon: '✦',
     desc: 'Meet the family and friends standing beside us on our big day.' },

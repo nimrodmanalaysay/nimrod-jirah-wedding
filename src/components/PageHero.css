@@ -4,10 +4,9 @@
 
    The burgundy fill and gold bottom rule were removed, so the text
    colours had to change with them: gold/white were chosen to read
-   against burgundy and would be invisible on --off-white. These now
-   match .cp-pagetitle in CeremonyPages.css, which keeps all four
-   Program pages consistent (Overview uses this component, its three
-   siblings use .cp-pagetitle).
+   against burgundy and would be invisible on --off-white. These are
+   kept in step with .cp-pagetitle in CeremonyPages.css, which the
+   Program pages use, so the two title treatments look the same.
    ============================================================ */
 .page-hero {
   width: 100%;
