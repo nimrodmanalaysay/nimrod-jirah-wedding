@@ -23,8 +23,10 @@
      content in the whole viewport, including the ~78px the navbar covers, so
      "The Wedding of" sat only ~52px below the nav on an 800px-tall laptop.
      Only the top is padded, deliberately — adding matching bottom padding
-     would re-centre the block and cancel the shift out. */
-  padding: 4.5rem 1.5rem 0;
+     would re-centre the block and cancel the shift out.
+     7rem is close to the ceiling on a 800px-tall screen: the block is 568px, so
+     much more and the CTA buttons start running out of room underneath. */
+  padding: 7rem 1.5rem 0;
 }
 
 /* Subtle decorative overlay pattern */
@@ -51,7 +53,10 @@
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 1.5rem;
+  /* Tightened from 1.5rem. Together with .hero__date below this takes 28px off
+     the block's height, which is what lets .hero sit lower without the buttons
+     crowding the bottom — and it leaves the names at full size. */
+  margin-bottom: 1rem;
 }
 
 /* Couple names — large elegant serif */
@@ -76,7 +81,7 @@
   letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--gold);
-  margin: 1.5rem 0 2.5rem;
+  margin: 1rem 0 1.75rem;   /* tightened from 1.5rem / 2.5rem — see .hero__pre */
 }
 
 .hero__cta {
