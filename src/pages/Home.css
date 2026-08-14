@@ -64,14 +64,6 @@
   letter-spacing: -0.01em;
 }
 
-/* Short viewports (most laptops) — at the full scale the three name lines are
-   596px tall, which with the navbar cleared leaves the CTA buttons overlapping
-   the scroll arrow. Easing the type back buys the breathing room; taller
-   screens keep the full 9rem. */
-@media (max-height: 860px) {
-  .hero__names { font-size: clamp(3.4rem, 9vw, 6.5rem); }
-}
-
 .hero__amp {
   color: var(--gold);
   font-style: italic;
@@ -100,6 +92,17 @@
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
+}
+
+/* Short *and* wide — i.e. laptops. There the names hit the full 9rem, making
+   the three lines 596px, so once the navbar is cleared nothing is left for this
+   arrow and it lands under the CTA buttons. Drop the arrow rather than shrink
+   the names: it is decorative, and a hero filling the screen already reads as
+   scrollable.
+   The min-width matters. Phones are also under 860px tall, but their names
+   clamp down to ~64px, which leaves the arrow plenty of room — so they keep it. */
+@media (max-height: 860px) and (min-width: 700px) {
+  .hero__scroll-hint { display: none; }
 }
 .hero__scroll-hint span {
   display: block;
