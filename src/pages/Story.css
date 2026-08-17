@@ -175,9 +175,16 @@
   background-size: cover;
   background-position: center;
   transform: scale(1.16);         /* resting (pre-entrance) */
+  /* Chapters hold several photos stacked here; only .is-current shows, and the
+     rest cross-fade in behind it as the chapter cycles. */
+  opacity: 0;
+  transition: opacity 1.1s ease;
 }
-/* slow Ken Burns drift once the scene lands */
-.reel.in-view .reel__bg {
+.reel__bg.is-current { opacity: 1; }
+
+/* slow Ken Burns drift once the scene lands — on the visible photo only, or
+   every layer would burn through its animation while hidden */
+.reel.in-view .reel__bg.is-current {
   animation: kenburns 14s ease-out forwards;
 }
 @keyframes kenburns {
@@ -341,5 +348,8 @@
 @media (prefers-reduced-motion: reduce) {
   .film__grain { display: none; }
   .film__cue-line { animation: none; }
-  .reel.in-view .reel__bg { animation: none; transform: scale(1.04); }
+  .reel.in-view .reel__bg,
+  .reel.in-view .reel__bg.is-current { animation: none; transform: scale(1.04); }
+  /* The JS also stops advancing chapters here, so the first photo just holds */
+  .reel__bg { transition: none; }
 }
