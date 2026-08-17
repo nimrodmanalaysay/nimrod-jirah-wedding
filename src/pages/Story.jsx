@@ -24,9 +24,10 @@ import './Story.css'
       step writes slugged copies instead.
    ============================================================ */
 
-// How long each photo holds before the next. 2500 so the longest chapter
-// (7 photos) gets through in ~18s rather than ~32s.
-const SLIDE_MS = 2500
+// Seconds of travel per photo. The strip's animation-duration is this times the
+// chapter's frame count, so a 7-photo chapter takes longer than a 2-photo one
+// but both move at the same speed.
+const SECONDS_PER_FRAME = 4.5
 
 const scenes = [
   {
@@ -124,21 +125,8 @@ export default function Story() {
     return () => observer.disconnect()
   }, [])
 
-  // Cross-fade the photos of whichever scene is on screen. One shared counter
-  // is enough — only the active scene is visible, and it resets on every scene
-  // change so each chapter starts from its first photo.
-  const [slide, setSlide] = useState(0)
-  useEffect(() => {
-    setSlide(0)
-    const count = scenes[active - 1]?.images.length ?? 0
-    if (count < 2) return
-    // Deliberately NOT gated on prefers-reduced-motion. Advancing is how the
-    // other photos in a chapter are seen at all — gating it here meant anyone
-    // with reduced motion on saw photo 1 and never the remaining 17. The CSS
-    // drops the cross-fade for them instead, so photos cut rather than blend.
-    const t = setInterval(() => setSlide(i => i + 1), SLIDE_MS)
-    return () => clearInterval(t)
-  }, [active])
+  // No slide timer any more — the strip scrolls continuously in CSS, so every
+  // photo in a chapter passes through on its own.
 
   // Warm the next chapter's first photo so arriving at it isn't a black frame
   useEffect(() => {
@@ -182,28 +170,35 @@ export default function Story() {
           data-index={i + 1}
           ref={register}
         >
-          {/* Film strip. The perforated rails are drawn by CSS on .reel__strip;
-              the gate holds every photo of the chapter as a stacked frame, and
-              only the current one shows. Images are <img> with object-fit:
-              contain, so nothing is cropped and portraits stay portrait. */}
-          <div className="reel__strip" aria-hidden="true">
-            <div className="reel__gate">
-              {s.images.map((src, n) => {
-                const current = active === i + 1 ? slide % s.images.length : 0
-                return (
-                  <figure
-                    key={src}
-                    className={`reel__frame ${n === current ? 'is-current' : ''}`}
-                  >
-                    <img
-                      src={src}
-                      alt={n === 0 ? s.imageAlt : ''}
-                      loading={i === 0 && n === 0 ? 'eager' : 'lazy'}
-                      decoding="async"
-                    />
-                  </figure>
-                )
-              })}
+          {/* Film strip. Perforated rails run along the top and bottom edges
+              (CSS ::before/::after on .reel__strip), and the track inside slides
+              right to left so the chapter's frames pass through continuously —
+              no timed swapping, every photo is seen as it goes by.
+
+              The frame list is rendered twice. The animation travels exactly
+              -50%, which lands the second copy where the first started, so the
+              loop repeats with no visible jump. `aria-hidden` because the second
+              copy would otherwise be announced as duplicate content; the chapter
+              text carries the meaning. */}
+          <div className="reel__strip">
+            <div
+              className="reel__track"
+              style={{ animationDuration: `${s.images.length * SECONDS_PER_FRAME}s` }}
+            >
+              {[...s.images, ...s.images].map((src, n) => (
+                <figure
+                  className="reel__frame"
+                  key={`${src}-${n}`}
+                  aria-hidden={n >= s.images.length ? 'true' : undefined}
+                >
+                  <img
+                    src={src}
+                    alt={n === 0 ? s.imageAlt : ''}
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                  />
+                </figure>
+              ))}
             </div>
           </div>
 

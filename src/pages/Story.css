@@ -169,98 +169,84 @@
    SCENES — cinematic entrance fires on .in-view
    ════════════════════════════════════════════════════════════ */
 /* ── Film strip ──
-   The scene is a strip of film: two perforated rails with the frame between
-   them. Photos are NOT cropped to fill the screen — each sits in the gate at
-   its own aspect ratio, so portraits stay portrait and landscapes stay
-   landscape. */
-.reel__strip {
-  position: absolute;
-  left: 50%;
-  top: 6vh;
-  transform: translateX(-50%);
-  height: 56vh;
-  /* explicit width, not max-width: this box is absolutely positioned, so with
-     only a max it shrink-wraps its content — and the frames inside are
-     position:absolute, contributing no width, which collapsed the strip to the
-     width of its own padding */
-  width: min(92vw, 900px);
-  display: flex;
-  align-items: center;
-  /* rail width either side; the holes are painted into these gutters */
-  padding: 0 22px;
-  background: #100a09;
-  box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+   35mm run edge to edge: black film base, a perforated rail along the top and
+   another along the bottom, frames in a row between them with the base showing
+   through as the frame line. The whole run slides right to left, so every photo
+   in the chapter passes through — nothing is cropped and portraits stay
+   portrait, they just take a narrower frame than the landscapes. */
+:root {
+  --rail: 44px;      /* height of one perforated rail */
+  --frame-gap: 12px; /* black frame line between frames */
 }
 
-/* Perforations — one repeating-gradient per rail, so no extra elements */
+.reel__strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 6vh;
+  height: 56vh;
+  overflow: hidden;                /* the run is wider than the screen */
+  background: #0b0a0a;
+  /* rails sit in this padding, frames in what is left */
+  padding: var(--rail) 0;
+  box-shadow: 0 26px 60px rgba(0,0,0,0.5);
+}
+
+/* Perforations. An inline SVG tile rather than a repeating-linear-gradient,
+   because a gradient can only make square holes and real perfs are rounded. */
 .reel__strip::before,
 .reel__strip::after {
   content: '';
   position: absolute;
-  top: 0; bottom: 0;
-  width: 22px;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0 9px,
-    rgba(240,232,220,0.82) 9px 23px,
-    transparent 23px 32px
-  );
-  background-size: 12px 32px;
-  background-position: center top;
-  background-repeat: repeat-y;
+  left: 0;
+  right: 0;
+  height: var(--rail);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='44'%3E%3Crect x='16' y='9' width='40' height='26' rx='7' fill='%23ece7dd'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-position: left center;
 }
-.reel__strip::before { left: 5px; }
-.reel__strip::after  { right: 5px; }
+.reel__strip::before { top: 0; }
+.reel__strip::after  { bottom: 0; }
 
-/* The gate — the opening the frame shows through */
-.reel__gate {
-  position: relative;
-  /* flex:1 is load-bearing — the frames inside are position:absolute, so with
-     auto width this flex item measures 0 and the gate never opens */
-  flex: 1;
-  min-width: 0;
+/* The run itself. margin-right on each frame rather than `gap`: the loop
+   travels exactly -50%, and with `gap` a duplicated list has 2n-1 gaps, so half
+   its width lands half a gap short and the seam visibly jumps. Per-frame margin
+   makes every frame the same total width, so -50% is exact. */
+.reel__track {
+  display: flex;
+  align-items: center;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #050303;
-  /* clips the incoming frame while it is still above the gate, so the advance
-     reads as film moving past an opening rather than an image flying in */
-  overflow: hidden;
+  width: max-content;
+  animation-name: filmRoll;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  /* duration is set per scene in Story.jsx, scaled to the frame count so the
+     travel speed stays even across chapters of different lengths */
+}
+@keyframes filmRoll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
-/* Frames are stacked; only .is-current is shown */
 .reel__frame {
-  position: absolute;
-  inset: 0;
-  margin: 0;
+  margin: 0 var(--frame-gap) 0 0;
+  height: 100%;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  visibility: hidden;
+  background: #050403;
+  border-radius: 10px;
+  overflow: hidden;
 }
 .reel__frame img {
   display: block;
-  /* the whole point: never crop, never stretch */
-  max-width: 100%;
-  max-height: 100%;
+  /* height-led so every frame is the same height and the width follows the
+     photo — this is what keeps aspect ratios untouched */
+  height: 100%;
   width: auto;
-  height: auto;
+  max-width: none;
   object-fit: contain;
-}
-.reel__frame.is-current { opacity: 1; visibility: visible; }
-
-/* Film advance — the incoming frame is pulled down through the gate the way a
-   projector claw moves the strip, with a dark beat as the frame line passes.
-   Replaces the old Ken Burns zoom, which cropped and drifted the image. */
-.reel.in-view .reel__frame.is-current {
-  animation: filmAdvance 0.42s cubic-bezier(0.25, 0.1, 0.25, 1) both;
-}
-@keyframes filmAdvance {
-  0%   { opacity: 0; transform: translateY(-104%); }
-  42%  { opacity: 0.35; }
-  100% { opacity: 1; transform: translateY(0); }
 }
 /* kenburns and .reel__scrim were dropped with the full-bleed background: the
    zoom cropped the photo, and the scrim existed to darken a photo sitting
@@ -399,9 +385,20 @@
    The old rule centred the text vertically, which now lands it on top of the
    film strip. */
 @media (max-width: 1000px) {
-  .reel__strip  { height: 50vh; top: 8vh; padding: 0 18px; }
+  /* Shorter strip, and slimmer rails so the frame keeps most of the height.
+     --rail drives both the padding and the SVG tile height, so overriding the
+     variable is enough — the previous `padding: 0 18px` here was left from the
+     side-rail layout and zeroed the top/bottom rail space entirely. */
+  .reel__strip {
+    height: 50vh;
+    top: 8vh;
+    padding: 30px 0;
+  }
   .reel__strip::before,
-  .reel__strip::after { width: 18px; }
+  .reel__strip::after {
+    height: 30px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='52' height='30'%3E%3Crect x='12' y='7' width='28' height='17' rx='5' fill='%23ece7dd'/%3E%3C/svg%3E");
+  }
   .reel__content { top: 60vh; bottom: 2vh; }
 }
 
@@ -414,13 +411,18 @@
 /* ════════════════════════════════════════════════════════════
    REDUCED MOTION
    Keep the snap + entrance fades (so it still feels cinematic),
-   but drop the looping grain, the cue pulse, and the film-advance
-   pull-down in favour of a straight cut.
+   but drop the looping grain and the cue pulse.
    ════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   .film__grain { display: none; }
   .film__cue-line { animation: none; }
-  /* Chapters still advance — that is how the rest of a chapter's photos are
-     seen at all — the frame just cuts instead of being pulled down. */
-  .reel.in-view .reel__frame.is-current { animation: none; transform: none; }
+  /* Stop the run, but make the strip swipeable instead — otherwise only the
+     frames that happen to be on screen would ever be reachable. */
+  .reel__track { animation: none; }
+  .reel__strip {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .reel__frame { scroll-snap-align: center; }
 }
