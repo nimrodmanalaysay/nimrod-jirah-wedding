@@ -183,17 +183,29 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: 6vh;
-  height: 56vh;
+  /* Sits behind the chapter text as ambient background, not as an object in
+     front of it — hence no solid base, no shadow, and a soft edge. */
+  top: 20vh;
+  height: 48vh;
+  z-index: 0;
   overflow: hidden;                /* the run is wider than the screen */
-  background: #0b0a0a;
-  /* rails sit in this padding, frames in what is left */
+  background: transparent;
   padding: var(--rail) 0;
-  box-shadow: 0 26px 60px rgba(0,0,0,0.5);
+  /* fade out at all four edges so the run has no hard boundary and reads as
+     something passing behind the page rather than a panel dropped onto it */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 14%, #000 86%, transparent),
+    linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 14%, #000 86%, transparent),
+    linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  mask-composite: intersect;
 }
 
 /* Perforations. An inline SVG tile rather than a repeating-linear-gradient,
-   because a gradient can only make square holes and real perfs are rounded. */
+   because a gradient can only make square holes and real perfs are rounded.
+   Low fill-opacity so the sprockets register without drawing the eye. */
 .reel__strip::before,
 .reel__strip::after {
   content: '';
@@ -201,7 +213,7 @@
   left: 0;
   right: 0;
   height: var(--rail);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='44'%3E%3Crect x='16' y='9' width='40' height='26' rx='7' fill='%23ece7dd'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='44'%3E%3Crect x='16' y='9' width='40' height='26' rx='7' fill='%23ece7dd' fill-opacity='0.16'/%3E%3C/svg%3E");
   background-repeat: repeat-x;
   background-position: left center;
 }
@@ -235,8 +247,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #050403;
-  border-radius: 10px;
+  /* no frame fill — the scene's own black shows through as the frame line */
+  background: transparent;
+  border-radius: 4px;
   overflow: hidden;
 }
 .reel__frame img {
@@ -247,6 +260,8 @@
   width: auto;
   max-width: none;
   object-fit: contain;
+  /* held back so the chapter text stays the thing being read */
+  opacity: 0.42;
 }
 /* kenburns and .reel__scrim were dropped with the full-bleed background: the
    zoom cropped the photo, and the scrim existed to darken a photo sitting
@@ -266,19 +281,26 @@
 .reel.in-view .reel__fade { opacity: 0; }
 
 /* ── Title-card text ── */
-/* Sits below the film strip, not over it. The strip runs 6vh–62vh, so the text
-   starts at 64vh — overlaying it would cover the photo the strip exists to
-   show. */
+/* Back over the strip, now that the film is faint background rather than the
+   subject. Centred, with its own soft darkening so the copy stays legible
+   wherever a frame happens to be behind it. */
 .reel__content {
   position: absolute;
   left: 0; right: 0;
-  top: 64vh;
-  bottom: 2vh;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 3;
   padding: 0 2rem;
   text-align: center;
   color: #fff;
-  overflow: hidden;
+}
+.reel__content::before {
+  content: '';
+  position: absolute;
+  inset: -8vh -10vw;
+  z-index: -1;
+  background: radial-gradient(ellipse at center, rgba(10,6,5,0.72) 0%, rgba(10,6,5,0.35) 55%, transparent 78%);
+  pointer-events: none;
 }
 .reel__content > * {
   text-shadow: 0 2px 40px rgba(0,0,0,0.6);
@@ -390,16 +412,17 @@
      variable is enough — the previous `padding: 0 18px` here was left from the
      side-rail layout and zeroed the top/bottom rail space entirely. */
   .reel__strip {
-    height: 50vh;
-    top: 8vh;
+    height: 46vh;
+    top: 22vh;
     padding: 30px 0;
   }
   .reel__strip::before,
   .reel__strip::after {
     height: 30px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='52' height='30'%3E%3Crect x='12' y='7' width='28' height='17' rx='5' fill='%23ece7dd'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='52' height='30'%3E%3Crect x='12' y='7' width='28' height='17' rx='5' fill='%23ece7dd' fill-opacity='0.16'/%3E%3C/svg%3E");
   }
-  .reel__content { top: 60vh; bottom: 2vh; }
+  /* stays centred over the strip — the desktop rule already does that, so no
+     top/bottom override here any more */
 }
 
 @media (max-width: 600px) {
