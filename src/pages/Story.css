@@ -416,13 +416,16 @@
 @media (prefers-reduced-motion: reduce) {
   .film__grain { display: none; }
   .film__cue-line { animation: none; }
-  /* Stop the run, but make the strip swipeable instead — otherwise only the
-     frames that happen to be on screen would ever be reachable. */
-  .reel__track { animation: none; }
+  /* The run is NOT stopped here. It is the only way the rest of a chapter's
+     photos are ever seen, so it counts as content, not decoration — stopping it
+     left a static strip and the other photos unreachable unless you happened to
+     try swiping. Slowed right down instead, which is what "reduce" asks for.
+     Swiping still works as well, for anyone who wants to move it themselves.
+     The slower duration is applied in Story.jsx, not here, so it scales with the
+     chapter's frame count — a flat value here made a 2-photo chapter crawl for
+     as long as a 7-photo one. */
   .reel__strip {
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
   }
-  .reel__frame { scroll-snap-align: center; }
 }

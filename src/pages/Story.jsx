@@ -29,6 +29,12 @@ import './Story.css'
 // but both move at the same speed.
 const SECONDS_PER_FRAME = 4.5
 
+// Under prefers-reduced-motion the strip still moves — it is the only way the
+// rest of a chapter's photos are ever seen — but at a third of the speed.
+// Multiplying the per-chapter duration keeps every chapter moving at the same
+// speed as each other; a flat duration would make short chapters crawl.
+const REDUCED_MOTION_FACTOR = 3
+
 const scenes = [
   {
     id: 1,
@@ -128,6 +134,13 @@ export default function Story() {
   // No slide timer any more — the strip scrolls continuously in CSS, so every
   // photo in a chapter passes through on its own.
 
+  // Read once — this preference does not realistically change mid-visit, and
+  // the strip's duration is baked into inline style at render.
+  const [slowMotion] = useState(
+    () => typeof window !== 'undefined' &&
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  )
+
   // Warm the next chapter's first photo so arriving at it isn't a black frame
   useEffect(() => {
     const next = scenes[active]?.images[0]
@@ -183,7 +196,12 @@ export default function Story() {
           <div className="reel__strip">
             <div
               className="reel__track"
-              style={{ animationDuration: `${s.images.length * SECONDS_PER_FRAME}s` }}
+              style={{
+                animationDuration: `${
+                  s.images.length * SECONDS_PER_FRAME *
+                  (slowMotion ? REDUCED_MOTION_FACTOR : 1)
+                }s`,
+              }}
             >
               {[...s.images, ...s.images].map((src, n) => (
                 <figure
