@@ -178,7 +178,9 @@
   /* Chapters hold several photos stacked here; only .is-current shows, and the
      rest cross-fade in behind it as the chapter cycles. */
   opacity: 0;
-  transition: opacity 1.1s ease;
+  /* 0.7s against the 2500ms hold in Story.jsx. Any slower and the scene reads
+     as permanently mid-fade rather than resting on a photo. */
+  transition: opacity 0.7s ease;
 }
 .reel__bg.is-current { opacity: 1; }
 
@@ -350,6 +352,7 @@
   .film__cue-line { animation: none; }
   .reel.in-view .reel__bg,
   .reel.in-view .reel__bg.is-current { animation: none; transform: scale(1.04); }
-  /* The JS also stops advancing chapters here, so the first photo just holds */
+  /* Chapters still advance — that is how the rest of a chapter's photos are
+     seen — they just cut instead of cross-fading. */
   .reel__bg { transition: none; }
 }

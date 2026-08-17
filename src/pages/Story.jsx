@@ -24,7 +24,9 @@ import './Story.css'
       step writes slugged copies instead.
    ============================================================ */
 
-const SLIDE_MS = 4500          // how long each photo holds before the next
+// How long each photo holds before the next. 2500 so the longest chapter
+// (7 photos) gets through in ~18s rather than ~32s.
+const SLIDE_MS = 2500
 
 const scenes = [
   {
@@ -130,7 +132,10 @@ export default function Story() {
     setSlide(0)
     const count = scenes[active - 1]?.images.length ?? 0
     if (count < 2) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    // Deliberately NOT gated on prefers-reduced-motion. Advancing is how the
+    // other photos in a chapter are seen at all — gating it here meant anyone
+    // with reduced motion on saw photo 1 and never the remaining 17. The CSS
+    // drops the cross-fade for them instead, so photos cut rather than blend.
     const t = setInterval(() => setSlide(i => i + 1), SLIDE_MS)
     return () => clearInterval(t)
   }, [active])
