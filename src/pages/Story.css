@@ -168,40 +168,104 @@
 /* ════════════════════════════════════════════════════════════
    SCENES — cinematic entrance fires on .in-view
    ════════════════════════════════════════════════════════════ */
-.reel__media { position: absolute; inset: 0; }
-.reel__bg {
+/* ── Film strip ──
+   The scene is a strip of film: two perforated rails with the frame between
+   them. Photos are NOT cropped to fill the screen — each sits in the gate at
+   its own aspect ratio, so portraits stay portrait and landscapes stay
+   landscape. */
+.reel__strip {
   position: absolute;
-  inset: -4%;                     /* bleed so the zoom never shows an edge */
-  background-size: cover;
-  background-position: center;
-  transform: scale(1.16);         /* resting (pre-entrance) */
-  /* Chapters hold several photos stacked here; only .is-current shows, and the
-     rest cross-fade in behind it as the chapter cycles. */
-  opacity: 0;
-  /* 0.7s against the 2500ms hold in Story.jsx. Any slower and the scene reads
-     as permanently mid-fade rather than resting on a photo. */
-  transition: opacity 0.7s ease;
-}
-.reel__bg.is-current { opacity: 1; }
-
-/* slow Ken Burns drift once the scene lands — on the visible photo only, or
-   every layer would burn through its animation while hidden */
-.reel.in-view .reel__bg.is-current {
-  animation: kenburns 14s ease-out forwards;
-}
-@keyframes kenburns {
-  from { transform: scale(1.16) translate3d(0, 0, 0); }
-  to   { transform: scale(1.0)  translate3d(0, -1.5%, 0); }
+  left: 50%;
+  top: 6vh;
+  transform: translateX(-50%);
+  height: 56vh;
+  /* explicit width, not max-width: this box is absolutely positioned, so with
+     only a max it shrink-wraps its content — and the frames inside are
+     position:absolute, contributing no width, which collapsed the strip to the
+     width of its own padding */
+  width: min(92vw, 900px);
+  display: flex;
+  align-items: center;
+  /* rail width either side; the holes are painted into these gutters */
+  padding: 0 22px;
+  background: #100a09;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.55);
 }
 
-/* vignette + gradient for mood and legibility */
-.reel__scrim {
+/* Perforations — one repeating-gradient per rail, so no extra elements */
+.reel__strip::before,
+.reel__strip::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 22px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 9px,
+    rgba(240,232,220,0.82) 9px 23px,
+    transparent 23px 32px
+  );
+  background-size: 12px 32px;
+  background-position: center top;
+  background-repeat: repeat-y;
+}
+.reel__strip::before { left: 5px; }
+.reel__strip::after  { right: 5px; }
+
+/* The gate — the opening the frame shows through */
+.reel__gate {
+  position: relative;
+  /* flex:1 is load-bearing — the frames inside are position:absolute, so with
+     auto width this flex item measures 0 and the gate never opens */
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #050303;
+  /* clips the incoming frame while it is still above the gate, so the advance
+     reads as film moving past an opening rather than an image flying in */
+  overflow: hidden;
+}
+
+/* Frames are stacked; only .is-current is shown */
+.reel__frame {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse at 50% 38%, transparent 30%, rgba(10,6,5,0.55) 100%),
-    linear-gradient(to top, rgba(8,4,3,0.92) 0%, rgba(8,4,3,0.35) 45%, rgba(8,4,3,0.6) 100%);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
 }
+.reel__frame img {
+  display: block;
+  /* the whole point: never crop, never stretch */
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.reel__frame.is-current { opacity: 1; visibility: visible; }
+
+/* Film advance — the incoming frame is pulled down through the gate the way a
+   projector claw moves the strip, with a dark beat as the frame line passes.
+   Replaces the old Ken Burns zoom, which cropped and drifted the image. */
+.reel.in-view .reel__frame.is-current {
+  animation: filmAdvance 0.42s cubic-bezier(0.25, 0.1, 0.25, 1) both;
+}
+@keyframes filmAdvance {
+  0%   { opacity: 0; transform: translateY(-104%); }
+  42%  { opacity: 0.35; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+/* kenburns and .reel__scrim were dropped with the full-bleed background: the
+   zoom cropped the photo, and the scrim existed to darken a photo sitting
+   behind text. The photo now sits in the film gate on cinema black, so neither
+   has anything to act on. */
 
 /* black crossfade — opaque until the scene is in view */
 .reel__fade {
@@ -216,14 +280,19 @@
 .reel.in-view .reel__fade { opacity: 0; }
 
 /* ── Title-card text ── */
+/* Sits below the film strip, not over it. The strip runs 6vh–62vh, so the text
+   starts at 64vh — overlaying it would cover the photo the strip exists to
+   show. */
 .reel__content {
   position: absolute;
   left: 0; right: 0;
-  bottom: 16vh;
+  top: 64vh;
+  bottom: 2vh;
   z-index: 3;
   padding: 0 2rem;
   text-align: center;
   color: #fff;
+  overflow: hidden;
 }
 .reel__content > * {
   text-shadow: 0 2px 40px rgba(0,0,0,0.6);
@@ -325,14 +394,15 @@
 /* ════════════════════════════════════════════════════════════
    RESPONSIVE
    ════════════════════════════════════════════════════════════ */
-/* Tablet & mobile — vertically center the chapter text (desktop keeps
-   the lower-third position, which looks good on wide screens) */
+/* Tablet & mobile — narrower screens make the strip taller relative to width,
+   so give the strip less height and start the text a little lower.
+   The old rule centred the text vertically, which now lands it on top of the
+   film strip. */
 @media (max-width: 1000px) {
-  .reel__content {
-    top: 50%;
-    bottom: auto;
-    transform: translateY(-50%);
-  }
+  .reel__strip  { height: 50vh; top: 8vh; padding: 0 18px; }
+  .reel__strip::before,
+  .reel__strip::after { width: 18px; }
+  .reel__content { top: 60vh; bottom: 2vh; }
 }
 
 @media (max-width: 600px) {
@@ -344,15 +414,13 @@
 /* ════════════════════════════════════════════════════════════
    REDUCED MOTION
    Keep the snap + entrance fades (so it still feels cinematic),
-   but drop the looping grain, the cue pulse, and the Ken Burns
-   zoom in favor of a still image.
+   but drop the looping grain, the cue pulse, and the film-advance
+   pull-down in favour of a straight cut.
    ════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   .film__grain { display: none; }
   .film__cue-line { animation: none; }
-  .reel.in-view .reel__bg,
-  .reel.in-view .reel__bg.is-current { animation: none; transform: scale(1.04); }
   /* Chapters still advance — that is how the rest of a chapter's photos are
-     seen — they just cut instead of cross-fading. */
-  .reel__bg { transition: none; }
+     seen at all — the frame just cuts instead of being pulled down. */
+  .reel.in-view .reel__frame.is-current { animation: none; transform: none; }
 }

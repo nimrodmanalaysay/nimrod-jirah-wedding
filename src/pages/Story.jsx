@@ -182,22 +182,30 @@ export default function Story() {
           data-index={i + 1}
           ref={register}
         >
-          {/* Every photo in the chapter is a stacked layer; only the current
-              one is opaque. Scenes that aren't on screen stay on their first
-              photo, so the counter only ever moves the visible scene. */}
-          <div className="reel__media" role="img" aria-label={s.imageAlt}>
-            {s.images.map((src, n) => {
-              const current = active === i + 1 ? slide % s.images.length : 0
-              return (
-                <div
-                  key={src}
-                  className={`reel__bg ${n === current ? 'is-current' : ''}`}
-                  style={{ backgroundImage: `url(${src})` }}
-                />
-              )
-            })}
+          {/* Film strip. The perforated rails are drawn by CSS on .reel__strip;
+              the gate holds every photo of the chapter as a stacked frame, and
+              only the current one shows. Images are <img> with object-fit:
+              contain, so nothing is cropped and portraits stay portrait. */}
+          <div className="reel__strip" aria-hidden="true">
+            <div className="reel__gate">
+              {s.images.map((src, n) => {
+                const current = active === i + 1 ? slide % s.images.length : 0
+                return (
+                  <figure
+                    key={src}
+                    className={`reel__frame ${n === current ? 'is-current' : ''}`}
+                  >
+                    <img
+                      src={src}
+                      alt={n === 0 ? s.imageAlt : ''}
+                      loading={i === 0 && n === 0 ? 'eager' : 'lazy'}
+                      decoding="async"
+                    />
+                  </figure>
+                )
+              })}
+            </div>
           </div>
-          <div className="reel__scrim" aria-hidden="true" />
 
           <div className="reel__content">
             <span className="reel__num">{String(i + 1).padStart(2, '0')}</span>
