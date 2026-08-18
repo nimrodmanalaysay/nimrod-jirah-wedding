@@ -175,7 +175,7 @@
    in the chapter passes through — nothing is cropped and portraits stay
    portrait, they just take a narrower frame than the landscapes. */
 :root {
-  --rail: 44px;      /* height of one perforated rail */
+  --rail: 52px;      /* height of one perforated rail */
   --frame-gap: 12px; /* black frame line between frames */
 }
 
@@ -185,8 +185,8 @@
   right: 0;
   /* Sits behind the chapter text as ambient background, not as an object in
      front of it — hence no solid base, no shadow, and a soft edge. */
-  top: 20vh;
-  height: 48vh;
+  top: 12vh;
+  height: 64vh;
   z-index: 0;
   overflow: hidden;                /* the run is wider than the screen */
   background: transparent;
@@ -213,7 +213,7 @@
   left: 0;
   right: 0;
   height: var(--rail);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='44'%3E%3Crect x='16' y='9' width='40' height='26' rx='7' fill='%23ece7dd' fill-opacity='0.16'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='52'%3E%3Crect x='19' y='11' width='46' height='30' rx='8' fill='%23ece7dd' fill-opacity='0.16'/%3E%3C/svg%3E");
   background-repeat: repeat-x;
   background-position: left center;
 }
@@ -402,15 +402,28 @@
 /* ════════════════════════════════════════════════════════════
    RESPONSIVE
    ════════════════════════════════════════════════════════════ */
-/* Tablet & mobile — narrower screens make the strip taller relative to width,
-   so give the strip less height and start the text a little lower.
-   The old rule centred the text vertically, which now lands it on top of the
-   film strip. */
-@media (max-width: 1000px) {
-  /* Shorter strip, and slimmer rails so the frame keeps most of the height.
-     --rail drives both the padding and the SVG tile height, so overriding the
-     variable is enough — the previous `padding: 0 18px` here was left from the
-     side-rail layout and zeroed the top/bottom rail space entirely. */
+/* Tablet — 641px to 1000px only. Phones are handled in their own block below;
+   this used to be `max-width: 1000px` and so applied to both, which meant any
+   change here silently moved the phone layout too. */
+@media (min-width: 641px) and (max-width: 1000px) {
+  .reel__strip {
+    height: 58vh;
+    top: 15vh;
+    padding: 40px 0;
+  }
+  .reel__strip::before,
+  .reel__strip::after {
+    height: 40px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='66' height='40'%3E%3Crect x='15' y='9' width='36' height='22' rx='6' fill='%23ece7dd' fill-opacity='0.16'/%3E%3C/svg%3E");
+  }
+  /* stays centred over the strip — the desktop rule already does that, so no
+     top/bottom override here any more */
+}
+
+/* Phones — keep the smaller strip they already had. Only web and tablet were
+   enlarged; without this block phones would inherit the desktop 64vh/52px rail,
+   which is far too tall for a 375px-wide screen. */
+@media (max-width: 640px) {
   .reel__strip {
     height: 46vh;
     top: 22vh;
@@ -421,8 +434,6 @@
     height: 30px;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='52' height='30'%3E%3Crect x='12' y='7' width='28' height='17' rx='5' fill='%23ece7dd' fill-opacity='0.16'/%3E%3C/svg%3E");
   }
-  /* stays centred over the strip — the desktop rule already does that, so no
-     top/bottom override here any more */
 }
 
 @media (max-width: 600px) {
