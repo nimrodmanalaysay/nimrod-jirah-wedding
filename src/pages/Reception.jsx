@@ -77,13 +77,19 @@ export default function Reception() {
           </div>
         </section>
 
-        {/* Placeholder images */}
+        {/* ✏️ One real photo of the venue. Drop a replacement at
+            /public/photos/reception-venue-1.jpg to change it. */}
         <section className="cp-section cp-section--blush">
           <h2 className="cp-section__title">The Venue</h2>
-          <div className="cp-img-grid">
-            <img src="/photos/reception-venue-1.jpg" alt="Venue" />
-            <img src="/photos/reception-venue-2.jpg" alt="Venue" />
-            <img src="/photos/reception-venue-3.jpg" alt="Venue" />
+          <div className="cp-img-grid cp-img-grid--single">
+            <img
+              src="/photos/reception-venue-1.jpg"
+              alt="Grass Garden, the ceremony and reception venue"
+              width="800"
+              height="600"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         </section>
 

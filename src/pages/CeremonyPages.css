@@ -426,6 +426,20 @@
   grid-template-columns: repeat(4, 1fr);
   align-items: start;
 }
+
+/* One photo instead of a row of three. The base rule stretches every cell to
+   fill its track with object-fit: cover, which on a lone image in a 3-column
+   grid left it squeezed into a third of the width and cropped. This gives it a
+   single centred column and lets the height follow the photo, so the 800x600
+   frame is shown whole. */
+.cp-img-grid--single {
+  grid-template-columns: minmax(0, 720px);
+  justify-content: center;
+}
+.cp-img-grid--single img {
+  height: auto;
+  object-fit: contain;
+}
 .cp-inspo-card {
   display: flex;
   flex-direction: column;
