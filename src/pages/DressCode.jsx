@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import './CeremonyPages.css'
 
-// ✏️ Replace /public/photos/weddingoutfit.jpg to change the attire guide image
-const ATTIRE_IMG = '/photos/weddingoutfit.jpg'
+// ✏️ Replace /public/photos/Dresscode.jpg to change the attire guide image
+const ATTIRE_IMG = '/photos/Dresscode.jpg'
 
 /* ============================================================
    Dress Code Page
