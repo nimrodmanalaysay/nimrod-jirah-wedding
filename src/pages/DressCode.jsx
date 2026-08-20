@@ -11,10 +11,12 @@ const ATTIRE_IMG = '/photos/weddingoutfit.jpg'
 
 // ✏️ Palette swatches — update colors and labels to match your theme
 const palette = [
-  { color: '#E1CA96', label: 'Champagne Gold',  note: 'Dresses, ties, accessories' },
-  { color: '#FFD9DA', label: 'Soft Blush',       note: 'Gowns, dress shirts' },
-  { color: '#556251', label: 'Sage Green',        note: 'Suits, midi dresses' },
-  { color: '#BD6738', label: 'Terracotta',        note: 'Accents, wraps' },
+  { color: '#C98F8A', label: 'Dusty Rose',        note: 'Gowns, dresses' },
+  { color: '#D8C3A5', label: 'Warm Beige',        note: 'Dress shirts, accessories' },
+  { color: '#B85C45', label: 'Burnt Terracotta',  note: 'Ties, accents, wraps' },
+  { color: '#879B78', label: 'Sage Green',        note: 'Suits, midi dresses' },
+  { color: '#667052', label: 'Olive Green',       note: 'Suits, pantsuits' },
+  { color: '#5A4035', label: 'Dark Cocoa Brown',  note: 'Suits, barong accents' },
 ]
 
 const dos = [
