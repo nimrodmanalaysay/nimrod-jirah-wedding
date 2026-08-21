@@ -116,7 +116,6 @@ export default function Reception() {
           <ul className="cp-reminders">
             <li>The ceremony and reception are at the <strong>same venue</strong>. No transportation needed between events.</li>
             <li>Free parking is available on-site for all guests.</li>
-            <li>Ride-sharing services (Grab/Angkas) are readily available in the area.</li>
             <li>For guests staying overnight, recommended hotels will be shared closer to the date.</li>
           </ul>
         </section>

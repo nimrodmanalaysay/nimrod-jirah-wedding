@@ -124,13 +124,21 @@
   margin: 0.15rem 0;
 }
 
-/* ── Best Man & Maid of Honor ── */
+/* ── Best Man & Maid of Honor ──
+   min-width/min-height match .ent-party-col .name-card so these two cards
+   read the same size as the ones in every other section; gap matches
+   .ent-others-grid's 1rem instead of a one-off 2rem. */
 .ent-honor-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
+  gap: 1rem;
   flex-wrap: wrap;
+}
+.ent-honor-row .name-card {
+  min-width: 200px;
+  min-height: 64px;
+  justify-content: center;
 }
 .ent-honor-divider {
   width: 1px;

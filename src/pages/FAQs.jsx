@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: 'What is the dress code?',
-    a: 'The dress code is Formal / Semi-Formal. We encourage guests to wear earth tones, soft blush, sage green, or champagne gold. Please avoid wearing white or ivory dresses (reserved for the bride). See our Dress Code page for more details.',
+    a: 'The dress code is Formal / Semi-Formal. We encourage guests to wear dusty rose, taupe brown, burnt terracotta, olive green, or burgundy. Please avoid wearing white or ivory dresses (reserved for the bride). See our Dress Code page for more details.',
   },
   {
     q: 'Will the ceremony be indoors or outdoors?',
