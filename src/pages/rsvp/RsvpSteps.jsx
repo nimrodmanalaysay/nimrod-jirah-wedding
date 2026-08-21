@@ -146,6 +146,10 @@ export function StepGate({ onVerified, onDuplicate, onChecking }) {
           <p className="rsvp-gate__sub">
             Enter your name as it appears on your invitation.
           </p>
+          <p className="rsvp-gate__note">
+            This RSVP is exclusive to invited guests. If you've been granted a plus one,
+            you'll get the option to add them after confirming your attendance.
+          </p>
           <div className="rsvp-gate__field">
             <input
               type="text"

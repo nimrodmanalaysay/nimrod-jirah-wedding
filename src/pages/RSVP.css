@@ -93,8 +93,16 @@
 .rsvp-gate__sub {
   font-size: 0.9rem;
   color: rgba(105,27,25,0.6);
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.rsvp-gate__note {
+  font-size: 0.78rem;
+  color: rgba(105,27,25,0.5);
   margin-bottom: 2rem;
   line-height: 1.6;
+  font-style: italic;
 }
 
 .rsvp-gate__field {
