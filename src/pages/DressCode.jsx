@@ -12,7 +12,7 @@ const ATTIRE_IMG = '/photos/Dresscode.jpg'
 // ✏️ Palette swatches — update colors and labels to match your theme
 const palette = [
   { color: '#C98F8A', label: 'Dusty Rose' },
-  { color: '#D8C3A5', label: 'Warm Beige' },
+  { color: '#722F37', label: 'Wine' },
   { color: '#B85C45', label: 'Burnt Terracotta' },
   { color: '#879B78', label: 'Sage Green' },
   { color: '#667052', label: 'Olive Green' },
