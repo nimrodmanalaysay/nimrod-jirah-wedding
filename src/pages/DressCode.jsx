@@ -11,12 +11,12 @@ const ATTIRE_IMG = '/photos/Dresscode.jpg'
 
 // ✏️ Palette swatches — update colors and labels to match your theme
 const palette = [
-  { color: '#C98F8A', label: 'Dusty Rose',        note: 'Gowns, dresses' },
-  { color: '#D8C3A5', label: 'Warm Beige',        note: 'Dress shirts, accessories' },
-  { color: '#B85C45', label: 'Burnt Terracotta',  note: 'Ties, accents, wraps' },
-  { color: '#879B78', label: 'Sage Green',        note: 'Suits, midi dresses' },
-  { color: '#667052', label: 'Olive Green',       note: 'Suits, pantsuits' },
-  { color: '#5A4035', label: 'Dark Cocoa Brown',  note: 'Suits, barong accents' },
+  { color: '#C98F8A', label: 'Dusty Rose' },
+  { color: '#D8C3A5', label: 'Warm Beige' },
+  { color: '#B85C45', label: 'Burnt Terracotta' },
+  { color: '#879B78', label: 'Sage Green' },
+  { color: '#667052', label: 'Olive Green' },
+  { color: '#5A4035', label: 'Dark Cocoa Brown' },
 ]
 
 const dos = [
@@ -79,7 +79,6 @@ export default function DressCode() {
               <div key={i} className="cp-swatch">
                 <div className="cp-swatch__color" style={{ background: s.color }} />
                 <p className="cp-swatch__label">{s.label}</p>
-                <p className="cp-swatch__note">{s.note}</p>
               </div>
             ))}
           </div>
