@@ -4,6 +4,13 @@ import './CeremonyPages.css'
 // ✏️ Replace /public/photos/Dresscode.jpg to change the attire guide image
 const ATTIRE_IMG = '/photos/Dresscode.jpg'
 
+// ✏️ Guest casual attire inspiration — /public/photos/DressCodeCasual/
+const GUEST_IMAGES = [
+  { src: '/photos/DressCodeCasual/general.jpg', alt: 'Guest attire inspiration' },
+  { src: '/photos/DressCodeCasual/girls.jpg',    alt: 'Guest attire inspiration for women' },
+  { src: '/photos/DressCodeCasual/boys.jpg',     alt: 'Guest attire inspiration for men' },
+]
+
 /* ============================================================
    Dress Code Page
    ✏️ Update attire theme, colors, and descriptions below.
@@ -103,18 +110,28 @@ export default function DressCode() {
           </div>
         </section>
 
-        {/* Attire guide reference image */}
+        {/* Attire guide reference image — entourage */}
         <section className="cp-section cp-section--blush">
-          <h2 className="cp-section__title">Wedding Attire Guide</h2>
+          <h2 className="cp-section__title">Entourage Attire Guide</h2>
           <button
             type="button"
             className="cp-attire-guide"
             onClick={() => setZoomed(true)}
-            aria-label="Zoom in on the wedding attire guide"
+            aria-label="Zoom in on the entourage attire guide"
           >
-            <img src={ATTIRE_IMG} alt="Wedding attire guide reference" />
+            <img src={ATTIRE_IMG} alt="Entourage attire guide reference" />
             <span className="cp-attire-guide__hint">Click to zoom</span>
           </button>
+        </section>
+
+        {/* Casual attire inspiration — guests */}
+        <section className="cp-section">
+          <h2 className="cp-section__title">Guest Attire Guide</h2>
+          <div className="cp-img-grid">
+            {GUEST_IMAGES.map((img, i) => (
+              <img key={i} src={img.src} alt={img.alt} loading="lazy" decoding="async" />
+            ))}
+          </div>
         </section>
 
       </div>
