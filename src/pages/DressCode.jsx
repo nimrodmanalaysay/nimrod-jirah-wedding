@@ -14,7 +14,7 @@ const palette = [
   { color: '#C98F8A', label: 'Dusty Rose' },
   { color: '#722F37', label: 'Wine' },
   { color: '#B85C45', label: 'Burnt Terracotta' },
-  { color: '#879B78', label: 'Sage Green' },
+  { color: '#D8C3A5', label: 'Warm Beige' },
   { color: '#667052', label: 'Olive Green' },
   { color: '#5A4035', label: 'Dark Cocoa Brown' },
 ]
