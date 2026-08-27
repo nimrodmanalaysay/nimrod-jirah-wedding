@@ -42,9 +42,12 @@ const donts = [
 ]
 
 export default function DressCode() {
-  const [zoomed, setZoomed]       = useState(false)  // lightbox open
+  // Lightbox holds the src/alt of whichever image was clicked — the entourage
+  // guide and each guest photo all share the one lightbox.
+  const [zoomedImg, setZoomedImg] = useState(null)
   const [magnified, setMagnified] = useState(false)  // extra zoom inside lightbox
-  const closeLightbox = () => { setZoomed(false); setMagnified(false) }
+  const openLightbox  = (src, alt) => setZoomedImg({ src, alt })
+  const closeLightbox = () => { setZoomedImg(null); setMagnified(false) }
 
   return (
     <div className="cp-page">
@@ -116,7 +119,7 @@ export default function DressCode() {
           <button
             type="button"
             className="cp-attire-guide"
-            onClick={() => setZoomed(true)}
+            onClick={() => openLightbox(ATTIRE_IMG, 'Entourage attire guide reference')}
             aria-label="Zoom in on the entourage attire guide"
           >
             <img src={ATTIRE_IMG} alt="Entourage attire guide reference" />
@@ -124,12 +127,32 @@ export default function DressCode() {
           </button>
         </section>
 
-        {/* Casual attire inspiration — guests */}
+        {/* Casual attire inspiration — guests. The general shot is landscape,
+            so it gets its own full-width row above the girls/boys pair
+            instead of being squeezed into a 3-up grid. */}
         <section className="cp-section">
           <h2 className="cp-section__title">Guest Attire Guide</h2>
-          <div className="cp-img-grid">
-            {GUEST_IMAGES.map((img, i) => (
-              <img key={i} src={img.src} alt={img.alt} loading="lazy" decoding="async" />
+          <button
+            type="button"
+            className="cp-attire-guide"
+            onClick={() => openLightbox(GUEST_IMAGES[0].src, GUEST_IMAGES[0].alt)}
+            aria-label={`Zoom in on ${GUEST_IMAGES[0].alt}`}
+          >
+            <img src={GUEST_IMAGES[0].src} alt={GUEST_IMAGES[0].alt} loading="lazy" decoding="async" />
+            <span className="cp-attire-guide__hint">Click to zoom</span>
+          </button>
+          <div className="cp-img-grid cp-img-grid--2">
+            {GUEST_IMAGES.slice(1).map((img, i) => (
+              <button
+                key={i}
+                type="button"
+                className="cp-attire-guide"
+                onClick={() => openLightbox(img.src, img.alt)}
+                aria-label={`Zoom in on ${img.alt}`}
+              >
+                <img src={img.src} alt={img.alt} loading="lazy" decoding="async" />
+                <span className="cp-attire-guide__hint">Click to zoom</span>
+              </button>
             ))}
           </div>
         </section>
@@ -137,7 +160,7 @@ export default function DressCode() {
       </div>
 
       {/* Zoom lightbox — backdrop/✕ to close; click image to zoom in further */}
-      {zoomed && (
+      {zoomedImg && (
         <div
           className={`cp-lightbox ${magnified ? 'cp-lightbox--zoom' : ''}`}
           onClick={(e) => { if (e.target === e.currentTarget) closeLightbox() }}
@@ -149,8 +172,8 @@ export default function DressCode() {
           >✕</button>
           <div className="cp-lightbox__img-wrap">
             <img
-              src={ATTIRE_IMG}
-              alt="Wedding attire guide"
+              src={zoomedImg.src}
+              alt={zoomedImg.alt}
               onClick={(e) => { e.stopPropagation(); setMagnified(m => !m) }}
             />
           </div>
