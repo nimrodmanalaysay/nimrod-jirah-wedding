@@ -301,6 +301,7 @@ export default function RSVP() {
       <PageHero
         eyebrow="Nimrod & Jirah"
         title="RSVP"
+        subtitle="Kindly reply before October 1, 2026"
       />
 
       <div className="rsvp-card" ref={cardRef}>
