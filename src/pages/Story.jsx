@@ -81,7 +81,7 @@ const scenes = [
   {
     id: 4,
     chapter: 'The Proposal',
-    date: 'December 23, 2025',
+    date: 'December 13, 2025',
     images: [
       '/photos/story/proposal-1.jpg',
       '/photos/story/proposal-2.jpg',
