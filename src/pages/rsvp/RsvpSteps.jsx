@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import {
   preValidate,
   findMatches,
@@ -599,6 +600,12 @@ export function StepSuccess({ inviteeName, attendance, plusOneData, email }) {
             sent to <strong>{email}</strong>.
           </p>
         </div>
+      )}
+
+      {isAttending && (
+        <p className="rsvp-success__dresscode">
+          Don't forget to check our <Link to="/ceremony/dresscode">Dress Code</Link> before the big day!
+        </p>
       )}
     </div>
   )

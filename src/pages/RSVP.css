@@ -635,6 +635,17 @@
   word-break: break-all;
 }
 
+.rsvp-success__dresscode {
+  margin-top: 1.2rem;
+  font-size: 0.85rem;
+  color: rgba(105,27,25,0.7);
+}
+.rsvp-success__dresscode a {
+  color: var(--btn-color);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 /* ================================================================
    BUSY OVERLAY  (class kept as .rsvp-sending)
    Covers the card during any wait on the Apps Script:
