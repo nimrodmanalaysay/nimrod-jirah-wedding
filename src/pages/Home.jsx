@@ -28,7 +28,7 @@ const explorePages = [
   { label: 'Gifts', path: '/gifts', icon: '❧',
     desc: 'Your presence is the greatest gift — but details are here if you wish.' },
   { label: 'RSVP', path: '/rsvp', icon: '✉',
-    desc: 'Let us know you can make it — kindly reply by October 1, 2026.' },
+    desc: 'Let us know you can make it — kindly reply by October 10, 2026.' },
   { label: 'FAQs', path: '/faqs', icon: '❖',
     desc: 'Quick answers about timing, parking, attire, and what to expect.' },
 ]

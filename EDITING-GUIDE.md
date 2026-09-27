@@ -100,7 +100,7 @@ Open **`src/styles/global.css`** and find the block near the top with color code
 
 The RSVP form is connected to a **Google Sheet** (that's where guest replies are collected) and it emails a confirmation to each guest automatically. This part is technical — if something about RSVP needs changing (guest list, emails, the sheet), it's best to ask a developer. The technical notes live in `CLAUDE.md` and `apps-script-rsvp.gs`.
 
-The RSVP deadline shown to guests is **October 1, 2026** (in `src/pages/RSVP.jsx`).
+The RSVP deadline shown to guests is **October 10, 2026** (in `src/pages/RSVP.jsx`).
 
 ---
 

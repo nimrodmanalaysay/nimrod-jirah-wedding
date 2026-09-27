@@ -80,7 +80,7 @@ Flow (`src/pages/rsvp/RsvpSteps.jsx`): name gate (with last-name disambiguation 
 - Progress is cached in the browser (`src/utils/rsvpCache.js`) so a refresh resumes the same step.
 - The Apps Script sends themed HTML confirmation emails (with an `.ics` calendar attachment when attending) via `GmailApp`, masked as "Nimrod & Jirah Wedding <nimrodjirahwedding@gmail.com>" — the same address shown to guests at the bottom of the FAQ page.
 - Sheet headers: `ID | Timestamp | Invitee Name | Attendance | First Name | Last Name | Email | Notes | Advice | Plus One Name | Plus One Attendance`.
-- RSVP deadline shown to guests: **October 1, 2026**.
+- RSVP deadline shown to guests: **October 10, 2026**.
 
 ## Conventions
 
